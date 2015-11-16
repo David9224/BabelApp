@@ -17,14 +17,17 @@ public class ConexionSql {
 
     private Connection connection;
 
-    public void conexion() {
+    public Connection conexion() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/babel", "root", "admin1234");
+            return connection;
         } catch (ClassNotFoundException ex) {
             System.out.println("Driver no encontrado " + ex.toString());
+            return null;
         } catch (SQLException ex) {
             System.out.println("Conexion Fallida " + ex.toString());
+            return null;
         }
     }
 

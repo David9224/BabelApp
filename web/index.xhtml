@@ -10,17 +10,32 @@
         <link rel="stylesheet" type="text/css" href="resources/indexCss.css"/>
     </h:head>
     <h:body>
+        <p:growl id="growl" showDetail="true" life="2000" />
         <p:panel id="login" styleClass="content">
             <h:form id="form">
                 <p:panelGrid columns="1" style="width: 100%; text-align: center">
                     <p:outputLabel value="Bienvenido"/>
                     <br/>
-                    <p:inputText placeholder="Ingrese Usuario" style="width: 100%;"/>
-                    <p:inputText placeholder="Ingrese Contraseña" style="width: 100%;"/>
-                    <p:commandButton value="Ingresar"/>
+                    <p:inputText placeholder="Ingrese Usuario" style="width: 100%;" value="#{loginBean.cedula}" 
+                                 required="true"/>
+                    <p:inputText placeholder="Ingrese Contraseña" style="width: 100%;" value="#{loginBean.password}" 
+                                 required="true" type="password"/>
+                    <p:commandButton value="Ingresar" actionListener="#{loginBean.login()}" update=":growl"
+                                     oncomplete="manejarLogin(xhr, status, args)"/>
                 </p:panelGrid>
             </h:form>
         </p:panel>
+        <script type="text/javascript">
+            //<![CDATA[
+            function manejarLogin(xhr, status, args) {
+                if (!args.validationFailed && args.estaLogeado) {
+                    setTimeout(function () {
+                        window.location = args.view;
+                    }, 500);
+                }
+            }
+//]]>
+        </script>
     </h:body>
 </html>
 
