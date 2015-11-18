@@ -13,7 +13,6 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,62 +20,34 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author David
  */
-@WebFilter(filterName = "LoginFilter", urlPatterns = {"/admin"})
 public class LoginFilter implements Filter {
 
+    /**
+     * Checks if user is logged in. If not it redirects to the login.xhtml page.
+     */
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response,
-            FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        // Get the loginBean from session attribute
+        LoginBean loginBean = (LoginBean) ((HttpServletRequest) request).getSession().getAttribute("LoginBean");
         HttpServletRequest req = (HttpServletRequest) request;
-        HttpServletResponse res = (HttpServletResponse) response;
-        // Obtengo el bean que representa el usuario desde el scope sesión
-        LoginBean loginBean = (LoginBean) req.getSession().getAttribute("loginBean");
-
-        //Proceso la URL que está requiriendo el cliente
-        String urlStr = req.getRequestURL().toString().toLowerCase();
-        boolean noProteger = noProteger(urlStr);
-//        System.out.println(urlStr + " - desprotegido=[" + noProteger + "]");
-
-        //Si no requiere protección continúo normalmente.
-        if (noProteger(urlStr)) {
+        // For the first application request there is no loginBean in the session so user needs to log in
+        // For other requests loginBean is present but we need to check if user has logged in successfully
+        if (loginBean == null && (!req.getRequestURL().toString().contains("index.xhtml"))) {
+            String contextPath = ((HttpServletRequest) request).getContextPath();
+            ((HttpServletResponse) response).sendRedirect(contextPath + "/index.xhtml");
+        } else {
             chain.doFilter(request, response);
-            return;
-        }
-        //El usuario no está logueado
-        if (loginBean == null || !loginBean.isLogeado()) {
-            res.sendRedirect(req.getContextPath() + "/index.xhtml");
-            return;
         }
 
-        //El recurso requiere protección, pero el usuario ya está logueado.
-        chain.doFilter(request, response);
     }
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-
+    public void init(FilterConfig config) throws ServletException {
+        // Nothing to do here!
     }
 
     @Override
     public void destroy() {
-
-    }
-
-    private boolean noProteger(String urlStr) {
-
-        /*
-         * Este es un buen lugar para colocar y programar todos los patrones que
-         * creamos convenientes para determinar cuales de los recursos no
-         * requieren protección. Sin duda que habría que crear un mecanizmo tal
-         * que se obtengan de un archivo de configuración o algo que no requiera
-         * compilación.
-         */
-        if (urlStr.endsWith("index.xhtml")) {
-            return true;
-        }
-        if (urlStr.indexOf("/javax.faces.resource/") != -1) {
-            return true;
-        }
-        return false;
+        // Nothing to do here!
     }
 }

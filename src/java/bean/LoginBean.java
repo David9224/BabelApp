@@ -14,6 +14,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 import org.primefaces.context.RequestContext;
+import utility.Encriptar;
 
 /**
  * @Fecha 16/11/2015
@@ -28,6 +29,7 @@ public class LoginBean implements Serializable {
     private boolean logeado = false;
     private AccesosUsuarios acceso;
     private AccesosUsuariosFacade accesoFacade;
+    private Encriptar encripta;
 
     public LoginBean() {
         accesoFacade = new AccesosUsuariosFacade();
@@ -57,7 +59,11 @@ public class LoginBean implements Serializable {
         this.logeado = logeado;
     }
 
-    public void login() {
+    public void login() throws Exception {
+        encripta = new Encriptar();
+        String passEnc = encripta.Encriptar(password);
+        System.out.println(""+passEnc);
+        System.out.println(""+encripta.Desencriptar(passEnc));
         RequestContext context = RequestContext.getCurrentInstance();
         FacesMessage msg = null;
         if (cedula != null) {
@@ -81,15 +87,16 @@ public class LoginBean implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, msg);
         context.addCallbackParam("estaLogeado", logeado);
         if (logeado) {
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("LoginBean", this);
             context.addCallbackParam("view", "admin/indexAdmin.xhtml");
         }
     }
 
     public void logout() {
+        logeado = false;
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
                 .getExternalContext().getSession(false);
         session.invalidate();
-        logeado = false;
     }
 
 }
