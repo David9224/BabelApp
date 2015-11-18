@@ -6,6 +6,7 @@
 package facade;
 
 import entity.AccesosUsuarios;
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,7 +16,7 @@ import utility.ConexionSql;
  *@Fecha 16/11/2015
  * @author David
  */
-public class AccesosUsuariosFacade {
+public class AccesosUsuariosFacade implements Serializable{
     
     private ConexionSql connection;
     /**

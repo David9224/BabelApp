@@ -5,6 +5,7 @@
  */
 package utility;
 
+import java.io.Serializable;
 import java.security.MessageDigest;
 import java.util.Arrays;
 import javax.crypto.Cipher;
@@ -16,7 +17,7 @@ import org.apache.commons.codec.binary.Base64;
  *
  * @author David
  */
-public class Encriptar {
+public class Encriptar implements Serializable{
 
     public static String MD2 = "MD2";
     public static String MD5 = "MD5";

@@ -24,19 +24,34 @@ public class LoginFilter implements Filter {
 
     /**
      * Checks if user is logged in. If not it redirects to the login.xhtml page.
+     * @param request
+     * @param response
+     * @param chain
+     * @throws java.io.IOException
+     * @throws javax.servlet.ServletException
      */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         // Get the loginBean from session attribute
         LoginBean loginBean = (LoginBean) ((HttpServletRequest) request).getSession().getAttribute("LoginBean");
+        String tipo = "";
+        if ((String) ((HttpServletRequest) request).getSession().getAttribute("tipo")!=null) {
+            tipo = (String) ((HttpServletRequest) request).getSession().getAttribute("tipo");
+        }
         HttpServletRequest req = (HttpServletRequest) request;
         // For the first application request there is no loginBean in the session so user needs to log in
         // For other requests loginBean is present but we need to check if user has logged in successfully
         if (loginBean == null && (!req.getRequestURL().toString().contains("index.xhtml"))) {
             String contextPath = ((HttpServletRequest) request).getContextPath();
             ((HttpServletResponse) response).sendRedirect(contextPath + "/index.xhtml");
-        } else {
-            chain.doFilter(request, response);
+        }
+        else {
+            if (tipo.equals("admin")&& (!req.getRequestURL().toString().contains("admin"))) {
+            String contextPath = ((HttpServletRequest) request).getContextPath();
+            ((HttpServletResponse) response).sendRedirect(contextPath + "/admin/indexAdmin.xhtml");
+            }else{
+               chain.doFilter(request, response);
+            }
         }
 
     }

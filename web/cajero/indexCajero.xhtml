@@ -9,14 +9,12 @@
         <title>Facelet Title</title>
     </h:head>
     <h:body>
-        <h:form>
         <p:commandLink id="logout"
                        actionListener="#{loginBean.logout}"
                        style="margin-right:20px;"
                        oncomplete="logout(xhr, status, args)">
             <h:outputText value="logout" />
         </p:commandLink>
-        </h:form>
         <script type="text/javascript">
             //<![CDATA[   
             function logout(xhr, status, args) {

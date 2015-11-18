@@ -11,6 +11,8 @@ import java.io.Serializable;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 import org.primefaces.context.RequestContext;
@@ -62,8 +64,8 @@ public class LoginBean implements Serializable {
     public void login() throws Exception {
         encripta = new Encriptar();
         String passEnc = encripta.Encriptar(password);
-        System.out.println(""+passEnc);
-        System.out.println(""+encripta.Desencriptar(passEnc));
+        System.out.println("" + passEnc);
+        System.out.println("" + encripta.Desencriptar(passEnc));
         RequestContext context = RequestContext.getCurrentInstance();
         FacesMessage msg = null;
         if (cedula != null) {
@@ -73,6 +75,7 @@ public class LoginBean implements Serializable {
                     logeado = true;
                     msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Bienvenid@", "" + cedula);
                 } else {
+                    logeado = false;
                     msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Contraseña invalida");
                 }
             } else {
@@ -88,15 +91,20 @@ public class LoginBean implements Serializable {
         context.addCallbackParam("estaLogeado", logeado);
         if (logeado) {
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("LoginBean", this);
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("tipo", "admin");
             context.addCallbackParam("view", "admin/indexAdmin.xhtml");
         }
     }
 
     public void logout() {
         logeado = false;
-        HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
-                .getExternalContext().getSession(false);
-        session.invalidate();
+        System.out.println("logout");
+        FacesContext context = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = context.getExternalContext();
+        Object session = externalContext.getSession(false);
+        HttpSession httpSession = (HttpSession) session;
+        httpSession.invalidate();
+        externalContext.getSessionMap().clear();
     }
 
 }

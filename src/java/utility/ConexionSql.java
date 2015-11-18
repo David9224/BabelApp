@@ -5,6 +5,7 @@
  */
 package utility;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -13,7 +14,7 @@ import java.sql.SQLException;
  * @Fecha 15/11/2015
  * @author David
  */
-public class ConexionSql {
+public class ConexionSql implements Serializable{
 
     private Connection connection;
 

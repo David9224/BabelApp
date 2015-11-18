@@ -5,11 +5,13 @@
  */
 package entity;
 
+import java.io.Serializable;
+
 /**
  *
  * @author David
  */
-public class AccesosUsuarios {
+public class AccesosUsuarios implements Serializable{
     private Long acCodi;
     private Long acCedu;
     private String acContra;
