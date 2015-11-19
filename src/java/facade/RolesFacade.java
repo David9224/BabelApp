@@ -6,6 +6,7 @@
 package facade;
 
 import entity.AccesosUsuarios;
+import entity.Roles;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,7 +17,7 @@ import utility.ConexionSql;
  *@Fecha 16/11/2015
  * @author David
  */
-public class AccesosUsuariosFacade implements Serializable{
+public class RolesFacade implements Serializable{
     
     private ConexionSql connection;
     /**
@@ -25,30 +26,28 @@ public class AccesosUsuariosFacade implements Serializable{
      * @Fecha 16/11/2015
      * @Observacion busca el usuario por cedula
      */
-    public AccesosUsuarios getAcceso(Long cedula){
+    public Roles getRoles(int id){
         try {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
-            String SQL = " select * from ACCESOS_USUARIOS "
-                    + "     where ac_cedu = ? ";
+            String SQL = " select * from roles "
+                    + "     where id_rol = ? ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
-            stmt.setLong(1, cedula);
-            AccesosUsuarios acceso = null;
+            stmt.setLong(1, id);
+            Roles rol = null;
             ResultSet rs = stmt.executeQuery();
             while(rs.next()){
-                acceso = new AccesosUsuarios();
-                acceso.setAcCodi(rs.getLong(1));
-                acceso.setAcCedu(rs.getLong(2));
-                acceso.setAcContra(rs.getString(3));
-                acceso.setAcRol(rs.getInt(4));
+                rol = new Roles();
+                rol.setId(rs.getInt(1));
+                rol.setNombre(rs.getString(2));
             }
             rs.close();
             stmt.close();
             conexion.close();
             
-            return acceso;
+            return rol;
         } catch (Exception e) {
-            System.out.println("Error getAcceso "+e.toString());
+            System.out.println("Error getRoles "+e.toString());
             return null;
         }
     }

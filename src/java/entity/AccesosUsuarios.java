@@ -15,6 +15,8 @@ public class AccesosUsuarios implements Serializable{
     private Long acCodi;
     private Long acCedu;
     private String acContra;
+    private int acRol;
+
 
     public Long getAcCodi() {
         return acCodi;
@@ -39,4 +41,12 @@ public class AccesosUsuarios implements Serializable{
     public void setAcContra(String acContra) {
         this.acContra = acContra;
     }
+     public int getAcRol() {
+        return acRol;
+    }
+
+    public void setAcRol(int acRol) {
+        this.acRol=acRol;
+    }
+    
 }

@@ -10,7 +10,6 @@
     </filter>
     <filter-mapping>
         <filter-name>FilterLogin</filter-name>
-        <url-pattern>/index.xhtml</url-pattern>
         <url-pattern>/admin/*</url-pattern>
         <url-pattern>/cajero/*</url-pattern>
     </filter-mapping>

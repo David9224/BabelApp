@@ -10,6 +10,7 @@
         <link rel="stylesheet" type="text/css" href="resources/indexCss.css"/>
     </h:head>
     <h:body>
+        #{loginBean.redirect()}
         <p:growl id="growl" showDetail="true" life="2000" />
         <p:panel id="login" styleClass="content">
             <h:form id="form">

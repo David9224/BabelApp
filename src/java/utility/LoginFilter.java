@@ -34,24 +34,24 @@ public class LoginFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         // Get the loginBean from session attribute
         LoginBean loginBean = (LoginBean) ((HttpServletRequest) request).getSession().getAttribute("LoginBean");
-        String tipo = "";
-        if ((String) ((HttpServletRequest) request).getSession().getAttribute("tipo")!=null) {
-            tipo = (String) ((HttpServletRequest) request).getSession().getAttribute("tipo");
+        String rol = "";
+        if ((String) ((HttpServletRequest) request).getSession().getAttribute("rol")!=null) {
+            rol = (String) ((HttpServletRequest) request).getSession().getAttribute("rol");
         }
         HttpServletRequest req = (HttpServletRequest) request;
         // For the first application request there is no loginBean in the session so user needs to log in
         // For other requests loginBean is present but we need to check if user has logged in successfully
-        if (loginBean == null && (!req.getRequestURL().toString().contains("index.xhtml"))) {
+        if (loginBean != null) {
+            if (!rol.equals("")&& (!req.getRequestURL().toString().contains(rol))) {
             String contextPath = ((HttpServletRequest) request).getContextPath();
-            ((HttpServletResponse) response).sendRedirect(contextPath + "/index.xhtml");
-        }
-        else {
-            if (tipo.equals("admin")&& (!req.getRequestURL().toString().contains("admin"))) {
-            String contextPath = ((HttpServletRequest) request).getContextPath();
-            ((HttpServletResponse) response).sendRedirect(contextPath + "/admin/indexAdmin.xhtml");
+            ((HttpServletResponse) response).sendRedirect(contextPath + "/"+rol+"/index.xhtml");
             }else{
                chain.doFilter(request, response);
             }
+         }
+        else{
+         String contextPath = ((HttpServletRequest) request).getContextPath();
+            ((HttpServletResponse) response).sendRedirect(contextPath +"/index.xhtml");
         }
 
     }
