@@ -3,5 +3,10 @@
               xmlns="http://xmlns.jcp.org/xml/ns/javaee"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
-
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>crearUsuarios</from-outcome>
+            <to-view-id>/admin/usuarios/Crear.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
 </faces-config>

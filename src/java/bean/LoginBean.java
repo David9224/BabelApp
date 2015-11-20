@@ -12,10 +12,10 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
@@ -38,7 +38,8 @@ public class LoginBean implements Serializable {
     private RolesFacade rolesFacade;
     private Encriptar encripta;
 
-    public LoginBean() {
+    @PostConstruct
+    public void init() {
         accesoFacade = new AccesosUsuariosFacade();
         rolesFacade = new RolesFacade();
     }
@@ -104,14 +105,14 @@ public class LoginBean implements Serializable {
     }
 
     public void logout() {
-        logeado = false;
-        System.out.println("logout");
-        FacesContext context = FacesContext.getCurrentInstance();
-        ExternalContext externalContext = context.getExternalContext();
-        Object session = externalContext.getSession(false);
-        HttpSession httpSession = (HttpSession) session;
-        httpSession.invalidate();
-        externalContext.getSessionMap().clear();
+        logeado=false;
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        ec.invalidateSession();
+        try {
+            ec.redirect(ec.getRequestContextPath());
+        } catch (IOException ex) {
+                Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void redirect() {
@@ -119,11 +120,15 @@ public class LoginBean implements Serializable {
             try {
                 String rol = rolesFacade.getRoles(acceso.getAcRol()).getNombre();
                 ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-                context.redirect(rol+"/index.xhtml");
+                context.redirect(rol + "/index.xhtml");
             } catch (IOException ex) {
                 Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    public long getusuario() {
+        return acceso.getAcCedu();
     }
 
 }

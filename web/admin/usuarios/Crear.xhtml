@@ -7,13 +7,13 @@
       xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>Babel</title>
-        <link rel="stylesheet" type="text/css" href="../resources/indexCss.css"/>
+        <link rel="stylesheet" type="text/css" href="../../resources/indexCss.css"/>
     </h:head>
     <h:body>
         <h:form>
             <p:menubar>
                 <p:submenu label="Usuarios" icon="ui-icon-gear">
-                    <p:menuitem value="Crear" icon="ui-icon-disk" outcome="crearUsuarios"/>
+                    <p:menuitem value="Crear" icon="ui-icon-disk" />
                     <p:menuitem value="Editar/Elimnar" icon="ui-icon-disk" />
                 </p:submenu>
                 <p:submenu label="Roles" icon="ui-icon-gear">
@@ -37,15 +37,43 @@
                     <p:menuitem value="Editar/Elimnar" icon="ui-icon-disk" />
                 </p:submenu>
                 <f:facet name="options">
-                    <p:menuButton value="#{loginBean.usuario}" rendered="true">
+                    <p:menuButton value="#{loginBean.getusuario()}" rendered="true">
                         <p:menuitem value="Modificar Perfil" icon="ui-icon-disk" />
-                        <p:menuitem value="Cerrar Sesion" actionListener="#{loginBean.logout}"   icon="ui-icon-extlink"/>
+                        <p:menuitem value="Cerrar Sesion" actionListener="#{loginBean.logout()}" update="@form" icon="ui-icon-extlink"/>
                     </p:menuButton>
                 </f:facet>
             </p:menubar>
-
         </h:form>
-        
+        <h:form>
+            <p:panel header="Crear Usuario"   styleClass="content" style="text-align: center">
+                <p:growl id="growl" showDetail="true" life="2000" />
+                <h:panelGrid columns="1" style="width: 100%">
+                    <h:outputText value="Cedula: *" />
+                    <p:inputText value="#{usuariosBean.usuarios.cedula}"  style="width: 100%;" required="true" label="Cedula">
+                        <f:validateDoubleRange minimum="1" maximum="99999999999" />
+                    </p:inputText>
+
+                    <h:outputText value="Nombres: *" />
+                    <p:inputText value="#{usuariosBean.usuarios.nombres}" style="width: 100%;" required="true" label="Nombres"/>
+
+                    <h:outputText value="Apellidos: *" />
+                    <p:inputText value="#{usuariosBean.usuarios.apellidos}" style="width: 100%;" required="true" label="Apellidos"/>
+
+                    <h:outputText value="Direccion: *" />
+                    <p:inputText value="#{usuariosBean.usuarios.direccion}" style="width: 100%;" required="true" label="Direccion"/>
+
+                    <h:outputText value="Telefono: *" />
+                    <p:inputText value="#{usuariosBean.usuarios.telefono}" style="width: 100%;" required="true" label="Telefono">
+                        <f:validateDoubleRange minimum="1" maximum="99999999999" />
+                    </p:inputText>
+
+                </h:panelGrid>
+                <br/>
+                <p:commandButton value="Crear" actionListener="#{usuariosBean.crearUsuario}" update="@form"/>
+
+            </p:panel>
+        </h:form>
+
     </h:body>
 </html>
 

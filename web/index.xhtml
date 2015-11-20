@@ -17,8 +17,10 @@
                 <p:panelGrid columns="1" style="width: 100%; text-align: center">
                     <p:outputLabel value="Bienvenido"/>
                     <br/>
+                     <p:outputLabel value="Usuario:"/>
                     <p:inputText placeholder="Ingrese Usuario" style="width: 100%;" value="#{loginBean.cedula}" 
                                  required="true"/>
+                     <p:outputLabel value="Contraseña"/>
                     <p:inputText placeholder="Ingrese Contraseña" style="width: 100%;" value="#{loginBean.password}" 
                                  required="true" type="password"/>
                     <p:commandButton value="Ingresar" actionListener="#{loginBean.login()}" update=":growl"
