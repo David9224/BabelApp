@@ -10,40 +10,7 @@
         <link rel="stylesheet" type="text/css" href="../../resources/indexCss.css"/>
     </h:head>
     <h:body>
-        <h:form>
-            <p:menubar>
-                <p:submenu label="Usuarios" icon="ui-icon-gear">
-                    <p:menuitem value="Crear" icon="ui-icon-disk" />
-                    <p:menuitem value="Editar/Elimnar" icon="ui-icon-disk" />
-                </p:submenu>
-                <p:submenu label="Roles" icon="ui-icon-gear">
-                    <p:menuitem value="Crear" icon="ui-icon-disk" />
-                    <p:menuitem value="Editar/Elimnar" icon="ui-icon-disk" />
-                </p:submenu>
-                <p:submenu label="Acceso Usuarios" icon="ui-icon-gear">
-                    <p:menuitem value="Crear" icon="ui-icon-disk" />
-                    <p:menuitem value="Editar/Elimnar" icon="ui-icon-disk" />
-                </p:submenu>
-                <p:submenu label="Clientes" icon="ui-icon-gear">
-                    <p:menuitem value="Crear" icon="ui-icon-disk" />
-                    <p:menuitem value="Editar/Elimnar" icon="ui-icon-disk" />
-                </p:submenu>
-                <p:submenu label="Categorias" icon="ui-icon-gear">
-                    <p:menuitem value="Crear" icon="ui-icon-disk" />
-                    <p:menuitem value="Editar/Elimnar" icon="ui-icon-disk" />
-                </p:submenu>
-                <p:submenu label="Productos" icon="ui-icon-gear">
-                    <p:menuitem value="Crear" icon="ui-icon-disk" />
-                    <p:menuitem value="Editar/Elimnar" icon="ui-icon-disk" />
-                </p:submenu>
-                <f:facet name="options">
-                    <p:menuButton value="#{loginBean.getusuario()}" rendered="true">
-                        <p:menuitem value="Modificar Perfil" icon="ui-icon-disk" />
-                        <p:menuitem value="Cerrar Sesion" actionListener="#{loginBean.logout()}" update="@form" icon="ui-icon-extlink"/>
-                    </p:menuButton>
-                </f:facet>
-            </p:menubar>
-        </h:form>
+       <ui:include src="../../resources/appmenu.xhtml"/>
         <h:form>
             <p:panel header="Crear Usuario"   styleClass="content" style="text-align: center">
                 <p:growl id="growl" showDetail="true" life="2000" />

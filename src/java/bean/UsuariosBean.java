@@ -17,29 +17,54 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import org.primefaces.context.RequestContext;
+import javax.faces.bean.ViewScoped;
+import org.primefaces.event.RowEditEvent;
 
 /**
  * @Fecha 16/11/2015
  * @author David
  */
 @ManagedBean
-@SessionScoped
+@ViewScoped
 public class UsuariosBean implements Serializable {
 
     private Usuarios usuarios;
     private UsuariosFacade usuariosFacade;
     private List<Usuarios> listaUsuarios;
+    private List<Usuarios> listaUsuariosFiltrados;
 
     @PostConstruct
     public void init() {
-        usuarios = new Usuarios();
-        listaUsuarios= new ArrayList<>();
-        usuariosFacade = new UsuariosFacade();
+        try {
+            usuarios = new Usuarios();
+            listaUsuariosFiltrados = new ArrayList<>();
+            usuariosFacade = new UsuariosFacade();
+            listaUsuarios = usuariosFacade.getAllUsuarios();
+        } catch (Exception ex) {
+            Logger.getLogger(UsuariosBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public List<Usuarios> getListaUsuariosFiltrados() {
+        return listaUsuariosFiltrados;
+    }
+
+    public void setListaUsuariosFiltrados(List<Usuarios> listaUsuariosFiltrados) {
+        this.listaUsuariosFiltrados = listaUsuariosFiltrados;
     }
 
     public Usuarios getUsuarios() {
         return usuarios;
+    }
+
+    public List<Usuarios> getListaUsuarios() {
+        System.out.println(listaUsuarios.size());
+        return listaUsuarios;
+    }
+
+    public void setListaUsuarios(List<Usuarios> listaUsuarios) {
+        this.listaUsuarios = listaUsuarios;
     }
 
     public void setUsuarios(Usuarios usuarios) {
@@ -69,7 +94,7 @@ public class UsuariosBean implements Serializable {
     }
 
     public void editarUsuario() {
-         FacesMessage msg = null;
+        FacesMessage msg = null;
         try {
             usuariosFacade.updateUsuario(usuarios);
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Usuario Editado");
@@ -84,7 +109,7 @@ public class UsuariosBean implements Serializable {
     public void buscarUsuario() {
         FacesMessage msg = null;
         try {
-            
+
             usuarios = usuariosFacade.buscarUsuario(usuarios.getCedula());
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Usuario Encontrado");
             FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -94,29 +119,44 @@ public class UsuariosBean implements Serializable {
         }
     }
 
-    public void eliminarUsuario() {
-         FacesMessage msg = null;
+    public void eliminarUsuario(Usuarios u) {
+        FacesMessage msg = null;
         try {
-            usuariosFacade.borrarUsuario(usuarios.getCedula());
+            System.out.println("aaaaa");
+            usuariosFacade.borrarUsuario(u.getCedula());
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Usuario Eliminado");
             FacesContext.getCurrentInstance().addMessage(null, msg);
-        } catch (Exception ex) {
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ex.getMessage());
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        }
-        usuarios=new Usuarios();
-    }
-    
-     public void buscarAllUsuarios() {
-         FacesMessage msg = null;
-        try {
-            listaUsuarios = usuariosFacade.getAllUsuarios();
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Busqueda Exitosa");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            buscarAllUsuarios();
         } catch (Exception ex) {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ex.getMessage());
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
     }
 
+    public void buscarAllUsuarios() {
+        FacesMessage msg = null;
+        try {
+            listaUsuarios = usuariosFacade.getAllUsuarios();
+
+        } catch (Exception ex) {
+
+            Logger.getLogger(UsuariosBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void onRowEdit(RowEditEvent event) {
+        try {
+            usuariosFacade.updateUsuario((Usuarios) event.getObject());
+            FacesMessage msg = new FacesMessage("Usuario editado", Integer.toString(((Usuarios) event.getObject()).getCedula()));
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        } catch (Exception ex) {
+            FacesMessage msg = new FacesMessage("Error", ex.getMessage());
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
+
+    public void onRowCancel(RowEditEvent event) {
+        FacesMessage msg = new FacesMessage("Editacion Cancelada", Integer.toString(((Usuarios) event.getObject()).getCedula()));
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
 }

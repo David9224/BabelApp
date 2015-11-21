@@ -8,5 +8,9 @@
             <from-outcome>crearUsuarios</from-outcome>
             <to-view-id>/admin/usuarios/Crear.xhtml</to-view-id>
         </navigation-case>
+         <navigation-case>
+            <from-outcome>editarEliminarUsuarios</from-outcome>
+            <to-view-id>/admin/usuarios/Editar_Eliminar.xhtml</to-view-id>
+        </navigation-case>
     </navigation-rule>
 </faces-config>
