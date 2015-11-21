@@ -15,7 +15,6 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.bean.ViewScoped;
 import org.primefaces.event.RowEditEvent;
@@ -29,21 +28,16 @@ import org.primefaces.event.RowEditEvent;
 public class UsuariosBean implements Serializable {
 
     private Usuarios usuarios;
+    private Usuarios usuariosSelect;
     private UsuariosFacade usuariosFacade;
     private List<Usuarios> listaUsuarios;
     private List<Usuarios> listaUsuariosFiltrados;
 
-    @PostConstruct
-    public void init() {
-        try {
-            usuarios = new Usuarios();
-            listaUsuariosFiltrados = new ArrayList<>();
-            usuariosFacade = new UsuariosFacade();
-            listaUsuarios = usuariosFacade.getAllUsuarios();
-        } catch (Exception ex) {
-            Logger.getLogger(UsuariosBean.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+    public UsuariosBean() {
+        usuarios = new Usuarios();
+        usuariosSelect = new Usuarios();
+        listaUsuariosFiltrados = new ArrayList<>();
+        usuariosFacade = new UsuariosFacade();
     }
 
     public List<Usuarios> getListaUsuariosFiltrados() {
@@ -58,8 +52,8 @@ public class UsuariosBean implements Serializable {
         return usuarios;
     }
 
-    public List<Usuarios> getListaUsuarios() {
-        System.out.println(listaUsuarios.size());
+    public List<Usuarios> getListaUsuarios() throws Exception {
+        listaUsuarios = usuariosFacade.getAllUsuarios();
         return listaUsuarios;
     }
 
@@ -79,84 +73,48 @@ public class UsuariosBean implements Serializable {
         this.usuariosFacade = usuariosFacade;
     }
 
-    public void crearUsuario() {
+    public Usuarios getUsuariosSelect() {
+        return usuariosSelect;
+    }
+
+    public void setUsuariosSelect(Usuarios usuariosSelect) {
+        this.usuariosSelect = usuariosSelect;
+    }
+
+    public void crearUsuario() throws Exception {
         FacesMessage msg = null;
         try {
-
-            usuariosFacade.crearUsuario(usuarios);
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Usuario Creado");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            if (usuariosFacade.buscarUsuario(usuarios.getCedula()) == null) {
+                usuariosFacade.crearUsuario(usuarios);
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Usuario Creado");
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            } else {
+                usuariosFacade.updateUsuario(usuarios);
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Usuario Editado");
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            }
         } catch (Exception ex) {
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ex.getMessage());
+            System.out.println("Error: " + ex.toString());
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo completar la operacion");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
         usuarios = new Usuarios();
-    }
-
-    public void editarUsuario() {
-        FacesMessage msg = null;
-        try {
-            usuariosFacade.updateUsuario(usuarios);
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Usuario Editado");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        } catch (Exception ex) {
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ex.getMessage());
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        }
-        usuarios = new Usuarios();
-    }
-
-    public void buscarUsuario() {
-        FacesMessage msg = null;
-        try {
-
-            usuarios = usuariosFacade.buscarUsuario(usuarios.getCedula());
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Usuario Encontrado");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        } catch (Exception ex) {
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ex.getMessage());
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        }
+        listaUsuarios = getListaUsuarios();
     }
 
     public void eliminarUsuario(Usuarios u) {
         FacesMessage msg = null;
         try {
-            System.out.println("aaaaa");
             usuariosFacade.borrarUsuario(u.getCedula());
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Usuario Eliminado");
             FacesContext.getCurrentInstance().addMessage(null, msg);
-            buscarAllUsuarios();
         } catch (Exception ex) {
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ex.getMessage());
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
     }
 
-    public void buscarAllUsuarios() {
-        FacesMessage msg = null;
-        try {
-            listaUsuarios = usuariosFacade.getAllUsuarios();
-
-        } catch (Exception ex) {
-
-            Logger.getLogger(UsuariosBean.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public void onRowEdit(RowEditEvent event) {
-        try {
-            usuariosFacade.updateUsuario((Usuarios) event.getObject());
-            FacesMessage msg = new FacesMessage("Usuario editado", Integer.toString(((Usuarios) event.getObject()).getCedula()));
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        } catch (Exception ex) {
-            FacesMessage msg = new FacesMessage("Error", ex.getMessage());
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        }
-    }
-
-    public void onRowCancel(RowEditEvent event) {
-        FacesMessage msg = new FacesMessage("Editacion Cancelada", Integer.toString(((Usuarios) event.getObject()).getCedula()));
-        FacesContext.getCurrentInstance().addMessage(null, msg);
+    public void onRowSelect() {
+        usuarios = usuariosSelect;
     }
 }

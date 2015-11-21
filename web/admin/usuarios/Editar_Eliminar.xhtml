@@ -20,7 +20,7 @@
                 <p:dataTable id="table" style="width:auto" value="#{usuariosBean.listaUsuarios}" editable="true" paginator="true"
                              paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                              rowsPerPageTemplate="5,10,15" var="usuarios" emptyMessage="Usuarios no encontrados" filteredValue="#{usuariosBean.listaUsuariosFiltrados}" >
-
+                
                     <p:ajax event="rowEdit" listener="#{usuariosBean.onRowEdit}" update="@form" />
                     <p:ajax event="rowEditCancel" listener="#{usuariosBean.onRowCancel}" update="@form" />
 
