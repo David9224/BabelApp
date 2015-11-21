@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package facade;
+
 import entity.Usuarios;
 import java.io.Serializable;
 import java.sql.Connection;
@@ -27,7 +28,7 @@ public class UsuariosFacade implements Serializable {
      * @Fecha 16/11/2015
      * @Observacion busca el usuario por cedula
      */
-    public Usuarios buscarUsuario(int cedula) throws Exception{
+    public Usuarios buscarUsuario(int cedula) throws Exception {
         try {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
@@ -51,13 +52,13 @@ public class UsuariosFacade implements Serializable {
 
             return usuarios;
         } catch (Exception e) {
-            throw new Exception("Error Buscar Usuario: " +e.getMessage());
+            throw new Exception("Error Buscar Usuario: " + e.getMessage());
         }
     }
 
     public Usuarios crearUsuario(Usuarios usuarios) throws Exception {
         try {
-            
+
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
             String SQL = "INSERT INTO Usuarios values (?, ?, ?, ?, ?)";
@@ -68,7 +69,7 @@ public class UsuariosFacade implements Serializable {
             stmt.setString(4, usuarios.getDireccion());
             stmt.setInt(5, usuarios.getTelefono());
 
-            stmt.executeUpdate();
+            stmt.execute();
             stmt.close();
             conexion.close();
 
@@ -90,12 +91,13 @@ public class UsuariosFacade implements Serializable {
             stmt.setString(2, usuario.getApellidos());
             stmt.setString(3, usuario.getDireccion());
             stmt.setInt(4, usuario.getTelefono());
-             stmt.executeUpdate();
+            stmt.setInt(5, usuario.getCedula());
+            stmt.execute();
 
             stmt.close();
             conexion.close();
         } catch (Exception e) {
-         throw new Exception("Error update Usuario: " + e.toString());
+            throw new Exception("Error update Usuario: " + e.toString());
         }
     }
 
@@ -107,7 +109,7 @@ public class UsuariosFacade implements Serializable {
                     + "     where CEDULA =? ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             stmt.setLong(1, cedula);
-            stmt.executeUpdate();
+            stmt.execute();
 
             stmt.close();
             conexion.close();
@@ -139,7 +141,7 @@ public class UsuariosFacade implements Serializable {
             conexion.close();
             return listaUsuarios;
         } catch (Exception e) {
-             throw new Exception("Error getAllUsuarios: " + e.toString());
+            throw new Exception("Error getAllUsuarios: " + e.toString());
         }
     }
 
