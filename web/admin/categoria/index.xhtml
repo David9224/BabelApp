@@ -13,7 +13,7 @@
 
         <ui:include src="../../resources/appmenu.xhtml"/>
         <h:form id="form">
-            <p:panel header="Crear Categoria" style="text-align: center;width: 30%;height:available">
+            <p:panel header="Crear Categoria" styleClass="content1" style="text-align: center" id="panel1">
                 <p:growl id="growl" showDetail="true" life="2000" />
                 <h:panelGrid id="crear" columns="1" style="width: 100%">
                     <h:outputText value="Id: *" />
@@ -31,14 +31,20 @@
                 <p:commandButton value="Crear" actionListener="#{categoriaBean.crearCategoria()}" update=":form:crear :formtable"/>
 
             </p:panel>
+            
             </h:form>
+        
+            <br/>
         <h:form id="formtable">
                             <p:growl id="grow2" showDetail="true" life="2000" />
 
-            <p:dataTable  id="table" style="width:auto" value="#{categoriaBean.listaCategorias}"  paginator="true"
+            <p:dataTable  id="table" style="width:auto" value="#{categoriaBean.listaCategorias}" emptyMessage="Categorias no encontradas"  paginator="true"
                           paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                          rowsPerPageTemplate="5,10,15" var="categoria" emptyMessage="Categorias no encontradas" filteredValue="#{categoriaBean.listaCategoriaFiltrados}" >
+                          rowsPerPageTemplate="5,10,15" var="categoria" selection="#{categoriaBean.categoriaSelect}" selectionMode="single" >
 
+                 <p:ajax event="rowSelect" 
+                        listener="#{categoriaBean.onRowSelect}"
+                        update=":form1:panel1"/>
                 <p:column filterBy="#{categoria.id}" headerText="Id" filterMatchMode="contains">
                     <p:outputLabel value="#{categoria.id}"/>
                 </p:column>

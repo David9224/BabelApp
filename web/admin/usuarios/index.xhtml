@@ -37,15 +37,16 @@
                                  required="true" label="Telefono">
                         <f:validateDoubleRange minimum="1" maximum="99999999999" />
                     </p:inputText>
-                    <p:commandButton value="Crear" actionListener="#{usuariosBean.crearUsuario()}" 
-                                     update="growl, :form1:table"/>
+                    
 
                 </h:panelGrid>
+                <p:commandButton value="Crear" actionListener="#{usuariosBean.crearUsuario()}" 
+                                     update="growl, :form1:table"/>
             </p:panel>
             <br/>
             <p:dataTable id="table" style="width:auto" value="#{usuariosBean.listaUsuarios}" editable="true" paginator="true" rowKey="#{usuarios.cedula}"
                          paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                         rowsPerPageTemplate="5,10,15" var="usuarios" emptyMessage="Usuarios no encontrados" filteredValue="#{usuariosBean.listaUsuariosFiltrados}" 
+                         rowsPerPageTemplate="5,10,15" var="usuarios" emptyMessage="Usuarios no encontrados" 
                          selection="#{usuariosBean.usuariosSelect}" selectionMode="single">
 
                 <p:ajax event="rowSelect" 
@@ -72,7 +73,7 @@
                 </p:column>
 
                 <p:column headerText="Eliminar">
-                    <p:commandButton icon="ui-icon-close" actionListener="#{usuariosBean.eliminarUsuario(usuarios)}" update=":form1"/>
+                    <p:commandButton icon="ui-icon-close" actionListener="#{usuariosBean.eliminarUsuario(usuarios)}" update=":form1:growl :form1:table"/>
                 </p:column>
 
             </p:dataTable>

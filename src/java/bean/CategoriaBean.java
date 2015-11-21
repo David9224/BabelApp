@@ -14,9 +14,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.context.FacesContext;
 import javax.faces.bean.ViewScoped;
-import org.primefaces.event.RowEditEvent;
+import javax.faces.context.FacesContext;
 
 /**
  * @Fecha 16/11/2015
@@ -30,9 +29,14 @@ public class CategoriaBean implements Serializable {
     private CategoriaFacade categoriaFacade;
     private List<Categoria> listaCategorias;
     private List<Categoria> listaCategoriaFiltrados;
-
+    private Categoria categoriaSelect;
+    /**
+     *
+     */
+    
     public CategoriaBean() {
          try {
+             categoriaSelect= new Categoria();
             categoria = new Categoria();
             listaCategoriaFiltrados = new ArrayList<>();
             categoriaFacade = new CategoriaFacade();
@@ -138,6 +142,9 @@ public class CategoriaBean implements Serializable {
 
             Logger.getLogger(CategoriaBean.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+     public void onRowSelect() {
+        categoria = categoriaSelect;
     }
 
 }
