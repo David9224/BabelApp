@@ -11,6 +11,8 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import utility.ConexionSql;
 
 /**
@@ -38,8 +40,8 @@ public class RolesFacade implements Serializable{
             ResultSet rs = stmt.executeQuery();
             while(rs.next()){
                 rol = new Roles();
-                rol.setId(rs.getInt(1));
-                rol.setNombre(rs.getString(2));
+                rol.setIdRol(rs.getInt(1));
+                rol.setNombreRol(rs.getString(2));
             }
             rs.close();
             stmt.close();
@@ -48,6 +50,32 @@ public class RolesFacade implements Serializable{
             return rol;
         } catch (Exception e) {
             System.out.println("Error getRoles "+e.toString());
+            return null;
+        }
+    }
+    
+    public List<Roles> getAllRoles(){
+        try {
+            connection = new ConexionSql();
+            Connection conexion = connection.conexion();
+            String SQL = " select * from roles ";
+            PreparedStatement stmt = conexion.prepareStatement(SQL);
+            Roles rol = null;
+            List<Roles> lstRoles = new ArrayList<>();
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()){
+                rol = new Roles();
+                rol.setIdRol(rs.getInt(1));
+                rol.setNombreRol(rs.getString(2));
+                lstRoles.add(rol);
+            }
+            rs.close();
+            stmt.close();
+            conexion.close();
+            
+            return lstRoles;
+        } catch (Exception e) {
+            System.out.println("Error getAllRoles "+e.toString());
             return null;
         }
     }

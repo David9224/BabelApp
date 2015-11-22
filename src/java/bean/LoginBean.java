@@ -69,15 +69,16 @@ public class LoginBean implements Serializable {
 
     public void login() throws Exception {
         encripta = new Encriptar();
-        String passEnc = encripta.Encriptar(password);
-        System.out.println("" + passEnc);
-        System.out.println("" + encripta.Desencriptar(passEnc));
         RequestContext context = RequestContext.getCurrentInstance();
         FacesMessage msg = null;
         if (cedula != null) {
             acceso = accesoFacade.getAcceso(cedula);
             if (acceso != null) {
-                if (password.equalsIgnoreCase(acceso.getAcContra())) {
+                String passEnc = encripta.Encriptar(password);
+                System.out.println("" + passEnc);
+                System.out.println("" + encripta.Desencriptar(passEnc));
+                System.out.println("bd_____ "+ acceso.getAcContra());
+                if (password.equals(encripta.Desencriptar(acceso.getAcContra()))) {
                     logeado = true;
                     msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Bienvenid@", "" + cedula);
                 } else {
@@ -96,7 +97,7 @@ public class LoginBean implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, msg);
         context.addCallbackParam("estaLogeado", logeado);
         if (logeado) {
-            String rol = rolesFacade.getRoles(acceso.getAcRol()).getNombre();
+            String rol = rolesFacade.getRoles(acceso.getAcRol()).getNombreRol();
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("LoginBean", this);
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("rol", rol);
             context.addCallbackParam("view", rol + "/index.xhtml");
@@ -104,20 +105,20 @@ public class LoginBean implements Serializable {
     }
 
     public void logout() {
-        logeado=false;
+        logeado = false;
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         ec.invalidateSession();
         try {
             ec.redirect(ec.getRequestContextPath());
         } catch (IOException ex) {
-                Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public void redirect() {
         if (logeado) {
             try {
-                String rol = rolesFacade.getRoles(acceso.getAcRol()).getNombre();
+                String rol = rolesFacade.getRoles(acceso.getAcRol()).getNombreRol();
                 ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
                 context.redirect(rol + "/index.xhtml");
             } catch (IOException ex) {

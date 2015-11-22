@@ -13,23 +13,23 @@ import java.io.Serializable;
  */
 public class Roles implements Serializable{
     
-    private int id;
-    private String nombre;
+    private int idRol;
+    private String nombreRol;
 
-    public int getId() {
-        return id;
+    public int getIdRol() {
+        return idRol;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setIdRol(int idRol) {
+        this.idRol = idRol;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getNombreRol() {
+        return nombreRol;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNombreRol(String nombreRol) {
+        this.nombreRol = nombreRol;
     }
 
 }

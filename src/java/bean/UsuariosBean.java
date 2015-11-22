@@ -147,6 +147,7 @@ public class UsuariosBean implements Serializable {
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Usuario Eliminado");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {
+            System.out.println("No se pudo eliminar " + ex.toString());
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ex.getMessage());
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
