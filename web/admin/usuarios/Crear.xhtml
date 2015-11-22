@@ -35,6 +35,12 @@
                     <h:outputText value="Telefono: *" />
                     <p:inputText value="#{usuariosBean.usuarios.telefono}" style="width: 100%;" 
                                 label="Telefono"/>
+                    
+                    <h:outputLabel value="Rol: *"/>
+                    <p:selectOneMenu value="#{usuariosBean.idRol}" style="width: 100%">
+                        <f:selectItem itemLabel="---Seleccione Un Rol---" itemValue=""/>
+                        <f:selectItems value="#{usuariosBean.lstRoles}" var="rol" itemValue="#{rol.idRol}" itemLabel="#{rol.nombreRol}"/>
+                    </p:selectOneMenu>
                     <p:commandButton value="Crear" actionListener="#{usuariosBean.crearUsuario()}"/>
 
                 </h:panelGrid>

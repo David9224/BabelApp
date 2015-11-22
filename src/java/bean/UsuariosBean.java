@@ -5,20 +5,20 @@
  */
 package bean;
 
+import entity.Roles;
 import entity.Usuarios;
+import facade.AccesosUsuariosFacade;
+import facade.RolesFacade;
 import facade.UsuariosFacade;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.faces.bean.ViewScoped;
 import org.primefaces.context.RequestContext;
-import org.primefaces.event.RowEditEvent;
+import utility.Encriptar;
 
 /**
  * @Fecha 16/11/2015
@@ -33,12 +33,24 @@ public class UsuariosBean implements Serializable {
     private UsuariosFacade usuariosFacade;
     private List<Usuarios> listaUsuarios;
     private List<Usuarios> listaUsuariosFiltrados;
+    //Roles
+    private String idRol;
+    private String password;
+    private RolesFacade rolesFacade;
+    private List<Roles> lstRoles;
+    //Accesos Usuarios
+    private AccesosUsuariosFacade accesoFacade;
 
     public UsuariosBean() {
         usuarios = new Usuarios();
         usuariosSelect = new Usuarios();
         listaUsuariosFiltrados = new ArrayList<>();
         usuariosFacade = new UsuariosFacade();
+        //Roles
+        rolesFacade = new RolesFacade();
+        lstRoles = new ArrayList<>();
+        //Accesos Usuarios
+        accesoFacade = new AccesosUsuariosFacade();
     }
 
     public List<Usuarios> getListaUsuariosFiltrados() {
@@ -82,11 +94,32 @@ public class UsuariosBean implements Serializable {
         this.usuariosSelect = usuariosSelect;
     }
 
+    public List<Roles> getLstRoles() {
+        lstRoles = rolesFacade.getAllRoles();
+        return lstRoles;
+    }
+
+    public void setLstRoles(List<Roles> lstRoles) {
+        this.lstRoles = lstRoles;
+    }
+
+    public String getIdRol() {
+        return idRol;
+    }
+
+    public void setIdRol(String idRol) {
+        this.idRol = idRol;
+    }
+
     public void crearUsuario() throws Exception {
+        String passEncriptado;
         FacesMessage msg = null;
         try {
             if (usuariosFacade.buscarUsuario(usuarios.getCedula()) == null) {
                 usuariosFacade.crearUsuario(usuarios);
+                password = "" + usuarios.getCedula();
+                passEncriptado = new Encriptar().Encriptar(password.substring(password.length() - 4, password.length()));
+                accesoFacade.crearAccesoUsuario(Integer.parseInt(idRol), usuarios.getCedula(), passEncriptado);
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Usuario Creado");
                 FacesContext.getCurrentInstance().addMessage(null, msg);
             } else {
@@ -106,7 +139,6 @@ public class UsuariosBean implements Serializable {
     public void eliminarUsuario(Usuarios u) {
         FacesMessage msg = null;
         try {
-            System.out.println("holaaa");
             usuariosFacade.borrarUsuario(u.getCedula());
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Usuario Eliminado");
             FacesContext.getCurrentInstance().addMessage(null, msg);

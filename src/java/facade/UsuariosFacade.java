@@ -64,9 +64,9 @@ public class UsuariosFacade implements Serializable {
             String SQL = "INSERT INTO Usuarios values (?, ?, ?, ?, ?)";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             stmt.setInt(1, usuarios.getCedula());
-            stmt.setString(2, usuarios.getNombres());
-            stmt.setString(3, usuarios.getApellidos());
-            stmt.setString(4, usuarios.getDireccion());
+            stmt.setString(2, usuarios.getNombres().toUpperCase());
+            stmt.setString(3, usuarios.getApellidos().toUpperCase());
+            stmt.setString(4, usuarios.getDireccion().toUpperCase());
             stmt.setInt(5, usuarios.getTelefono());
 
             stmt.execute();
@@ -87,9 +87,9 @@ public class UsuariosFacade implements Serializable {
                     + "     nombres=?, apellidos=?, direccion=?,telefono=? "
                     + "     where cedula = ?";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
-            stmt.setString(1, usuario.getNombres());
-            stmt.setString(2, usuario.getApellidos());
-            stmt.setString(3, usuario.getDireccion());
+            stmt.setString(1, usuario.getNombres().toUpperCase());
+            stmt.setString(2, usuario.getApellidos().toUpperCase());
+            stmt.setString(3, usuario.getDireccion().toUpperCase());
             stmt.setInt(4, usuario.getTelefono());
             stmt.setInt(5, usuario.getCedula());
             stmt.execute();
