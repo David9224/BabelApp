@@ -81,8 +81,11 @@
                         #{usuarios.telefono}
                     </p:column>
 
-                    <p:column headerText="Eliminar">
+                    <p:column headerText="Eliminar" style="width: available; text-align: center">
                         <p:commandButton icon="ui-icon-close" actionListener="#{usuariosBean.eliminarUsuario(usuarios)}" update=":form1:growl :table"/>
+                    </p:column>
+                    <p:column headerText="Resetear Contraseña" style="width: available; text-align: center">
+                        <p:commandButton icon="ui-icon-check" actionListener="#{usuariosBean.resetContraseña(usuarios)}" update=":form1:growl :table"/>
                     </p:column>
 
                 </p:dataTable>

@@ -23,10 +23,11 @@
                     </p:inputText>
 
                     <h:outputText value="Categoria: *" />
-                    <p:selectOneMenu id="categoria" required="true" value="#{productosBean.producto.id_categoria}" style="width:125px">
+                    <p:selectOneMenu  filter="true" filterMatchMode="contains" required="true" value="#{productosBean.producto.id_categoria}" style="width:125px">
                         <f:selectItem itemLabel="Seleccione uno" itemValue="" />
                         <f:selectItems value="#{categoriaBean.listaCategorias}" var="categoria" itemLabel="#{categoria.nombre}" itemValue="#{categoria.id}"/>
                     </p:selectOneMenu>
+
 
                     <h:outputText value="Nombre: *" />
                     <p:inputText value="#{productosBean.producto.nombre}" style="width: 100%;" required="true" label="Nombre"/>
@@ -71,7 +72,7 @@
                 <p:column filterBy="#{producto.precio}" headerText="Precio" filterMatchMode="contains">
                     <p:outputLabel value="#{producto.precio}"/>
                 </p:column>
-                
+
                 <p:column filterBy="#{producto.cantidadDisponible}" headerText="Cantidad Disponible" filterMatchMode="contains">
                     <p:outputLabel value="#{producto.cantidadDisponible}"/>
                 </p:column>
