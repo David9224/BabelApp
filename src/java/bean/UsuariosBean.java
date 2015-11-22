@@ -17,6 +17,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.faces.bean.ViewScoped;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.RowEditEvent;
 
 /**
@@ -99,16 +100,19 @@ public class UsuariosBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
         usuarios = new Usuarios();
-        listaUsuarios = getListaUsuarios();
+        RequestContext.getCurrentInstance().update("form1");
     }
 
     public void eliminarUsuario(Usuarios u) {
         FacesMessage msg = null;
         try {
+            System.out.println("holaaa");
             usuariosFacade.borrarUsuario(u.getCedula());
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Usuario Eliminado");
             FacesContext.getCurrentInstance().addMessage(null, msg);
+            RequestContext.getCurrentInstance().update("table");
         } catch (Exception ex) {
+            System.out.println("No se pudo eliminar " + ex.toString());
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ex.getMessage());
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
