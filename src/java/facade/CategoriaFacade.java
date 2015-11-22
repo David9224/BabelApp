@@ -81,7 +81,7 @@ public class CategoriaFacade implements Serializable {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
             String SQL = " update categoria set  "
-                    + "     nombre=?, decripcion=?"
+                    + "     nombre = ?, descripcion = ?"
                     + "     where id_categoria = ?";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             stmt.setString(1, categoria.getNombre());

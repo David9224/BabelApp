@@ -30,13 +30,15 @@ public class CategoriaBean implements Serializable {
     private List<Categoria> listaCategorias;
     private List<Categoria> listaCategoriaFiltrados;
     private Categoria categoriaSelect;
+    private String crearHeader = "Crear Categoria";
+    private String crear = "Crear";
+
     /**
      *
      */
-    
     public CategoriaBean() {
-         try {
-             categoriaSelect= new Categoria();
+        try {
+            categoriaSelect = new Categoria();
             categoria = new Categoria();
             listaCategoriaFiltrados = new ArrayList<>();
             categoriaFacade = new CategoriaFacade();
@@ -54,15 +56,32 @@ public class CategoriaBean implements Serializable {
         this.categoria = categoria;
     }
 
+    public Categoria getCategoriaSelect() {
+        return categoriaSelect;
+    }
+
+    public void setCategoriaSelect(Categoria categoriaSelect) {
+        this.categoriaSelect = categoriaSelect;
+    }
+
+    public String getCrearHeader() {
+        return crearHeader;
+    }
+
+    public String getCrear() {
+        return crear;
+    }
+
+    
     public List<Categoria> getListaCategorias() {
         try {
             listaCategorias = categoriaFacade.getAllCategorias();
             System.out.println(listaCategorias.size());
             return listaCategorias;
         } catch (Exception ex) {
-             listaCategorias = new ArrayList<>();
-             System.out.println(listaCategorias.size());
-             return listaCategorias;
+            listaCategorias = new ArrayList<>();
+            System.out.println(listaCategorias.size());
+            return listaCategorias;
         }
     }
 
@@ -81,16 +100,24 @@ public class CategoriaBean implements Serializable {
     public void crearCategoria() {
         FacesMessage msg = null;
         try {
-
-            categoriaFacade.crearCategoria(categoria);
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Categoria Creada");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            if (categoriaFacade.buscarCategoria(categoria.getId()) == null) {
+                categoriaFacade.crearCategoria(categoria);
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Categoria Creada");
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            } else {
+                categoriaFacade.updateCategoria(categoria);
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Categoria Editada");
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+            }
         } catch (Exception ex) {
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ex.getMessage());
+            System.out.println("Error: " + ex.toString());
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo completar la operacion");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
         buscarAllCategorias();
         categoria = new Categoria();
+        crear="Crear";
+        crearHeader= "Crear Categoria";
     }
 
     public void editarCategoria() {
@@ -143,8 +170,11 @@ public class CategoriaBean implements Serializable {
             Logger.getLogger(CategoriaBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-     public void onRowSelect() {
+
+    public void onRowSelect() {
         categoria = categoriaSelect;
+        crear="Editar";
+        crearHeader= "Editar Categoria";
     }
 
 }

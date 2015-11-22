@@ -12,8 +12,8 @@
     <h:body>
 
         <ui:include src="../../resources/appmenu.xhtml"/>
-        <h:form id="form">
-            <p:panel header="Crear Categoria" styleClass="content1" style="text-align: center" id="panel1">
+        <h:form id="form1">
+            <p:panel header="#{categoriaBean.crearHeader}" styleClass="content1" style="text-align: center" id="panel1">
                 <p:growl id="growl" showDetail="true" life="2000" />
                 <h:panelGrid id="crear" columns="1" style="width: 100%">
                     <h:outputText value="Id: *" />
@@ -28,7 +28,7 @@
                     <p:inputText value="#{categoriaBean.categoria.descripcion}" style="width: 100%;" required="false" label="Descripcion"/>
                 </h:panelGrid>
                 <br/>
-                <p:commandButton value="Crear" actionListener="#{categoriaBean.crearCategoria()}" update=":form:crear :formtable"/>
+                <p:commandButton value="#{categoriaBean.crear}" actionListener="#{categoriaBean.crearCategoria}" update=":form1:crear :formtable"/>
 
             </p:panel>
             
@@ -38,13 +38,13 @@
         <h:form id="formtable">
                             <p:growl id="grow2" showDetail="true" life="2000" />
 
-            <p:dataTable  id="table" style="width:auto" value="#{categoriaBean.listaCategorias}" emptyMessage="Categorias no encontradas"  paginator="true"
+            <p:dataTable  id="table" style="width:auto" rowKey="#{categoria.id}" value="#{categoriaBean.listaCategorias}" emptyMessage="Categorias no encontradas"  paginator="true"
                           paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                           rowsPerPageTemplate="5,10,15" var="categoria" selection="#{categoriaBean.categoriaSelect}" selectionMode="single" >
 
                  <p:ajax event="rowSelect" 
                         listener="#{categoriaBean.onRowSelect}"
-                        update=":form1:panel1"/>
+                        update=":form1:panel1" oncomplete="permutardisplay();"/>
                 <p:column filterBy="#{categoria.id}" headerText="Id" filterMatchMode="contains">
                     <p:outputLabel value="#{categoria.id}"/>
                 </p:column>
@@ -62,7 +62,14 @@
 
             </p:dataTable>
             </h:form>
-
+<script>
+function permutardisplay() {
+  // en una variable, guardo la etiqueta
+  var micontenedor = document.getElementById('panel1');
+  // uso una condición; le pregunto ¿esa etiqueta es visible?
+  micontenedor.getAttribute('header') = 'editar';
+}
+</script>
     </h:body>
 </html>
 

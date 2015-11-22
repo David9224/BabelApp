@@ -35,49 +35,54 @@
                     <h:outputText value="Telefono: *" />
                     <p:inputText value="#{usuariosBean.usuarios.telefono}" style="width: 100%;" 
                                  required="true" label="Telefono">
-                        <f:validateDoubleRange minimum="1" maximum="99999999999" />
+                        <f:validateDoubleRange minimum="1"/>
                     </p:inputText>
-                    
+
 
                 </h:panelGrid>
                 <p:commandButton value="Crear" actionListener="#{usuariosBean.crearUsuario()}" 
-                                     update="growl, :form1:table"/>
+                                 update="growl, :table :form1:panel1"/>
             </p:panel>
-            <br/>
-            <p:dataTable id="table" style="width:auto" value="#{usuariosBean.listaUsuarios}" editable="true" paginator="true" rowKey="#{usuarios.cedula}"
-                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                         rowsPerPageTemplate="5,10,15" var="usuarios" emptyMessage="Usuarios no encontrados" 
-                         selection="#{usuariosBean.usuariosSelect}" selectionMode="single">
-
-                <p:ajax event="rowSelect" 
-                        listener="#{usuariosBean.onRowSelect}"
-                        update=":form1:panel1"/>
-
-                <p:column filterBy="#{usuarios.cedula}" headerText="Cedula" filterMatchMode="contains">
-                    #{usuarios.cedula}
-                </p:column>
-                <p:column filterBy="#{usuarios.nombres}" headerText="Nombres" filterMatchMode="contains">
-                    #{usuarios.nombres}
-                </p:column>
-
-                <p:column filterBy="#{usuarios.apellidos}" headerText="Apellidos" filterMatchMode="contains">
-                    #{usuarios.apellidos}
-                </p:column>
-
-                <p:column filterBy="#{usuarios.direccion}" headerText="Direccion" filterMatchMode="contains">
-                    #{usuarios.direccion}
-                </p:column>
-
-                <p:column filterBy="#{usuarios.telefono}" headerText="Telefono" filterMatchMode="contains">
-                    #{usuarios.telefono}
-                </p:column>
-
-                <p:column headerText="Eliminar">
-                    <p:commandButton icon="ui-icon-close" actionListener="#{usuariosBean.eliminarUsuario(usuarios)}" update=":form1:growl :form1:table"/>
-                </p:column>
-
-            </p:dataTable>
+            
         </h:form>
+            <br/>
+            <h:form  id="table">
+
+
+                <p:dataTable style="width:auto" value="#{usuariosBean.listaUsuarios}" paginator="true" rowKey="#{usuarios.cedula}"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="5,10,15" var="usuarios" emptyMessage="Usuarios no encontrados" 
+                             selection="#{usuariosBean.usuariosSelect}" selectionMode="single">
+
+                    <p:ajax event="rowSelect" 
+                            listener="#{usuariosBean.onRowSelect}"
+                            update=":form1:panel1"/>
+
+                    <p:column filterBy="#{usuarios.cedula}" headerText="Cedula" filterMatchMode="contains">
+                        #{usuarios.cedula}
+                    </p:column>
+                    <p:column filterBy="#{usuarios.nombres}" headerText="Nombres" filterMatchMode="contains">
+                        #{usuarios.nombres}
+                    </p:column>
+
+                    <p:column filterBy="#{usuarios.apellidos}" headerText="Apellidos" filterMatchMode="contains">
+                        #{usuarios.apellidos}
+                    </p:column>
+
+                    <p:column filterBy="#{usuarios.direccion}" headerText="Direccion" filterMatchMode="contains">
+                        #{usuarios.direccion}
+                    </p:column>
+
+                    <p:column filterBy="#{usuarios.telefono}" headerText="Telefono" filterMatchMode="contains">
+                        #{usuarios.telefono}
+                    </p:column>
+
+                    <p:column headerText="Eliminar">
+                        <p:commandButton icon="ui-icon-close" actionListener="#{usuariosBean.eliminarUsuario(usuarios)}" update=":form1:growl @form"/>
+                    </p:column>
+
+                </p:dataTable>
+            </h:form>
 
     </h:body>
 </html>
