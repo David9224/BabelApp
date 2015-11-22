@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Babel</title>
+        <link rel="stylesheet" type="text/css" href="../../resources/indexCss.css"/>
+    </h:head>
+    <h:body>
+
+        <ui:include src="../../resources/appmenu.xhtml"/>
+        <h:form>
+            <h1>Seleccione el archivo a importar</h1>
+            <p:fileUpload id="file" required="true" auto="true" fileUploadListener="#{productosBean.handleFileUpload}" mode="advanced" dragDropSupport="true"
+                          update="@form" sizeLimit="5000000" multiple="false" allowTypes="/(\.|\/)(csv)$/" />
+            <br/>
+            <br/>
+            <p:dataTable  id="table" style="width:auto" value="#{productosBean.listaProductos}" emptyMessage="Productos no encontrados"  paginator="true"
+                          paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                          rowsPerPageTemplate="5,10,15" var="producto" >
+
+
+                <p:column filterBy="#{producto.id_producto}" headerText="Id" filterMatchMode="contains">
+                    <p:outputLabel value="#{producto.id_producto}"/>
+                </p:column>
+                <p:column filterBy="#{producto.id_categoria}" headerText="Categoria" filterMatchMode="contains">
+                    <p:outputLabel value="#{producto.id_categoria}"/>
+                </p:column>
+
+                <p:column filterBy="#{producto.nombre}" headerText="Nombre" filterMatchMode="contains">
+                    <p:outputLabel value="#{producto.nombre}"/>
+                </p:column>
+
+                <p:column filterBy="#{producto.precio}" headerText="Precio" filterMatchMode="contains">
+                    <p:outputLabel value="#{producto.precio}"/>
+                </p:column>
+
+                <p:column filterBy="#{producto.cantidadDisponible}" headerText="Cantidad Disponible" filterMatchMode="contains">
+                    <p:outputLabel value="#{producto.cantidadDisponible}"/>
+                </p:column>
+
+            </p:dataTable>
+        </h:form></h:body>
+</html>

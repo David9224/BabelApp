@@ -10,25 +10,27 @@
             <p:menubar>
                 <p:submenu label="Usuarios" icon="ui-icon-gear">
                     <p:menuitem value="Gestionar" icon="ui-icon-disk" outcome="gestionarUsuarios" />
+                    <p:menuitem value="Importar" icon="ui-icon-disk" outcome="importarUsuarios"/>
                 </p:submenu>
                 <p:submenu label="Roles" icon="ui-icon-gear">
-                    <p:menuitem value="Crear" icon="ui-icon-disk" />
-                    <p:menuitem value="Editar/Elimnar" icon="ui-icon-disk" />
+                    <p:menuitem value="Gestionar" icon="ui-icon-disk" />
+                    <p:menuitem value="Importar" icon="ui-icon-disk" />
                 </p:submenu>
                 <p:submenu label="Acceso Usuarios" icon="ui-icon-gear">
-                    <p:menuitem value="Crear" icon="ui-icon-disk" />
-                    <p:menuitem value="Editar/Elimnar" icon="ui-icon-disk" />
+                    <p:menuitem value="Gestionar" icon="ui-icon-disk" />
+                    <p:menuitem value="Importar" icon="ui-icon-disk" />
                 </p:submenu>
                 <p:submenu label="Clientes" icon="ui-icon-gear">
-                    <p:menuitem value="Crear" icon="ui-icon-disk" />
-                    <p:menuitem value="Editar/Elimnar" icon="ui-icon-disk" />
+                    <p:menuitem value="Gestionar" icon="ui-icon-disk" />
+                    <p:menuitem value="Importar" icon="ui-icon-disk" />
                 </p:submenu>
                 <p:submenu label="Categorias" icon="ui-icon-gear">
                     <p:menuitem value="Gestionar" icon="ui-icon-disk" outcome="gestionarCategorias"/>
+                    <p:menuitem value="Importar" icon="ui-icon-disk" outcome="importarCategorias"/>
                 </p:submenu>
                 <p:submenu label="Productos" icon="ui-icon-gear">
-                    <p:menuitem value="Crear" icon="ui-icon-disk" />
-                    <p:menuitem value="Editar/Elimnar" icon="ui-icon-disk" />
+                    <p:menuitem value="Gestionar" icon="ui-icon-disk" outcome="gestionarProductos"/>
+                    <p:menuitem value="Importar" icon="ui-icon-disk" outcome="importarProductos"/>
                 </p:submenu>
                 <f:facet name="options">
                     <p:menuButton value="#{loginBean.getusuario()}" rendered="true">

@@ -49,6 +49,8 @@ CREATE TABLE `categoria` (
 
 /*Data for the table `categoria` */
 
+insert  into `categoria`(`id_categoria`,`nombre`,`descripcion`) values (1,'lacteos','productos derivados de la leche'),(2,'2','2'),(3,'3','3'),(4,'a','5');
+
 /*Table structure for table `cliente` */
 
 DROP TABLE IF EXISTS `cliente`;
@@ -110,12 +112,14 @@ CREATE TABLE `producto` (
   `nombre` varchar(100) NOT NULL,
   `precio` float NOT NULL,
   `cantidad_disponible` int(11) NOT NULL,
-  PRIMARY KEY (`id_producto`,`id_categoria`),
+  PRIMARY KEY (`id_producto`),
   KEY `id_categoria` (`id_categoria`),
   CONSTRAINT `producto_ibfk_1` FOREIGN KEY (`id_categoria`) REFERENCES `categoria` (`id_categoria`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `producto` */
+
+insert  into `producto`(`id_producto`,`id_categoria`,`nombre`,`precio`,`cantidad_disponible`) values (1,2,'v',1,1);
 
 /*Table structure for table `roles` */
 
@@ -146,7 +150,7 @@ CREATE TABLE `usuarios` (
 
 /*Data for the table `usuarios` */
 
-insert  into `usuarios`(`Cedula`,`Nombres`,`Apellidos`,`Direccion`,`Telefono`) values (1112226107,'DAVID','ARISTIZABAL PEÑARANDA','CALLE 27#16-83',2865646);
+insert  into `usuarios`(`Cedula`,`Nombres`,`Apellidos`,`Direccion`,`Telefono`) values (3,'3','a','3',3),(111111,'anderson','hincapie','cll 41 # 26 - 41',222222222),(1112226107,'DAVID','ARISTIZABAL PEÑARANDA','CALLE 27#16-83',2865646);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

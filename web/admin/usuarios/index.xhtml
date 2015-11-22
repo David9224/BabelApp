@@ -14,10 +14,10 @@
         <h:form id="form1">
 
             <p:growl id="growl" showDetail="true" life="2000" />
-            <p:panel header="Crear Usuario"   styleClass="content1" style="text-align: center" id="panel1">
+            <p:panel header="#{usuariosBean.crearHeader}"   styleClass="content1" style="text-align: center" id="panel1">
                 <h:panelGrid columns="2" style="width: 100%">
                     <h:outputText value="Cedula: *" />
-                    <p:inputText value="#{usuariosBean.usuarios.cedula}"  style="width: 100%;" 
+                    <p:inputText value="#{usuariosBean.usuarios.cedula}" disabled="#{usuariosBean.usuarios.cedula!=0}"  style="width: 100%;" 
                                  required="true" label="Cedula"/>
 
                     <h:outputText value="Nombres: *" />
@@ -40,8 +40,10 @@
 
 
                 </h:panelGrid>
-                <p:commandButton value="Crear" actionListener="#{usuariosBean.crearUsuario()}" 
+                <p:commandButton value="#{usuariosBean.crear}" actionListener="#{usuariosBean.crearUsuario()}" 
                                  update="growl, :table :form1:panel1"/>
+                <p:commandButton value="#{usuariosBean.cancelar}" disabled="#{usuariosBean.usuarios.cedula==0}" actionListener="#{usuariosBean.cancelar}" update="@form"/>
+
             </p:panel>
             
         </h:form>
@@ -78,7 +80,7 @@
                     </p:column>
 
                     <p:column headerText="Eliminar">
-                        <p:commandButton icon="ui-icon-close" actionListener="#{usuariosBean.eliminarUsuario(usuarios)}" update=":form1:growl @form"/>
+                        <p:commandButton icon="ui-icon-close" actionListener="#{usuariosBean.eliminarUsuario(usuarios)}" update=":form1:growl :table"/>
                     </p:column>
 
                 </p:dataTable>

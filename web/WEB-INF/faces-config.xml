@@ -5,8 +5,24 @@
               xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
     <navigation-rule>
         <navigation-case>
+            <from-outcome>importarUsuarios</from-outcome>
+            <to-view-id>/admin/usuarios/importarCvs.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>importarCategorias</from-outcome>
+            <to-view-id>/admin/categoria/importarCvs.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>importarProductos</from-outcome>
+            <to-view-id>/admin/productos/importarCvs.xhtml</to-view-id>
+        </navigation-case>
+         <navigation-case>
             <from-outcome>gestionarUsuarios</from-outcome>
             <to-view-id>/admin/usuarios/index.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>gestionarProductos</from-outcome>
+            <to-view-id>/admin/productos/index.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
             <from-outcome>gestionarCategorias</from-outcome>

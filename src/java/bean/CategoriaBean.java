@@ -5,8 +5,11 @@
  */
 package bean;
 
+import com.csvreader.CsvReader;
 import entity.Categoria;
+import entity.Producto;
 import facade.CategoriaFacade;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +19,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 /**
  * @Fecha 16/11/2015
@@ -32,6 +37,8 @@ public class CategoriaBean implements Serializable {
     private Categoria categoriaSelect;
     private String crearHeader = "Crear Categoria";
     private String crear = "Crear";
+    private String cancelar = "Limpiar";
+    private UploadedFile uploadedFile;
 
     /**
      *
@@ -50,6 +57,22 @@ public class CategoriaBean implements Serializable {
 
     public Categoria getCategoria() {
         return categoria;
+    }
+
+    public UploadedFile getUploadedFile() {
+        return uploadedFile;
+    }
+
+    public void setUploadedFile(UploadedFile uploadedFile) {
+        this.uploadedFile = uploadedFile;
+    }
+
+    public String getCancelar() {
+        return cancelar;
+    }
+
+    public void setCancelar(String cancelar) {
+        this.cancelar = cancelar;
     }
 
     public void setCategoria(Categoria categoria) {
@@ -72,15 +95,12 @@ public class CategoriaBean implements Serializable {
         return crear;
     }
 
-    
     public List<Categoria> getListaCategorias() {
         try {
             listaCategorias = categoriaFacade.getAllCategorias();
-            System.out.println(listaCategorias.size());
             return listaCategorias;
         } catch (Exception ex) {
             listaCategorias = new ArrayList<>();
-            System.out.println(listaCategorias.size());
             return listaCategorias;
         }
     }
@@ -116,8 +136,8 @@ public class CategoriaBean implements Serializable {
         }
         buscarAllCategorias();
         categoria = new Categoria();
-        crear="Crear";
-        crearHeader= "Crear Categoria";
+        crear = "Crear";
+        crearHeader = "Crear Categoria";
     }
 
     public void editarCategoria() {
@@ -149,7 +169,6 @@ public class CategoriaBean implements Serializable {
     public void eliminarCategoria(Categoria u) {
         FacesMessage msg = null;
         try {
-            System.out.println(u);
             categoriaFacade.borrarCategoria(u.getId());
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Categoria Eliminada");
             FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -173,8 +192,50 @@ public class CategoriaBean implements Serializable {
 
     public void onRowSelect() {
         categoria = categoriaSelect;
-        crear="Editar";
-        crearHeader= "Editar Categoria";
+        crear = "Editar";
+        crearHeader = "Editar Categoria";
+        if (crear.equals("Crear")) {
+            cancelar = "Limpiar";
+        } else {
+            cancelar = "Cancelar";
+        }
+    }
+
+    public void cancelar() {
+        categoria = new Categoria();
+        crear = "Crear";
+        crearHeader = "Crear Categoria";
+        if (crear.equals("Crear")) {
+            cancelar = "Limpiar";
+        } else {
+            cancelar = "Cancelar";
+        }
+    }
+
+    public void handleFileUpload(FileUploadEvent event) {
+        FacesMessage msg = null;
+        try {
+            CsvReader cvs;
+            uploadedFile = event.getFile();
+            cvs = new CsvReader(new InputStreamReader(uploadedFile.getInputstream()));
+            cvs.readHeaders();
+            while (cvs.readRecord()) {
+                categoria = new Categoria();
+                categoria.setId(Integer.parseInt(cvs.get(0)));
+                categoria.setNombre(cvs.get(1));
+                categoria.setDescripcion(cvs.get(2));
+                if (categoriaFacade.buscarCategoria(categoria.getId()) == null) {
+                    categoriaFacade.crearCategoria(categoria);
+                } else {
+                    categoriaFacade.updateCategoria(categoria);
+                }
+            }
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Se han importado todos los datos");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        } catch (Exception ex) {
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ex.getMessage());
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
     }
 
 }
