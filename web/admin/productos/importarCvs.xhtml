@@ -13,9 +13,12 @@
 
         <ui:include src="../../resources/appmenu.xhtml"/>
         <h:form>
-            <h1>Seleccione el archivo a importar</h1>
-            <p:fileUpload id="file" required="true" auto="true" fileUploadListener="#{productosBean.handleFileUpload}" mode="advanced" dragDropSupport="true"
-                          update="@form" sizeLimit="5000000" multiple="false" allowTypes="/(\.|\/)(csv)$/" />
+            <p:panel  header="Importar Productos" class="content1" style="text-align: center">
+                <h1>Seleccione el archivo a importar</h1>
+                <p:fileUpload  style="text-align: center" id="file" required="true" auto="true" fileUploadListener="#{productosBean.handleFileUpload}" mode="advanced" dragDropSupport="true"
+                              update="@form" sizeLimit="5000000" multiple="false" allowTypes="/(\.|\/)(csv)$/" />
+
+            </p:panel>
             <br/>
             <br/>
             <p:dataTable  id="table" style="width:auto" value="#{productosBean.listaProductos}" emptyMessage="Productos no encontrados"  paginator="true"

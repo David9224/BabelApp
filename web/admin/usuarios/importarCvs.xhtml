@@ -11,39 +11,41 @@
 
         <ui:include src="../../resources/appmenu.xhtml"/>
         <h:form>
-                    <p:growl id="growl" autoUpdate="true" showDetail="true"/>
+            <p:growl id="growl" autoUpdate="true" showDetail="true"/>
+            <p:panel  header="Importar Usuarios" class="content1" style="text-align: center">
+                <h1>Seleccione el archivo a importar</h1>
+                <p:fileUpload required="true" id="file" auto="true" fileUploadListener="#{usuariosBean.handleFileUpload}" mode="advanced" dragDropSupport="true"
+                              update="@form" sizeLimit="5000000" multiple="false" allowTypes="/(\.|\/)(csv)$/" />
 
-                    <h1>Seleccione el archivo a importar</h1>
-                    <p:fileUpload required="true" id="file" auto="true" fileUploadListener="#{usuariosBean.handleFileUpload}" mode="advanced" dragDropSupport="true"
-                                  update="@form" sizeLimit="5000000" multiple="false" allowTypes="/(\.|\/)(csv)$/" />
-                    <br/>
-                    <br/>
-                    <p:dataTable style="width:auto" value="#{usuariosBean.listaUsuarios}" paginator="true"
-                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                 rowsPerPageTemplate="5,10,15" var="usuarios" emptyMessage="Usuarios no encontrados" 
-                                 >
+            </p:panel>
+            <br/>
+            <br/>
+            <p:dataTable style="width:auto" value="#{usuariosBean.listaUsuarios}" paginator="true"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15" var="usuarios" emptyMessage="Usuarios no encontrados" 
+                         >
 
 
-                        <p:column filterBy="#{usuarios.cedula}" headerText="Cedula" filterMatchMode="contains">
-                            #{usuarios.cedula}
-                        </p:column>
-                        <p:column filterBy="#{usuarios.nombres}" headerText="Nombres" filterMatchMode="contains">
-                            #{usuarios.nombres}
-                        </p:column>
+                <p:column filterBy="#{usuarios.cedula}" headerText="Cedula" filterMatchMode="contains">
+                    #{usuarios.cedula}
+                </p:column>
+                <p:column filterBy="#{usuarios.nombres}" headerText="Nombres" filterMatchMode="contains">
+                    #{usuarios.nombres}
+                </p:column>
 
-                        <p:column filterBy="#{usuarios.apellidos}" headerText="Apellidos" filterMatchMode="contains">
-                            #{usuarios.apellidos}
-                        </p:column>
+                <p:column filterBy="#{usuarios.apellidos}" headerText="Apellidos" filterMatchMode="contains">
+                    #{usuarios.apellidos}
+                </p:column>
 
-                        <p:column filterBy="#{usuarios.direccion}" headerText="Direccion" filterMatchMode="contains">
-                            #{usuarios.direccion}
-                        </p:column>
+                <p:column filterBy="#{usuarios.direccion}" headerText="Direccion" filterMatchMode="contains">
+                    #{usuarios.direccion}
+                </p:column>
 
-                        <p:column filterBy="#{usuarios.telefono}" headerText="Telefono" filterMatchMode="contains">
-                            #{usuarios.telefono}
-                        </p:column>
+                <p:column filterBy="#{usuarios.telefono}" headerText="Telefono" filterMatchMode="contains">
+                    #{usuarios.telefono}
+                </p:column>
 
-                    </p:dataTable>
+            </p:dataTable>
 
-                </h:form></h:body>
+        </h:form></h:body>
 </html>
