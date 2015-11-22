@@ -7,6 +7,8 @@ package bean;
 
 import com.csvreader.CsvReader;
 import entity.Usuarios;
+import facade.AccesosUsuariosFacade;
+import facade.RolesFacade;
 import facade.UsuariosFacade;
 import java.io.InputStreamReader;
 import java.io.Serializable;
@@ -42,38 +44,6 @@ public class UsuariosBean implements Serializable {
         usuariosSelect = new Usuarios();
         listaUsuariosFiltrados = new ArrayList<>();
         usuariosFacade = new UsuariosFacade();
-    }
-
-    public String getCancelar() {
-        return cancelar;
-    }
-
-    public UploadedFile getUploadedFile() {
-        return uploadedFile;
-    }
-
-    public void setUploadedFile(UploadedFile uploadedFile) {
-        this.uploadedFile = uploadedFile;
-    }
-
-    public void setCancelar(String cancelar) {
-        this.cancelar = cancelar;
-    }
-
-    public String getCrearHeader() {
-        return crearHeader;
-    }
-
-    public void setCrearHeader(String crearHeader) {
-        this.crearHeader = crearHeader;
-    }
-
-    public String getCrear() {
-        return crear;
-    }
-
-    public void setCrear(String crear) {
-        this.crear = crear;
     }
 
     public List<Usuarios> getListaUsuariosFiltrados() {
@@ -118,6 +88,7 @@ public class UsuariosBean implements Serializable {
     }
 
     public void crearUsuario() throws Exception {
+        String passEncriptado;
         FacesMessage msg = null;
         try {
             if (usuariosFacade.buscarUsuario(usuarios.getCedula()) == null) {
