@@ -46,6 +46,40 @@ public class UsuariosBean implements Serializable {
         usuariosFacade = new UsuariosFacade();
     }
 
+    public String getCancelar() {
+        return cancelar;
+    }
+
+    public void setCancelar(String cancelar) {
+        this.cancelar = cancelar;
+    }
+
+    public String getCrearHeader() {
+        return crearHeader;
+    }
+
+    public void setCrearHeader(String crearHeader) {
+        this.crearHeader = crearHeader;
+    }
+
+    public String getCrear() {
+        return crear;
+    }
+
+    public void setCrear(String crear) {
+        this.crear = crear;
+    }
+
+    public UploadedFile getUploadedFile() {
+        return uploadedFile;
+    }
+
+    public void setUploadedFile(UploadedFile uploadedFile) {
+        this.uploadedFile = uploadedFile;
+    }
+    
+    
+
     public List<Usuarios> getListaUsuariosFiltrados() {
         return listaUsuariosFiltrados;
     }
