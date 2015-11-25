@@ -12,27 +12,28 @@
     <h:body>
 
         <ui:include src="../../resources/appmenu.xhtml"/>
-                <br/>
+
+        <ui:include src="../../resources/confirmdialog.xhtml"/>
+        <br/>
 
         <h:form id="form1">
             <p:panel header="#{categoriaBean.crearHeader}" styleClass="content1" style="text-align: center" id="panel1">
                 <p:growl id="growl" showDetail="true" life="2000" />
-                    <h:panelGrid  columns="1" style="width: 100%">
-                        <h:outputText value="Id: *" />
-                        <p:inputText value="#{categoriaBean.categoria.id}" disabled="#{categoriaBean.categoria.id!=0}"  style="width: 100%;" required="true" label="Id">
-                            <f:validateDoubleRange minimum="1"/>
-                        </p:inputText>
+                <h:panelGrid  columns="1" style="width: 100%">
+                    <h:outputText value="Nombre: *" />
+                    <p:inputText value="#{categoriaBean.categoria.nombre}" style="width: 100%;" required="true" label="Nombre">
+                        <p:ajax update=":form1:cancelar" event="keyup" />
+                    </p:inputText>
 
-                        <h:outputText value="Nombre: *" />
-                        <p:inputText value="#{categoriaBean.categoria.nombre}" style="width: 100%;" required="true" label="Nombre"/>
+                    <h:outputText value="Descripcion:" />
+                    <p:inputText value="#{categoriaBean.categoria.descripcion}" style="width: 100%;" required="false" label="Descripcion"/>
+                </h:panelGrid>
+                <br/>
+                <p:commandButton value="#{categoriaBean.crear}"  action="#{categoriaBean.crearCategoria()}" update="@form :formtable">
+                    <p:confirm   header="Informacion" message="Desea continuar la operación" icon="ui-icon-alert"/>
+                </p:commandButton>
 
-                        <h:outputText value="Descripcion:" />
-                        <p:inputText value="#{categoriaBean.categoria.descripcion}" style="width: 100%;" required="false" label="Descripcion"/>
-                    </h:panelGrid>
-                    <br/>
-                    <p:commandButton value="#{categoriaBean.crear}" actionListener="#{categoriaBean.crearCategoria}" update="@form :formtable"/>
-
-                    <p:commandButton value="#{categoriaBean.cancelar}" disabled="#{categoriaBean.categoria.id==0}" actionListener="#{categoriaBean.cancelar}" update="@form"/>
+                <p:commandButton id="cancelar" value="#{categoriaBean.cancelar}"  disabled="#{categoriaBean.categoria.nombre == null}" actionListener="#{categoriaBean.cancelar}" update="@form"/>
 
             </p:panel>
 
@@ -42,15 +43,13 @@
         <h:form id="formtable">
             <p:growl id="grow2" showDetail="true" life="2000" />
 
-            <p:dataTable  id="table" style="width:auto" rowKey="#{categoria.id}" value="#{categoriaBean.listaCategorias}" emptyMessage="Categorias no encontradas"  paginator="true"
+            <p:dataTable  id="table" style="width:auto;text-align: center" rowKey="#{categoria.id_categoria}" value="#{categoriaBean.listaCategorias}" emptyMessage="Categorias no encontradas"  paginator="true"
                           paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                           rowsPerPageTemplate="5,10,15" var="categoria" selection="#{categoriaBean.categoriaSelect}" selectionMode="single" >
-
-                <p:ajax event="rowSelect" 
-                        listener="#{categoriaBean.onRowSelect}"
-                        update=":form1:panel1" />
-                <p:column filterBy="#{categoria.id}" headerText="Id" filterMatchMode="contains">
-                    <p:outputLabel value="#{categoria.id}"/>
+                <p:ajax event="rowSelect"  listener="#{categoriaBean.onRowSelect}"
+                        update=":form1:panel1 " />
+                <p:column filterBy="#{categoria.id_categoria}" headerText="Id" filterMatchMode="contains">
+                    <p:outputLabel value="#{categoria.id_categoria}"/>
                 </p:column>
                 <p:column filterBy="#{categoria.nombre}" headerText="Nombre" filterMatchMode="contains">
                     <p:outputLabel value="#{categoria.nombre}"/>
@@ -61,12 +60,16 @@
                 </p:column>
 
                 <p:column headerText="Eliminar">
-                    <p:commandButton icon="ui-icon-close" action="#{categoriaBean.eliminarCategoria(categoria)}" update=":formtable" />
+                    <p:commandButton icon="ui-icon-close" actionListener="#{categoriaBean.eliminarCategoria(categoria)}" update=":formtable" >
+                        <p:confirm header="Eliminar" message="Desea eliminar la categoria" icon="ui-icon-alert" />
+                    </p:commandButton>
                 </p:column>
 
             </p:dataTable>
+
+
         </h:form>
-        
+
     </h:body>
 </html>
 

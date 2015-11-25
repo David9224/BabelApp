@@ -21,10 +21,12 @@ import utility.ConexionSql;
 public class ProductoFacade implements Serializable {
 
     private ConexionSql connection;
+    private final CategoriaFacade categoriaFacade = new CategoriaFacade();
 
     /**
-     * @param cedula
+     * @param id
      * @return
+     * @throws java.lang.Exception
      * @Fecha 16/11/2015
      * @Observacion busca el usuario por cedula
      */
@@ -37,14 +39,14 @@ public class ProductoFacade implements Serializable {
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             stmt.setInt(1, id);
             Producto producto = null;
+
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 producto = new Producto();
                 producto.setId_producto(rs.getInt(1));
-                producto.setId_categoria(rs.getInt(2));
+                producto.setId_categoria(categoriaFacade.buscarCategoria(rs.getInt(2)));
                 producto.setNombre(rs.getString(3));
                 producto.setPrecio(rs.getFloat(4));
-                producto.setCantidadDisponible(rs.getInt(5));
             }
             rs.close();
             stmt.close();
@@ -61,13 +63,11 @@ public class ProductoFacade implements Serializable {
 
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
-            String SQL = "INSERT INTO producto values (?, ?, ?, ?, ?)";
+            String SQL = "INSERT INTO producto (id_categoria,nombre,precio) values (?, ?, ?)";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
-            stmt.setInt(1, producto.getId_producto());
-            stmt.setInt(2, producto.getId_categoria());
-            stmt.setString(3, producto.getNombre());
-            stmt.setFloat(4, producto.getPrecio());
-            stmt.setInt(5, producto.getCantidadDisponible());
+            stmt.setInt(1, producto.getId_categoria().getId_categoria());
+            stmt.setString(2, producto.getNombre());
+            stmt.setFloat(3, producto.getPrecio());
 
             stmt.execute();
             stmt.close();
@@ -84,14 +84,13 @@ public class ProductoFacade implements Serializable {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
             String SQL = " update Producto set  "
-                    + "     id_categoria = ?, nombre = ?, precio = ?,cantidad_disponible = ? "
+                    + "     id_categoria = ?, nombre = ?, precio = ?"
                     + "     where id_producto = ?";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
-            stmt.setInt(1, producto.getId_categoria());
+            stmt.setInt(1, producto.getId_categoria().getId_categoria());
             stmt.setString(2, producto.getNombre());
             stmt.setFloat(3, producto.getPrecio());
-            stmt.setInt(4, producto.getCantidadDisponible());
-            stmt.setInt(5, producto.getId_producto());
+            stmt.setInt(4, producto.getId_producto());
             stmt.execute();
 
             stmt.close();
@@ -130,10 +129,9 @@ public class ProductoFacade implements Serializable {
             while (rs.next()) {
                 producto = new Producto();
                 producto.setId_producto(rs.getInt(1));
-                producto.setId_categoria(rs.getInt(2));
+                producto.setId_categoria(categoriaFacade.buscarCategoria(rs.getInt(2)));
                 producto.setNombre(rs.getString(3));
                 producto.setPrecio(rs.getFloat(4));
-                producto.setCantidadDisponible(rs.getInt(5));
                 listaProductos.add(producto);
             }
             rs.close();

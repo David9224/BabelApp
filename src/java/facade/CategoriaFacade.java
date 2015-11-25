@@ -6,7 +6,6 @@
 package facade;
 
 import entity.Categoria;
-import entity.Usuarios;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,8 +23,9 @@ public class CategoriaFacade implements Serializable {
     private ConexionSql connection;
 
     /**
-     * @param cedula
+     * @param id
      * @return
+     * @throws java.lang.Exception
      * @Fecha 16/11/2015
      * @Observacion busca el usuario por cedula
      */
@@ -41,7 +41,7 @@ public class CategoriaFacade implements Serializable {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 categoria = new Categoria();
-                categoria.setId(rs.getInt(1));
+                categoria.setId_categoria(rs.getInt(1));
                 categoria.setNombre(rs.getString(2));
                 categoria.setDescripcion(rs.getString(3));
 
@@ -61,11 +61,10 @@ public class CategoriaFacade implements Serializable {
 
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
-            String SQL = "INSERT INTO categoria values (?, ?, ?)";
+            String SQL = "INSERT INTO categoria (nombre,descripcion) values (?, ?)";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
-            stmt.setInt(1, categoria.getId());
-            stmt.setString(2, categoria.getNombre());
-            stmt.setString(3, categoria.getDescripcion());
+            stmt.setString(1, categoria.getNombre());
+            stmt.setString(2, categoria.getDescripcion());
             stmt.executeUpdate();
             stmt.close();
             conexion.close();
@@ -86,7 +85,7 @@ public class CategoriaFacade implements Serializable {
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             stmt.setString(1, categoria.getNombre());
             stmt.setString(2, categoria.getDescripcion());
-            stmt.setInt(3, categoria.getId());
+            stmt.setInt(3, categoria.getId_categoria());
 
             stmt.executeUpdate();
 
@@ -125,7 +124,7 @@ public class CategoriaFacade implements Serializable {
             List<Categoria> listaCategorias = new ArrayList<>();
             while (rs.next()) {
                 categoria = new Categoria();
-                categoria.setId(rs.getInt(1));
+                categoria.setId_categoria(rs.getInt(1));
                 categoria.setNombre(rs.getString(2));
                 categoria.setDescripcion(rs.getString(3));
                 listaCategorias.add(categoria);

@@ -7,7 +7,7 @@ package bean;
 
 import com.csvreader.CsvReader;
 import entity.Producto;
-import entity.Usuarios;
+import facade.CategoriaFacade;
 import facade.ProductoFacade;
 import java.io.InputStreamReader;
 import java.io.Serializable;
@@ -32,19 +32,21 @@ public class ProductosBean implements Serializable {
 
     private Producto producto;
     private Producto productoSelect;
-    private ProductoFacade productoFacade;
+    private final ProductoFacade productoFacade;
     private List<Producto> listaProductos;
     private List<Producto> listaProductosFiltrados;
     private String crearHeader = "Crear Producto";
     private String crear = "Crear";
     private String cancelar = "Limpiar";
     private UploadedFile uploadedFile;
+    private final CategoriaFacade categoriaFacade;
 
     public ProductosBean() {
         producto = new Producto();
         productoSelect = new Producto();
         listaProductosFiltrados = new ArrayList<>();
         productoFacade = new ProductoFacade();
+        categoriaFacade = new CategoriaFacade();
     }
 
     public UploadedFile getUploadedFile() {
@@ -139,6 +141,7 @@ public class ProductosBean implements Serializable {
         listaProductos = getListaProductos();
         crear = "Crear";
         crearHeader = "Crear Producto";
+        cancelar="Limpiar";
     }
 
     public void eliminarProducto(Producto p) {
@@ -164,6 +167,10 @@ public class ProductosBean implements Serializable {
         }
     }
 
+    public void onChange() {
+        System.out.println(producto.getId_categoria().toString());
+    }
+
     public void cancelar() {
         producto = new Producto();
         crear = "Crear";
@@ -184,11 +191,9 @@ public class ProductosBean implements Serializable {
             cvs.readHeaders();
             while (cvs.readRecord()) {
                 producto = new Producto();
-                producto.setId_producto(Integer.parseInt(cvs.get(0)));
-                producto.setId_categoria(Integer.parseInt(cvs.get(1)));
+                producto.setId_categoria(categoriaFacade.buscarCategoria(Integer.parseInt(cvs.get(1))));
                 producto.setNombre(cvs.get(2));
                 producto.setPrecio(Float.parseFloat(cvs.get(3)));
-                producto.setCantidadDisponible(Integer.parseInt(cvs.get(4)));
                 if (productoFacade.buscarProducto(producto.getId_producto()) == null) {
                     productoFacade.crearProducto(producto);
                 } else {

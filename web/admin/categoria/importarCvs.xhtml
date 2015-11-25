@@ -30,8 +30,8 @@
                           paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                           rowsPerPageTemplate="5,10,15" var="categoria" selection="#{categoriaBean.categoriaSelect}">
 
-                <p:column filterBy="#{categoria.id}" headerText="Id" filterMatchMode="contains">
-                    <p:outputLabel value="#{categoria.id}"/>
+                <p:column filterBy="#{categoria.id_categoria}" headerText="Id" filterMatchMode="contains">
+                    <p:outputLabel value="#{id_categoriategoria.id}"/>
                 </p:column>
                 <p:column filterBy="#{categoria.nombre}" headerText="Nombre" filterMatchMode="contains">
                     <p:outputLabel value="#{categoria.nombre}"/>

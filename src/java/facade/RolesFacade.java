@@ -5,7 +5,6 @@
  */
 package facade;
 
-import entity.AccesosUsuarios;
 import entity.Roles;
 import java.io.Serializable;
 import java.sql.Connection;
@@ -23,7 +22,7 @@ public class RolesFacade implements Serializable{
     
     private ConexionSql connection;
     /**
-     * @param cedula
+     * @param id
      * @return 
      * @Fecha 16/11/2015
      * @Observacion busca el usuario por cedula
@@ -42,6 +41,34 @@ public class RolesFacade implements Serializable{
                 rol = new Roles();
                 rol.setIdRol(rs.getInt(1));
                 rol.setNombreRol(rs.getString(2));
+                rol.setDescripcion(rs.getString(3));
+            }
+            rs.close();
+            stmt.close();
+            conexion.close();
+            
+            return rol;
+        } catch (Exception e) {
+            System.out.println("Error getRoles "+e.toString());
+            return null;
+        }
+    }
+    
+    public Roles getRoles(String nombre_rol){
+        try {
+            connection = new ConexionSql();
+            Connection conexion = connection.conexion();
+            String SQL = " select * from roles "
+                    + "     where nombre_rol = ? ";
+            PreparedStatement stmt = conexion.prepareStatement(SQL);
+            stmt.setString(1, nombre_rol);
+            Roles rol = null;
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()){
+                rol = new Roles();
+                rol.setIdRol(rs.getInt(1));
+                rol.setNombreRol(rs.getString(2));
+                rol.setDescripcion(rs.getString(3));
             }
             rs.close();
             stmt.close();
@@ -67,6 +94,7 @@ public class RolesFacade implements Serializable{
                 rol = new Roles();
                 rol.setIdRol(rs.getInt(1));
                 rol.setNombreRol(rs.getString(2));
+                rol.setDescripcion(rs.getString(3));
                 lstRoles.add(rol);
             }
             rs.close();

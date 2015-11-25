@@ -5,9 +5,10 @@
  */
 package facade;
 
-import entity.Usuarios;
+import entity.Usuario;
 import java.io.Serializable;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -25,10 +26,11 @@ public class UsuariosFacade implements Serializable {
     /**
      * @param cedula
      * @return
+     * @throws java.lang.Exception
      * @Fecha 16/11/2015
      * @Observacion busca el usuario por cedula
      */
-    public Usuarios buscarUsuario(int cedula) throws Exception {
+    public Usuario buscarUsuario(long cedula) throws Exception {
         try {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
@@ -36,15 +38,17 @@ public class UsuariosFacade implements Serializable {
                     + "     where cedula = ? ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             stmt.setLong(1, cedula);
-            Usuarios usuarios = null;
+            Usuario usuarios = null;
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                usuarios = new Usuarios();
+                usuarios = new Usuario();
                 usuarios.setCedula(rs.getInt(1));
                 usuarios.setNombres(rs.getString(2));
                 usuarios.setApellidos(rs.getString(3));
-                usuarios.setDireccion(rs.getString(4));
-                usuarios.setTelefono(rs.getInt(5));
+                usuarios.setFecha_nacimiento(rs.getDate(4));
+                usuarios.setDireccion(rs.getString(5));
+                usuarios.setEmail(rs.getString(6));
+                usuarios.setTelefono(rs.getInt(7));
             }
             rs.close();
             stmt.close();
@@ -56,19 +60,20 @@ public class UsuariosFacade implements Serializable {
         }
     }
 
-    public Usuarios crearUsuario(Usuarios usuarios) throws Exception {
+    public Usuario crearUsuario(Usuario usuarios) throws Exception {
         try {
 
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
-            String SQL = "INSERT INTO Usuarios values (?, ?, ?, ?, ?)";
+            String SQL = "INSERT INTO Usuarios values (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
-            stmt.setInt(1, usuarios.getCedula());
+            stmt.setLong(1, usuarios.getCedula());
             stmt.setString(2, usuarios.getNombres().toUpperCase());
             stmt.setString(3, usuarios.getApellidos().toUpperCase());
-            stmt.setString(4, usuarios.getDireccion().toUpperCase());
-            stmt.setInt(5, usuarios.getTelefono());
-
+            stmt.setDate(4, usuarios.getFecha_nacimiento());
+            stmt.setString(5, usuarios.getDireccion().toUpperCase());
+            stmt.setString(6, usuarios.getEmail());
+            stmt.setLong(7, usuarios.getTelefono());
             stmt.execute();
             stmt.close();
             conexion.close();
@@ -79,21 +84,22 @@ public class UsuariosFacade implements Serializable {
         }
     }
 
-    public void updateUsuario(Usuarios usuario) throws Exception {
+    public void updateUsuario(Usuario usuario) throws Exception {
         try {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
             String SQL = " update usuarios set  "
-                    + "     nombres=?, apellidos=?, direccion=?,telefono=? "
+                    + "     nombres = ?, apellidos = ?,fecha_nacimiento = ?, direccion = ?,email = ?,telefono = ? "
                     + "     where cedula = ?";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             stmt.setString(1, usuario.getNombres().toUpperCase());
             stmt.setString(2, usuario.getApellidos().toUpperCase());
-            stmt.setString(3, usuario.getDireccion().toUpperCase());
-            stmt.setInt(4, usuario.getTelefono());
-            stmt.setInt(5, usuario.getCedula());
+            stmt.setDate(3,  usuario.getFecha_nacimiento());
+            stmt.setString(4, usuario.getDireccion().toUpperCase());
+            stmt.setString(5, usuario.getEmail());
+            stmt.setLong(6, usuario.getTelefono());
+            stmt.setLong(7, usuario.getCedula());
             stmt.execute();
-
             stmt.close();
             conexion.close();
         } catch (Exception e) {
@@ -101,7 +107,7 @@ public class UsuariosFacade implements Serializable {
         }
     }
 
-    public void borrarUsuario(int cedula) {
+    public void borrarUsuario(long cedula) {
         try {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
@@ -118,22 +124,24 @@ public class UsuariosFacade implements Serializable {
         }
     }
 
-    public List<Usuarios> getAllUsuarios() throws Exception {
+    public List<Usuario> getAllUsuarios() throws Exception {
         try {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
             String SQL = " select * from usuarios ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             ResultSet rs = stmt.executeQuery();
-            Usuarios usuarios = null;
-            List<Usuarios> listaUsuarios = new ArrayList<>();
+            Usuario usuarios = null;
+            List<Usuario> listaUsuarios = new ArrayList<>();
             while (rs.next()) {
-                usuarios = new Usuarios();
+                usuarios = new Usuario();
                 usuarios.setCedula(rs.getInt(1));
                 usuarios.setNombres(rs.getString(2));
                 usuarios.setApellidos(rs.getString(3));
-                usuarios.setDireccion(rs.getString(4));
-                usuarios.setTelefono(rs.getInt(5));
+                usuarios.setFecha_nacimiento(rs.getDate(4));
+                usuarios.setDireccion(rs.getString(5));
+                usuarios.setEmail(rs.getString(6));
+                usuarios.setTelefono(rs.getInt(7));
                 listaUsuarios.add(usuarios);
             }
             rs.close();

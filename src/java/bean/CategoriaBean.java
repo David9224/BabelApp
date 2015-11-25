@@ -7,7 +7,6 @@ package bean;
 
 import com.csvreader.CsvReader;
 import entity.Categoria;
-import entity.Producto;
 import facade.CategoriaFacade;
 import java.io.InputStreamReader;
 import java.io.Serializable;
@@ -120,7 +119,7 @@ public class CategoriaBean implements Serializable {
     public void crearCategoria() {
         FacesMessage msg = null;
         try {
-            if (categoriaFacade.buscarCategoria(categoria.getId()) == null) {
+            if (categoriaFacade.buscarCategoria(categoria.getId_categoria()) == null) {
                 categoriaFacade.crearCategoria(categoria);
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Categoria Creada");
                 FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -138,6 +137,7 @@ public class CategoriaBean implements Serializable {
         categoria = new Categoria();
         crear = "Crear";
         crearHeader = "Crear Categoria";
+        cancelar="Limpiar";
     }
 
     public void editarCategoria() {
@@ -157,7 +157,7 @@ public class CategoriaBean implements Serializable {
         FacesMessage msg = null;
         try {
 
-            categoria = categoriaFacade.buscarCategoria(categoria.getId());
+            categoria = categoriaFacade.buscarCategoria(categoria.getId_categoria());
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Categoria Encontrada");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {
@@ -169,7 +169,7 @@ public class CategoriaBean implements Serializable {
     public void eliminarCategoria(Categoria u) {
         FacesMessage msg = null;
         try {
-            categoriaFacade.borrarCategoria(u.getId());
+            categoriaFacade.borrarCategoria(u.getId_categoria());
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Categoria Eliminada");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             buscarAllCategorias();
@@ -220,11 +220,10 @@ public class CategoriaBean implements Serializable {
             cvs = new CsvReader(new InputStreamReader(uploadedFile.getInputstream()));
             cvs.readHeaders();
             while (cvs.readRecord()) {
-                categoria = new Categoria();
-                categoria.setId(Integer.parseInt(cvs.get(0)));
+                categoria = new Categoria();      
                 categoria.setNombre(cvs.get(1));
                 categoria.setDescripcion(cvs.get(2));
-                if (categoriaFacade.buscarCategoria(categoria.getId()) == null) {
+                if (categoriaFacade.buscarCategoria(categoria.getId_categoria()) == null) {
                     categoriaFacade.crearCategoria(categoria);
                 } else {
                     categoriaFacade.updateCategoria(categoria);

@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @Fecha 15/11/2015
@@ -14,20 +15,11 @@ import java.io.Serializable;
 public class Producto implements Serializable {
 
     private int id_producto;
-    private int id_categoria;
+    private Categoria id_categoria;
     private String nombre;
     private float precio;
-    private int cantidadDisponible;
 
     public Producto() {
-    }
-
-    public Producto(int id_producto, int id_categoria, String nombre, float precio, int cantidadDisponible) {
-        this.id_producto = id_producto;
-        this.id_categoria = id_categoria;
-        this.nombre = nombre;
-        this.precio = precio;
-        this.cantidadDisponible = cantidadDisponible;
     }
 
     public int getId_producto() {
@@ -38,11 +30,11 @@ public class Producto implements Serializable {
         this.id_producto = id_producto;
     }
 
-    public int getId_categoria() {
+    public Categoria getId_categoria() {
         return id_categoria;
     }
 
-    public void setId_categoria(int id_categoria) {
+    public void setId_categoria(Categoria id_categoria) {
         this.id_categoria = id_categoria;
     }
 
@@ -62,12 +54,37 @@ public class Producto implements Serializable {
         this.precio = precio;
     }
 
-    public int getCantidadDisponible() {
-        return cantidadDisponible;
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 83 * hash + this.id_producto;
+        hash = 83 * hash + Objects.hashCode(this.id_categoria);
+        hash = 83 * hash + Objects.hashCode(this.nombre);
+        hash = 83 * hash + Float.floatToIntBits(this.precio);
+        return hash;
     }
 
-    public void setCantidadDisponible(int cantidadDisponible) {
-        this.cantidadDisponible = cantidadDisponible;
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Producto other = (Producto) obj;
+        if (this.id_producto != other.id_producto) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Producto{" + "id_producto=" + id_producto + ", id_categoria=" + id_categoria + ", nombre=" + nombre + ", precio=" + precio + '}';
     }
 
 }

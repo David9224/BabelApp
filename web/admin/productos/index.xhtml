@@ -12,36 +12,36 @@
     <h:body>
 
         <ui:include src="../../resources/appmenu.xhtml"/>
+        <ui:include src="../../resources/confirmdialog.xhtml"/>
         <br/>
         <h:form id="form1">
             <p:panel header="#{productosBean.crearHeader}" styleClass="content1" style="text-align: center" id="panel1">
                 <p:growl id="growl" showDetail="true" life="2000" />
                 <h:panelGrid id="crear" columns="1" style="width: 100%">
-                    <h:outputText value="Id: *" />
-                    <p:inputText value="#{productosBean.producto.id_producto}" disabled="#{productosBean.producto.id_producto!=0}" style="width: 100%;" required="true" label="Id">
-                        <f:validateDoubleRange minimum="1"/>
-                    </p:inputText>
-
+                   
                     <h:outputText value="Categoria: *" />
-                    <p:selectOneMenu  filter="true" filterMatchMode="contains" required="true" value="#{productosBean.producto.id_categoria}" style="width:125px">
-                        <f:selectItem itemLabel="Seleccione uno" itemValue="" />
-                        <f:selectItems value="#{categoriaBean.listaCategorias}" var="categoria" itemLabel="#{categoria.nombre}" itemValue="#{categoria.id}"/>
+                    <p:selectOneMenu  required="true" value="#{productosBean.producto.id_categoria}"  converter="categoriaConverter" converterMessage="Error en la conversion" >
+                        
+                        <f:selectItem itemLabel="Seleccione uno"/>
+                        <f:selectItems value="#{categoriaBean.listaCategorias}" var="categoria" itemLabel="#{categoria.nombre}" itemValue="#{categoria}"/>
                     </p:selectOneMenu>
 
 
                     <h:outputText value="Nombre: *" />
-                    <p:inputText value="#{productosBean.producto.nombre}" style="width: 100%;" required="true" label="Nombre"/>
+                    <p:inputText value="#{productosBean.producto.nombre}" style="width: 100%;" required="true" label="Nombre">
+                     <p:ajax update=":form1:cancelar" event="keyup" />
+                    </p:inputText>
 
                     <h:outputText value="Precio: *" />
                     <p:inputText value="#{productosBean.producto.precio}" style="width: 100%;" required="true" label="Precio"/>
 
-                    <h:outputText value="Cantidad Disponible: *" />
-                    <p:inputText value="#{productosBean.producto.cantidadDisponible}" style="width: 100%;" required="true" label="Cantidad Disponible"/>
-
+                    
                 </h:panelGrid>
                 <br/>
-                <p:commandButton value="#{productosBean.crear}" actionListener="#{productosBean.crearProducto()}" update=":form1:panel1 :formtable"/>
-                <p:commandButton value="#{productosBean.cancelar}" disabled="#{productosBean.producto.id_producto==0}" actionListener="#{productosBean.cancelar}" update="@form"/>
+                <p:commandButton value="#{productosBean.crear}" actionListener="#{productosBean.crearProducto()}" update=":form1:panel1 :formtable">
+                 <p:confirm   header="Informacion" message="Desea continuar la operación" icon="ui-icon-alert"/>
+               </p:commandButton>
+                <p:commandButton id="cancelar" value="#{productosBean.cancelar}" disabled="#{productosBean.producto.nombre == null}"  actionListener="#{productosBean.cancelar}" update="@form"/>
 
             </p:panel>
 
@@ -61,8 +61,8 @@
                 <p:column filterBy="#{producto.id_producto}" headerText="Id" filterMatchMode="contains">
                     <p:outputLabel value="#{producto.id_producto}"/>
                 </p:column>
-                <p:column filterBy="#{producto.id_categoria}" headerText="Categoria" filterMatchMode="contains">
-                    <p:outputLabel value="#{producto.id_categoria}"/>
+                <p:column filterBy="#{producto.id_categoria.nombre}" headerText="Categoria" filterMatchMode="contains">
+                    <p:outputLabel value="#{producto.id_categoria.nombre}"/>
                 </p:column>
 
                 <p:column filterBy="#{producto.nombre}" headerText="Nombre" filterMatchMode="contains">
@@ -73,12 +73,10 @@
                     <p:outputLabel value="#{producto.precio}"/>
                 </p:column>
 
-                <p:column filterBy="#{producto.cantidadDisponible}" headerText="Cantidad Disponible" filterMatchMode="contains">
-                    <p:outputLabel value="#{producto.cantidadDisponible}"/>
-                </p:column>
-
-                <p:column headerText="Eliminar">
-                    <p:commandButton icon="ui-icon-close" action="#{productosBean.eliminarProducto(producto)}" update=":formtable" />
+                <p:column headerText="Eliminar" style="text-align: center">
+                    <p:commandButton icon="ui-icon-close" action="#{productosBean.eliminarProducto(producto)}" update=":formtable" >
+                        <p:confirm header="Eliminar" message="Desea eliminar el producto?" icon="ui-icon-alert" />
+                    </p:commandButton>
                 </p:column>
 
             </p:dataTable>

@@ -9,6 +9,10 @@
             <to-view-id>/admin/usuarios/importarCvs.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
+            <from-outcome>importarClientes</from-outcome>
+            <to-view-id>/admin/clientes/importarCvs.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
             <from-outcome>importarCategorias</from-outcome>
             <to-view-id>/admin/categoria/importarCvs.xhtml</to-view-id>
         </navigation-case>
@@ -19,6 +23,10 @@
          <navigation-case>
             <from-outcome>gestionarUsuarios</from-outcome>
             <to-view-id>/admin/usuarios/index.xhtml</to-view-id>
+        </navigation-case>
+         <navigation-case>
+            <from-outcome>gestionarClientes</from-outcome>
+            <to-view-id>/admin/clientes/index.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
             <from-outcome>gestionarProductos</from-outcome>

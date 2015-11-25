@@ -72,7 +72,7 @@ public class LoginBean implements Serializable {
         RequestContext context = RequestContext.getCurrentInstance();
         FacesMessage msg = null;
         if (cedula != null) {
-            acceso = accesoFacade.getAcceso(cedula);
+            acceso = accesoFacade.getAccesoCedula(new Long(cedula.toString()));
             if (acceso != null) {
                 String passEnc = encripta.Encriptar(password);
                 System.out.println("" + passEnc);
@@ -97,7 +97,7 @@ public class LoginBean implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, msg);
         context.addCallbackParam("estaLogeado", logeado);
         if (logeado) {
-            String rol = rolesFacade.getRoles(acceso.getAcRol()).getNombreRol();
+            String rol = rolesFacade.getRoles(acceso.getAcRol().getIdRol()).getNombreRol();
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("LoginBean", this);
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("rol", rol);
             context.addCallbackParam("view", rol + "/index.xhtml");
@@ -118,7 +118,7 @@ public class LoginBean implements Serializable {
     public void redirect() {
         if (logeado) {
             try {
-                String rol = rolesFacade.getRoles(acceso.getAcRol()).getNombreRol();
+                String rol = rolesFacade.getRoles(acceso.getAcRol().getIdRol()).getNombreRol();
                 ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
                 context.redirect(rol + "/index.xhtml");
             } catch (IOException ex) {
@@ -128,7 +128,7 @@ public class LoginBean implements Serializable {
     }
 
     public long getusuario() {
-        return acceso.getAcCedu();
+        return acceso.getAcCedu().getCedula();
     }
 
 }
