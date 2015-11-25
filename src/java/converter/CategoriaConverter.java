@@ -1,7 +1,6 @@
 package converter;
 
 import entity.Categoria;
-import entity.Roles;
 import facade.CategoriaFacade;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,7 +27,6 @@ public class CategoriaConverter implements Converter {
             if (value == null || value.length() == 0 || JsfUtil.isDummySelectItem(component, value)) {
                 return null;
             }else{
-                System.out.println(categoriaFacade.buscarCategoria(getKey(value)).toString());
                  return categoriaFacade.buscarCategoria(getKey(value));
             }
         } catch (Exception ex) {
@@ -57,7 +55,6 @@ public class CategoriaConverter implements Converter {
         }
         if (object instanceof Categoria) {
             Categoria o = (Categoria) object;
-            System.out.println(o.getId_categoria());
             return getStringKey(o.getId_categoria());
         } else {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Categoria.class.getName()});
