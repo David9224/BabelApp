@@ -6,6 +6,7 @@
 package utility;
 
 import bean.LoginBean;
+import entity.AccesosUsuarios;
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -34,17 +35,17 @@ public class LoginFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         // Get the loginBean from session attribute
         LoginBean loginBean = (LoginBean) ((HttpServletRequest) request).getSession().getAttribute("LoginBean");
-        String rol = "";
-        if ((String) ((HttpServletRequest) request).getSession().getAttribute("rol")!=null) {
-            rol = (String) ((HttpServletRequest) request).getSession().getAttribute("rol");
+        AccesosUsuarios a=  null;
+        if ((AccesosUsuarios) ((HttpServletRequest) request).getSession().getAttribute("usuario")!=null) {
+            a = (AccesosUsuarios) ((HttpServletRequest) request).getSession().getAttribute("usuario");
         }
         HttpServletRequest req = (HttpServletRequest) request;
         // For the first application request there is no loginBean in the session so user needs to log in
         // For other requests loginBean is present but we need to check if user has logged in successfully
         if (loginBean != null) {
-            if (!rol.equals("")&& (!req.getRequestURL().toString().contains(rol))) {
+            if (a!=null&& (!req.getRequestURL().toString().contains(a.getAcRol().getNombreRol()))) {
             String contextPath = ((HttpServletRequest) request).getContextPath();
-            ((HttpServletResponse) response).sendRedirect(contextPath + "/"+rol+"/index.xhtml");
+            ((HttpServletResponse) response).sendRedirect(contextPath + "/"+a.getAcRol().getNombreRol()+"/index.xhtml");
             }else{
                chain.doFilter(request, response);
             }

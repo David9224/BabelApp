@@ -6,19 +6,12 @@
 package bean;
 
 import com.csvreader.CsvReader;
-import entity.AccesosUsuarios;
 import entity.Cliente;
-import entity.Roles;
-import entity.Usuario;
-import facade.AccesosUsuariosFacade;
 import facade.ClienteFacade;
-import facade.RolesFacade;
-import facade.UsuariosFacade;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,7 +22,6 @@ import javax.faces.bean.ViewScoped;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.UploadedFile;
-import utility.Encriptar;
 
 /**
  * @Fecha 16/11/2015

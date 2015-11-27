@@ -14,14 +14,14 @@
         <ui:include src="../../resources/appmenu.xhtml"/>
         <ui:include src="../../resources/confirmdialog.xhtml"/>
         <br/>
-        <h:form id="form1">
+        <h:form id="form1" enctype="multipart/form-data">
             <p:panel header="#{productosBean.crearHeader}" styleClass="content1" style="text-align: center" id="panel1">
-                <p:growl id="growl" showDetail="true" life="2000" />
+                <p:growl id="growl" showDetail="true" life="3000" />
                 <h:panelGrid id="crear" columns="1" style="width: 100%">
-                   
+
                     <h:outputText value="Categoria: *" />
                     <p:selectOneMenu  required="true" value="#{productosBean.producto.id_categoria}"  converter="categoriaConverter" converterMessage="Error en la conversion" >
-                        
+
                         <f:selectItem itemLabel="Seleccione uno"/>
                         <f:selectItems value="#{categoriaBean.listaCategorias}" var="categoria" itemLabel="#{categoria.nombre}" itemValue="#{categoria}"/>
                     </p:selectOneMenu>
@@ -29,26 +29,27 @@
 
                     <h:outputText value="Nombre: *" />
                     <p:inputText value="#{productosBean.producto.nombre}" style="width: 100%;" required="true" label="Nombre">
-                     <p:ajax update=":form1:cancelar" event="keyup" />
+                        <p:ajax update=":form1:cancelar" event="keyup" />
                     </p:inputText>
 
                     <h:outputText value="Precio: *" />
                     <p:inputText value="#{productosBean.producto.precio}" style="width: 100%;" required="true" label="Precio"/>
 
-                    
+                    <h:outputText value="Imagen: *"/>
+                    <p:fileUpload mode="advanced"  auto="true" sizeLimit="600000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" update="growl" fileUploadListener="#{productosBean.seleccionarImagen}" style="width: 100%"/>
+
                 </h:panelGrid>
                 <br/>
-                <p:commandButton value="#{productosBean.crear}" actionListener="#{productosBean.crearProducto()}" update=":form1:panel1 :formtable">
-                 <p:confirm   header="Informacion" message="Desea continuar la operación" icon="ui-icon-alert"/>
-               </p:commandButton>
+                <p:commandButton value="#{productosBean.crear}"  actionListener="#{productosBean.crearProducto}" ajax="true" update="@form :formtable">
+                    <p:confirm   header="Informacion" message="Desea continuar la operación" icon="ui-icon-alert"/>
+                </p:commandButton>
                 <p:commandButton id="cancelar" value="#{productosBean.cancelar}" disabled="#{productosBean.producto.nombre == null}"  actionListener="#{productosBean.cancelar}" update="@form"/>
 
             </p:panel>
 
         </h:form>
-
         <br/>
-        <h:form id="formtable">
+        <h:form id="formtable"  enctype="multipart/form-data">
             <p:growl id="grow2" showDetail="true" life="2000" />
 
             <p:dataTable  id="table" style="width:auto" rowKey="#{producto.id_producto}" value="#{productosBean.listaProductos}" emptyMessage="Productos no encontrados"  paginator="true"
@@ -72,6 +73,13 @@
                 <p:column filterBy="#{producto.precio}" headerText="Precio" filterMatchMode="contains">
                     <p:outputLabel value="#{producto.precio}"/>
                 </p:column>
+
+                <p:column filterBy="#{producto.imagen}" headerText="Imagen" filterMatchMode="contains" >
+                    <p:graphicImage value="#{productosBean.getImagen()}" style="width: 100%">
+                        <f:param id="image_id" name="image_id" value="#{producto.imagen.id}" />
+                    </p:graphicImage>
+                </p:column>
+
 
                 <p:column headerText="Eliminar" style="text-align: center">
                     <p:commandButton icon="ui-icon-close" action="#{productosBean.eliminarProducto(producto)}" update=":formtable" >

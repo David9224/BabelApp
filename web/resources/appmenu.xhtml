@@ -8,23 +8,23 @@
     
     <h:form id="menuform">
             <p:menubar>
-                <p:submenu label="Usuarios" icon="ui-icon-gear">
+                <p:submenu label="Usuarios" icon="ui-icon-gear" rendered="#{loginBean.admin}">
                     <p:menuitem value="Gestionar" icon="ui-icon-disk" outcome="gestionarUsuarios" />
                     <p:menuitem value="Importar" icon="ui-icon-disk" outcome="importarUsuarios"/>
                 </p:submenu>
-              <p:submenu label="Clientes" icon="ui-icon-gear">
+              <p:submenu label="Clientes" icon="ui-icon-gear" rendered="#{loginBean.admin}">
                     <p:menuitem value="Gestionar" icon="ui-icon-disk" outcome="gestionarClientes" />
                     <p:menuitem value="Importar" icon="ui-icon-disk" outcome="importarClientes"/>
                 </p:submenu>
-                <p:submenu label="Categorias" icon="ui-icon-gear">
+                <p:submenu label="Categorias" icon="ui-icon-gear" rendered="#{loginBean.admin}">
                     <p:menuitem value="Gestionar" icon="ui-icon-disk" outcome="gestionarCategorias"/>
                     <p:menuitem value="Importar" icon="ui-icon-disk" outcome="importarCategorias"/>
                 </p:submenu>
-                <p:submenu label="Productos" icon="ui-icon-gear">
+                <p:submenu label="Productos" icon="ui-icon-gear" rendered="#{loginBean.admin}">
                     <p:menuitem value="Gestionar" icon="ui-icon-disk" outcome="gestionarProductos"/>
                     <p:menuitem value="Importar" icon="ui-icon-disk" outcome="importarProductos"/>
                 </p:submenu>
-                <f:facet name="options">
+                <f:facet name="options" rendered="#{loginBean.logeado}">
                     <p:menuButton value="#{loginBean.getusuario()}" rendered="true">
                         <p:menuitem value="Modificar Perfil" icon="ui-icon-disk" />
                         <p:menuitem value="Cerrar Sesion" actionListener="#{loginBean.logout()}" update="@form" icon="ui-icon-extlink"/>

@@ -12,10 +12,9 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import org.primefaces.context.RequestContext;
@@ -26,19 +25,18 @@ import utility.Encriptar;
  * @author David
  */
 @ManagedBean
-@SessionScoped
+@ViewScoped
 public class LoginBean implements Serializable {
 
     private Long cedula;
     private String password;
     private boolean logeado = false;
     private AccesosUsuarios acceso;
-    private AccesosUsuariosFacade accesoFacade;
-    private RolesFacade rolesFacade;
+    private final AccesosUsuariosFacade accesoFacade;
+    private final RolesFacade rolesFacade;
     private Encriptar encripta;
 
-    @PostConstruct
-    public void init() {
+    public LoginBean() {
         accesoFacade = new AccesosUsuariosFacade();
         rolesFacade = new RolesFacade();
     }
@@ -77,7 +75,7 @@ public class LoginBean implements Serializable {
                 String passEnc = encripta.Encriptar(password);
                 System.out.println("" + passEnc);
                 System.out.println("" + encripta.Desencriptar(passEnc));
-                System.out.println("bd_____ "+ acceso.getAcContra());
+                System.out.println("bd_____ " + acceso.getAcContra());
                 if (password.equals(encripta.Desencriptar(acceso.getAcContra()))) {
                     logeado = true;
                     msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Bienvenid@", "" + cedula);
@@ -99,7 +97,7 @@ public class LoginBean implements Serializable {
         if (logeado) {
             String rol = rolesFacade.getRoles(acceso.getAcRol().getIdRol()).getNombreRol();
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("LoginBean", this);
-            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("rol", rol);
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", acceso);
             context.addCallbackParam("view", rol + "/index.xhtml");
         }
     }
@@ -127,8 +125,31 @@ public class LoginBean implements Serializable {
         }
     }
 
-    public long getusuario() {
-        return acceso.getAcCedu().getCedula();
+    public String getusuario() {
+        AccesosUsuarios a = null;
+        a = (AccesosUsuarios) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
+        if (a != null) {
+            return Long.toString(a.getAcCedu().getCedula());
+        } else {
+            return "Usuario no autentificado";
+        }
     }
 
+    public boolean isLogueado() {
+        AccesosUsuarios a = null;
+        a = (AccesosUsuarios) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
+        return a != null;
+    }
+
+    public boolean isAdmin() {
+        AccesosUsuarios a = null;
+        a = (AccesosUsuarios) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
+        return a.getAcRol().getNombreRol().equals("admin");
+    }
+
+    public boolean isCajero() {
+        AccesosUsuarios a = null;
+        a = (AccesosUsuarios) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
+        return a.getAcRol().getNombreRol().equals("cajero");
+    }
 }

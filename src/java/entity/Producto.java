@@ -18,9 +18,20 @@ public class Producto implements Serializable {
     private Categoria id_categoria;
     private String nombre;
     private float precio;
+    private Imagen imagen;
 
     public Producto() {
     }
+
+    public Imagen getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(Imagen imagen) {
+        this.imagen = imagen;
+    }
+
+   
 
     public int getId_producto() {
         return id_producto;
