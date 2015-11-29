@@ -6,6 +6,7 @@
 package facade;
 
 import entity.Detalle;
+import entity.Factura;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -40,7 +41,7 @@ public class DetalleFacade implements Serializable {
                     + "     where num_detalle = ? and id_producto =? ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             stmt.setInt(1, num_detalle);
-            stmt.setInt(1, id_producto);
+            stmt.setInt(2, id_producto);
             Detalle detalle = null;
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
@@ -65,7 +66,7 @@ public class DetalleFacade implements Serializable {
 
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
-            String SQL = "INSERT INTO Detalle values (?, ?, ?, ?)";
+            String SQL = "INSERT INTO Detalle (id_factura,id_producto,cantidad,precio) values (?, ?, ?, ?)";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             stmt.setInt(1, detalle.getFactura().getNum_factura());
             stmt.setInt(2, detalle.getProducto().getId_producto());
@@ -142,6 +143,34 @@ public class DetalleFacade implements Serializable {
             return listaDetalles;
         } catch (Exception e) {
             throw new Exception("Error getAllDetalles: " + e.toString());
+        }
+    }
+
+    public List<Detalle> getAllDetallesFactura(Factura f) throws Exception {
+        try {
+            connection = new ConexionSql();
+            Connection conexion = connection.conexion();
+            String SQL = " select * from Detalle"
+                    + "     where id_factura = ?";
+            PreparedStatement stmt = conexion.prepareStatement(SQL);
+            stmt.setInt(1, f.getNum_factura());
+            ResultSet rs = stmt.executeQuery();
+            Detalle detalle = null;
+            List<Detalle> listaDetalles = new ArrayList<>();
+            while (rs.next()) {
+                detalle = new Detalle();
+                detalle.setNum_detalle(rs.getInt(1));
+                detalle.setFactura(facturaFacade.buscarFactura(rs.getInt(2)));
+                detalle.setProducto(productoFacade.buscarProducto(rs.getInt(3)));
+                detalle.setCantidad(rs.getInt(4));
+                listaDetalles.add(detalle);
+            }
+            rs.close();
+            stmt.close();
+            conexion.close();
+            return listaDetalles;
+        } catch (Exception e) {
+            throw new Exception("Error getAllDetallesFactura: " + e.toString());
         }
     }
 

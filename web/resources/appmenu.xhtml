@@ -24,6 +24,10 @@
                     <p:menuitem value="Gestionar" icon="ui-icon-disk" outcome="gestionarProductos"/>
                     <p:menuitem value="Importar" icon="ui-icon-disk" outcome="importarProductos"/>
                 </p:submenu>
+                <p:submenu label="Facturas" icon="ui-icon-gear" rendered="#{loginBean.cajero}">
+                    <p:menuitem value="Crear" icon="ui-icon-disk" outcome="crearFacturas"/>
+                    <p:menuitem value="Editar" icon="ui-icon-disk" outcome="editarFacturas" />
+                </p:submenu>
                 <f:facet name="options" rendered="#{loginBean.logeado}">
                     <p:menuButton value="#{loginBean.getusuario()}" rendered="true">
                         <p:menuitem value="Modificar Perfil" icon="ui-icon-disk" />

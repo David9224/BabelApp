@@ -5,13 +5,15 @@
  */
 package entity;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  *
  * @author anderson
  */
-public class Detalle {
+public class Detalle implements Serializable{
+
     private int num_detalle;
     private Factura factura;
     private Producto producto;
@@ -78,19 +80,19 @@ public class Detalle {
             return false;
         }
         final Detalle other = (Detalle) obj;
-        if (this.num_detalle != other.num_detalle) {
-            return false;
-        }
-        if (!Objects.equals(this.factura, other.factura)) {
+        if (!Objects.equals(this.producto, other.producto)) {
             return false;
         }
         return true;
     }
+
+    
+
+    
 
     @Override
     public String toString() {
         return "Detalle{" + "num_detalle=" + num_detalle + ", factura=" + factura + ", producto=" + producto + ", cantidad=" + cantidad + '}';
     }
 
-    
 }

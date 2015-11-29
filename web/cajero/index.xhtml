@@ -10,19 +10,6 @@
         <link rel="stylesheet" type="text/css" href="../resources/indexCss.css"/>
     </h:head>
     <h:body>
-        <p:commandLink id="logout"
-                       actionListener="#{loginBean.logout}"
-                       style="margin-right:20px;"
-                       oncomplete="logout(xhr, status, args)">
-            <h:outputText value="logout" />
-        </p:commandLink>
-        <script type="text/javascript">
-            //<![CDATA[   
-            function logout(xhr, status, args) {
-                setTimeout(function () {
-                    window.location = '../index.xhtml';
-                }, 500);
-            } //]]> </script>
+        <ui:include src="../resources/appmenu.xhtml"/>
     </h:body>
 </html>
-

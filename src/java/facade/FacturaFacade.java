@@ -23,6 +23,7 @@ public class FacturaFacade implements Serializable {
     private ConexionSql connection;
     private ClienteFacade clienteFacade = new ClienteFacade();
     private UsuariosFacade usuariosFacade = new UsuariosFacade();
+
     /**
      * @param num_factura
      * @return
@@ -57,22 +58,51 @@ public class FacturaFacade implements Serializable {
         }
     }
 
+    public Factura crearFacturaC(Factura factura) throws Exception {
+        try {
+
+            connection = new ConexionSql();
+            Connection conexion = connection.conexion();
+            String SQL = "INSERT INTO factura (id_cliente,id_usuario,fecha,pendiente,mesa) values (?, ?, ?, ?, ?)";
+            PreparedStatement stmt = conexion.prepareStatement(SQL);
+            stmt.setLong(1, factura.getCliente().getCedula());
+            stmt.setLong(2, factura.getUsuario().getCedula());
+            stmt.setDate(3, factura.getFecha());
+            stmt.setBoolean(4, factura.isPendiente());
+            stmt.setInt(5, factura.getMesa());
+            stmt.executeUpdate();
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    factura.setNum_factura(generatedKeys.getInt(1));
+                }
+            }
+            stmt.close();
+            conexion.close();
+            return factura;
+        } catch (Exception e) {
+            throw new Exception("Error Crear Factura: " + e.toString());
+        }
+    }
+
     public Factura crearFactura(Factura factura) throws Exception {
         try {
 
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
-            String SQL = "INSERT INTO factura values (?, ?, ?, ?, ?)";
-            PreparedStatement stmt = conexion.prepareStatement(SQL);           
-            stmt.setLong(1, factura.getCliente().getCedula());
-            stmt.setLong(2, factura.getUsuario().getCedula());
-            stmt.setDate(3,factura.getFecha());
-            stmt.setBoolean(4, factura.isPendiente());
-            stmt.setInt(5, factura.getMesa());
-            stmt.execute();
+            String SQL = "INSERT INTO factura (id_usuario,fecha,pendiente,mesa) values (?, ?, ?, ?)";
+            PreparedStatement stmt = conexion.prepareStatement(SQL);
+            stmt.setLong(1, factura.getUsuario().getCedula());
+            stmt.setDate(2, factura.getFecha());
+            stmt.setBoolean(3, factura.isPendiente());
+            stmt.setInt(4, factura.getMesa());
+            stmt.executeUpdate();
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    factura.setNum_factura(generatedKeys.getInt(1));
+                }
+            }
             stmt.close();
             conexion.close();
-
             return factura;
         } catch (Exception e) {
             throw new Exception("Error Crear Factura: " + e.toString());
@@ -84,13 +114,35 @@ public class FacturaFacade implements Serializable {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
             String SQL = " update Factura set  "
+                    + "   id_usuario = ?,fecha = ?, pendiente = ?,mesa = ?"
+                    + "     where num_factura = ?";
+            PreparedStatement stmt = conexion.prepareStatement(SQL);
+            stmt.setInt(5, factura.getNum_factura());
+            stmt.setLong(1, factura.getUsuario().getCedula());
+            stmt.setDate(2, factura.getFecha());
+            stmt.setBoolean(3, factura.isPendiente());
+            stmt.setInt(4, factura.getMesa());
+            stmt.execute();
+            stmt.close();
+            conexion.close();
+        } catch (Exception e) {
+            throw new Exception("Error update Factura: " + e.toString());
+        }
+    }
+    
+    public void updateFacturaC(Factura factura) throws Exception {
+        try {
+            connection = new ConexionSql();
+            Connection conexion = connection.conexion();
+            String SQL = " update Factura set  "
                     + "     id_cliente = ?, id_usuario = ?,fecha = ?, pendiente = ?,mesa = ?"
                     + "     where num_factura = ?";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             stmt.setInt(6, factura.getNum_factura());
             stmt.setLong(1, factura.getCliente().getCedula());
             stmt.setLong(2, factura.getUsuario().getCedula());
-            stmt.setDate(3,factura.getFecha());
+            stmt.setDate(3, factura.getFecha());
+            System.out.println(factura.isPendiente());
             stmt.setBoolean(4, factura.isPendiente());
             stmt.setInt(5, factura.getMesa());
             stmt.execute();
@@ -101,7 +153,7 @@ public class FacturaFacade implements Serializable {
         }
     }
 
-    public void Factura(int num_factura) {
+    public void deleteFactura(int num_factura) {
         try {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
@@ -124,6 +176,36 @@ public class FacturaFacade implements Serializable {
             Connection conexion = connection.conexion();
             String SQL = " select * from Factura ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
+            ResultSet rs = stmt.executeQuery();
+            Factura factura = null;
+            List<Factura> listaFacturas = new ArrayList<>();
+            while (rs.next()) {
+                factura = new Factura();
+                factura.setNum_factura(rs.getInt(1));
+                factura.setCliente(clienteFacade.buscarCliente(rs.getInt(2)));
+                factura.setUsuario(usuariosFacade.buscarUsuario(rs.getInt(3)));
+                factura.setFecha(rs.getDate(4));
+                factura.setPendiente(rs.getBoolean(5));
+                factura.setMesa(rs.getInt(6));
+                listaFacturas.add(factura);
+            }
+            rs.close();
+            stmt.close();
+            conexion.close();
+            return listaFacturas;
+        } catch (Exception e) {
+            throw new Exception("Error getAllFacturas: " + e.toString());
+        }
+    }
+
+    public List<Factura> getAllFacturasPendientes() throws Exception {
+        try {
+            connection = new ConexionSql();
+            Connection conexion = connection.conexion();
+            String SQL = " select * from Factura "
+                    + "     where pendiente = ? ";
+            PreparedStatement stmt = conexion.prepareStatement(SQL);
+            stmt.setBoolean(1, true);
             ResultSet rs = stmt.executeQuery();
             Factura factura = null;
             List<Factura> listaFacturas = new ArrayList<>();
