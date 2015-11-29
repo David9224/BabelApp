@@ -5,122 +5,142 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
-    <h:head>
+    <head>
         <title>Babel</title>
-        <link rel="stylesheet" type="text/css" href="../../resources/indexCss.css"/>
-    </h:head>
-    <h:body>
-        <ui:include src="../../resources/appmenu.xhtml"/>
-        <ui:include src="../../resources/confirmdialog.xhtml"/>
-        <br/>
+        <meta charset="UTF-8"/>     
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" type="text/css" href="../../resources/indexCss.css"/>   
+        <link rel="stylesheet" type="text/css" href="../../mb/css/metro-bootstrap.css"/>
+        <link rel="stylesheet" href="../../mb/docs/font-awesome.css"/>
+        <link rel="stylesheet" type="text/css" href="../../resources/main.css"/>        
+    </head>
+    <body>
 
-        <h:form id="form1">
-
-            <p:growl id="growl" showDetail="true" life="2000" />
-            <p:panel header="#{usuariosBean.crearHeader}"   styleClass="content1" style="text-align: center" id="panel1">
-                <h:panelGrid columns="2" style="width: 100%">
-                    <h:outputText value="Cedula: *" />
-                    <p:inputText value="#{usuariosBean.usuarios.cedula}" disabled="#{usuariosBean.usuarios.cedula!=0}"  style="width: 100%;" 
-                                 required="true" label="Cedula">
-                        <p:ajax update=":form1:cancelar" event="keyup" />
-                    </p:inputText>
-
-                    <h:outputText value="Nombres: *" />
-                    <p:inputText value="#{usuariosBean.usuarios.nombres}" style="width: 100%;" 
-                                 required="true" label="Nombres"/>
-
-                    <h:outputText value="Apellidos: *" />
-                    <p:inputText value="#{usuariosBean.usuarios.apellidos}" style="width: 100%;" 
-                                 required="true" label="Apellidos"/>
-
-                    <h:outputText value="Fecha Nacimiento: *" />
-                    <p:calendar id="german" value="#{usuariosBean.date}"  navigator="true" placeholder="dd/mm/yy">
-                        <p:ajax event="dateSelect" listener="#{usuariosBean.onDateSelect}" update="growl" />
-                    </p:calendar>
-
-                    <h:outputText value="Direccion: *" />
-                    <p:inputText value="#{usuariosBean.usuarios.direccion}" style="width: 100%;" 
-                                 required="true" label="Direccion"/>
-
-                    <h:outputText value="Email:" />
-                    <p:inputText value="#{usuariosBean.usuarios.email}" style="width: 100%;" 
-                                 required="false" label="email"/>
-                    <h:outputText value="Telefono: *" />
-                    <p:inputText value="#{usuariosBean.usuarios.telefono}" style="width: 100%;" 
-                                 required="true" label="Telefono">
-                        <f:validateDoubleRange minimum="1"/>
-                    </p:inputText>
-
-                    <h:outputText value="Rol: *" />
-                    <p:selectOneMenu  required="true" value="#{usuariosBean.roles}" converter="rolesConverter" converterMessage="Error en la conversion" >
-                        <f:selectItems value="#{rolesBean.listaRoles}" var="roles" itemLabel="#{roles.nombreRol}" itemValue="#{roles}"/>
-                    </p:selectOneMenu>
+        <ui:composition template="./../../resources/template.xhtml">
+            <ui:include src="../../resources/confirmdialog.xhtml"/>
 
 
-                </h:panelGrid>
-                <p:commandButton value="#{usuariosBean.crear}" actionListener="#{usuariosBean.crearUsuario()}" 
-                                 update="growl, :table :form1:panel1">
-                    <p:confirm   header="Informacion" message="Desea continuar la operación?" icon="ui-icon-alert"/>
-                </p:commandButton>
-                <p:commandButton id="cancelar" value="#{usuariosBean.cancelar}" disabled="#{usuariosBean.usuarios.cedula==0}" actionListener="#{usuariosBean.cancelar}" update="@form"/>
+            <ui:define name="content">
+                <h:form id="form1">
 
-            </p:panel>
+                    <p:growl id="growl" showDetail="true" life="2000" />
+                    <p:panel header="#{usuariosBean.crearHeader}"   styleClass="content1" style="text-align: center" id="panel1">
+                        <h:panelGrid columns="2" style="width: auto">
+                            <h:outputText value="Cedula: *" />
+                            <p:inputText value="#{usuariosBean.usuarios.cedula}" disabled="#{usuariosBean.usuarios.cedula!= null}"  
+                                         style="width: auto;" label="Cedula">
+                            </p:inputText>
 
-        </h:form>
-        <br/>
-        <h:form  id="table">
+                            <h:outputText value="Nombres: *" />
+                            <p:inputText value="#{usuariosBean.usuarios.nombres}" style="width: auto;" 
+                                         label="Nombres"/>
+
+                            <h:outputText value="Apellidos: *" />
+                            <p:inputText value="#{usuariosBean.usuarios.apellidos}" style="width: auto;" 
+                                         label="Apellidos"/>
+
+                            <h:outputText value="Fecha Nacimiento: *" />
+                            <p:calendar id="german" value="#{usuariosBean.date}"  navigator="true" 
+                                        placeholder="DD/MM/YY" pattern="dd/MM/yy" mask="true" style="width: auto">
+                            </p:calendar>
+
+                            <h:outputText value="Direccion: *" />
+                            <p:inputText value="#{usuariosBean.usuarios.direccion}" style="width: auto;" 
+                                         required="true" label="Direccion"/>
+
+                            <h:outputText value="Email:" />
+                            <p:inputText value="#{usuariosBean.usuarios.email}" style="width: auto;"
+                                         required="false" label="email"/>
+                            <h:outputText value="Telefono: *" />
+                            <p:inputText value="#{usuariosBean.usuarios.telefono}" style="width: auto;" 
+                                         label="Telefono">
+                                <f:validateDoubleRange minimum="1"/>
+                            </p:inputText>
+
+                            <h:outputText value="Rol: *" />
+                            <p:selectOneMenu  value="#{usuariosBean.roles}" style="width: 100%"
+                                              converter="rolesConverter" converterMessage="Error en la conversion" >
+                                <f:selectItems value="#{rolesBean.listaRoles}" var="roles" 
+                                               itemLabel="#{roles.nombreRol}" itemValue="#{roles}"/>
+                            </p:selectOneMenu>
 
 
-            <p:dataTable style="width:auto" value="#{usuariosBean.listaUsuarios}" paginator="true" rowKey="#{usuarios.cedula}"
-                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                         rowsPerPageTemplate="5,10,15" var="usuarios" emptyMessage="Usuarios no encontrados" 
-                         selection="#{usuariosBean.usuariosSelect}" selectionMode="single">
+                        </h:panelGrid>
+                        <p:commandButton value="#{usuariosBean.crear}" actionListener="#{usuariosBean.crearUsuario()}" 
+                                         update="growl, :table :form1:panel1">
+                        </p:commandButton>
+                        <p:commandButton id="cancelar" value="#{usuariosBean.cancelar}" 
+                                         actionListener="#{usuariosBean.cancelar}" update="@form"/>
 
-                <p:ajax event="rowSelect" 
-                        listener="#{usuariosBean.onRowSelect}"
-                        update=":form1:panel1"/>
+                    </p:panel>
 
-                <p:column filterBy="#{usuarios.cedula}" headerText="Cedula" filterMatchMode="contains">
-                    #{usuarios.cedula}
-                </p:column>
-                <p:column filterBy="#{usuarios.nombres}" headerText="Nombres" filterMatchMode="contains">
-                    #{usuarios.nombres}
-                </p:column>
+                </h:form>
+                <br/>
+                <h:form  id="table">
 
-                <p:column filterBy="#{usuarios.apellidos}" headerText="Apellidos" filterMatchMode="contains">
-                    #{usuarios.apellidos}
-                </p:column>
 
-                <p:column filterBy="#{usuarios.fecha_nacimiento}" headerText="Fecha Nacimiento" filterMatchMode="contains">
-                    #{usuarios.fecha_nacimiento}
-                </p:column>
+                    <p:dataTable style="width:auto" value="#{usuariosBean.listaUsuarios}" paginator="true" rowKey="#{usuarios.cedula}"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="5,10,15" var="usuarios" emptyMessage="Usuarios no encontrados" 
+                                 selection="#{usuariosBean.usuariosSelect}" selectionMode="single">
 
-                <p:column filterBy="#{usuarios.direccion}" headerText="Direccion" filterMatchMode="contains">
-                    #{usuarios.direccion}
-                </p:column>
+                        <p:ajax event="rowSelect" 
+                                listener="#{usuariosBean.onRowSelect}"
+                                update=":form1:panel1"/>
 
-                <p:column filterBy="#{usuarios.email}" headerText="Email" filterMatchMode="contains">
-                    #{usuarios.email}
-                </p:column>
+                        <p:column filterBy="#{usuarios.cedula}" headerText="Cedula" filterMatchMode="contains">
+                            #{usuarios.cedula}
+                        </p:column>
+                        <p:column filterBy="#{usuarios.nombres}" headerText="Nombres" filterMatchMode="contains">
+                            #{usuarios.nombres}
+                        </p:column>
 
-                <p:column filterBy="#{usuarios.telefono}" headerText="Telefono" filterMatchMode="contains">
-                    #{usuarios.telefono}
-                </p:column>
+                        <p:column filterBy="#{usuarios.apellidos}" headerText="Apellidos" filterMatchMode="contains">
+                            #{usuarios.apellidos}
+                        </p:column>
 
-                <p:column headerText="Eliminar" style="width: available; text-align: center">
-                    <p:commandButton icon="ui-icon-close" actionListener="#{usuariosBean.eliminarUsuario(usuarios)}" update=":form1:growl :table">
-                        <p:confirm header="Eliminar" message="Desea eliminar el usuario?" icon="ui-icon-alert" />
-                    </p:commandButton>
-                </p:column>
-                <p:column headerText="Resetear Contraseña" style="width: available; text-align: center">
-                    <p:commandButton icon="ui-icon-check" actionListener="#{usuariosBean.resetPassword(usuarios)}" update=":form1:growl :table">
-                        <p:confirm header="Resetear" message="Desea resetear la contraseña?" icon="ui-icon-alert" />
-                    </p:commandButton>
-                </p:column>
+                        <p:column filterBy="#{usuarios.fecha_nacimiento}" headerText="Fecha Nacimiento" filterMatchMode="contains">
+                            #{usuarios.fecha_nacimiento}
+                        </p:column>
 
-            </p:dataTable>
-        </h:form>
+                        <p:column filterBy="#{usuarios.direccion}" headerText="Direccion" filterMatchMode="contains">
+                            #{usuarios.direccion}
+                        </p:column>
 
-    </h:body>
+                        <p:column filterBy="#{usuarios.email}" headerText="Email" filterMatchMode="contains">
+                            #{usuarios.email}
+                        </p:column>
+
+                        <p:column filterBy="#{usuarios.telefono}" headerText="Telefono" filterMatchMode="contains">
+                            #{usuarios.telefono}
+                        </p:column>
+
+                        <p:column headerText="Eliminar" style="width: available; text-align: center">
+                            <p:commandButton icon="ui-icon-close" actionListener="#{usuariosBean.eliminarUsuario(usuarios)}" update=":form1:growl :table">
+                            </p:commandButton>
+                        </p:column>
+                        <p:column headerText="Resetear Contraseña" style="width: available; text-align: center">
+                            <p:commandButton icon="ui-icon-check" actionListener="#{usuariosBean.resetPassword(usuarios)}" update=":form1:growl :table">
+                            </p:commandButton>
+                        </p:column>
+
+                    </p:dataTable>
+                </h:form>
+            </ui:define>
+
+            <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+            <script src="../../mb/docs/bootstrap-transition.js"></script>
+            <script src="../../mb/docs/bootstrap-alert.js"></script>
+            <script src="../../mb/docs/bootstrap-modal.js"></script>
+            <script src="../../mb/docs/bootstrap-dropdown.js"></script>
+            <script src="../../mb/docs/bootstrap-scrollspy.js"></script>
+            <script src="../../mb/docs/bootstrap-tab.js"></script>
+            <script src="../../mb/docs/bootstrap-tooltip.js"></script>
+            <script src="../../mb/docs/bootstrap-popover.js"></script>
+            <script src="../../mb/docs/bootstrap-button.js"></script>
+            <script src="../../mb/docs/bootstrap-collapse.js"></script>
+            <script src="../../mb/docs/bootstrap-carousel.js"></script>
+            <script src="../../mb/docs/bootstrap-typeahead.js"></script>
+        </ui:composition>
+    </body>
 </html>
-

@@ -68,7 +68,7 @@ public class ProductoFacade implements Serializable {
             String SQL = "INSERT INTO producto (id_categoria,nombre,precio,imagen) values (?, ?, ?, ?)";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             stmt.setInt(1, producto.getId_categoria().getId_categoria());
-            stmt.setString(2, producto.getNombre());
+            stmt.setString(2, producto.getNombre().toUpperCase());
             stmt.setFloat(3, producto.getPrecio());
             stmt.setInt(4, producto.getImagen().getId());
             stmt.executeUpdate();
@@ -95,7 +95,7 @@ public class ProductoFacade implements Serializable {
                     + "     where id_producto = ?";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             stmt.setInt(1, producto.getId_categoria().getId_categoria());
-            stmt.setString(2, producto.getNombre());
+            stmt.setString(2, producto.getNombre().toUpperCase());
             stmt.setFloat(3, producto.getPrecio());
             stmt.setInt(4, producto.getImagen().getId());
             stmt.setInt(5, producto.getId_producto());

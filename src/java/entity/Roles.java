@@ -73,11 +73,4 @@ public class Roles implements Serializable {
         }
         return true;
     }
-
-    @Override
-    public String toString() {
-        return "Roles{" + "idRol=" + idRol + ", nombreRol=" + nombreRol + ", descripcion=" + descripcion + '}';
-    }
-    
-
 }

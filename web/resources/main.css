@@ -1,0 +1,39 @@
+.cont
+{
+    margin-top: 70px;
+    text-align: justify;
+}
+
+.cent
+{
+    text-align: center;
+}
+
+.brand img
+{
+    margin-left: 20px;
+}
+
+.details
+{
+    background-color: #F1F1F1;
+    padding: 10px;
+    border: 1px solid #D9D9D9;
+    border-top: 0px;
+    text-align: justify;
+}
+
+.details h1,h2,h3,h4,h5,h6
+{
+    text-transform: capitalize;
+}
+
+footer
+{
+    background-color: #030303;
+    color: #F1F1F1;
+    font-size: 16px;
+    margin-top: 20px;
+    padding: 20px;
+    text-align: center;
+}

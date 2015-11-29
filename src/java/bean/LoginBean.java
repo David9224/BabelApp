@@ -72,10 +72,6 @@ public class LoginBean implements Serializable {
         if (cedula != null) {
             acceso = accesoFacade.getAccesoCedula(new Long(cedula.toString()));
             if (acceso != null) {
-                String passEnc = encripta.Encriptar(password);
-                System.out.println("" + passEnc);
-                System.out.println("" + encripta.Desencriptar(passEnc));
-                System.out.println("bd_____ " + acceso.getAcContra());
                 if (password.equals(encripta.Desencriptar(acceso.getAcContra()))) {
                     logeado = true;
                     msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Bienvenid@", "" + cedula);

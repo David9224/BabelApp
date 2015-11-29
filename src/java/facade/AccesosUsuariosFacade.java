@@ -104,7 +104,7 @@ public class AccesosUsuariosFacade implements Serializable {
         }
     }
 
-    public void updateAcceso(AccesosUsuarios acceso) throws Exception {
+    public void updateAcceso(AccesosUsuarios acceso) {
         try {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
@@ -116,12 +116,12 @@ public class AccesosUsuariosFacade implements Serializable {
             stmt.setString(2, acceso.getAcContra());
             stmt.setInt(3, acceso.getAcRol().getIdRol());
             stmt.setInt(4, acceso.getAcCodi());
-            stmt.executeUpdate();
+            stmt.execute();
 
             stmt.close();
             conexion.close();
         } catch (Exception e) {
-            throw new Exception("Error update AccesoUsuario: " + e.toString());
+            System.out.println("Error update AccesoUsuario: " + e.toString());
         }
     }
 

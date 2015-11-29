@@ -42,7 +42,7 @@ public class UsuariosFacade implements Serializable {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 usuarios = new Usuario();
-                usuarios.setCedula(rs.getInt(1));
+                usuarios.setCedula(rs.getLong(1));
                 usuarios.setNombres(rs.getString(2));
                 usuarios.setApellidos(rs.getString(3));
                 usuarios.setFecha_nacimiento(rs.getDate(4));
@@ -94,7 +94,7 @@ public class UsuariosFacade implements Serializable {
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             stmt.setString(1, usuario.getNombres().toUpperCase());
             stmt.setString(2, usuario.getApellidos().toUpperCase());
-            stmt.setDate(3,  usuario.getFecha_nacimiento());
+            stmt.setDate(3, usuario.getFecha_nacimiento());
             stmt.setString(4, usuario.getDireccion().toUpperCase());
             stmt.setString(5, usuario.getEmail());
             stmt.setLong(6, usuario.getTelefono());
@@ -135,7 +135,7 @@ public class UsuariosFacade implements Serializable {
             List<Usuario> listaUsuarios = new ArrayList<>();
             while (rs.next()) {
                 usuarios = new Usuario();
-                usuarios.setCedula(rs.getInt(1));
+                usuarios.setCedula(rs.getLong(1));
                 usuarios.setNombres(rs.getString(2));
                 usuarios.setApellidos(rs.getString(3));
                 usuarios.setFecha_nacimiento(rs.getDate(4));

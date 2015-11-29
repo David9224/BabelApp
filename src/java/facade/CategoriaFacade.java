@@ -63,7 +63,7 @@ public class CategoriaFacade implements Serializable {
             Connection conexion = connection.conexion();
             String SQL = "INSERT INTO categoria (nombre,descripcion) values (?, ?)";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
-            stmt.setString(1, categoria.getNombre());
+            stmt.setString(1, categoria.getNombre().toUpperCase());
             stmt.setString(2, categoria.getDescripcion());
             stmt.executeUpdate();
             stmt.close();
@@ -83,7 +83,7 @@ public class CategoriaFacade implements Serializable {
                     + "     nombre = ?, descripcion = ?"
                     + "     where id_categoria = ?";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
-            stmt.setString(1, categoria.getNombre());
+            stmt.setString(1, categoria.getNombre().toUpperCase());
             stmt.setString(2, categoria.getDescripcion());
             stmt.setInt(3, categoria.getId_categoria());
 

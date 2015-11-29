@@ -14,8 +14,8 @@ import java.util.Objects;
  * @author David
  */
 public class Usuario implements Serializable{
-    
-    private long cedula;
+
+    private Long cedula;
     private String nombres;
     private String apellidos;
     private Date fecha_nacimiento;
@@ -27,11 +27,11 @@ public class Usuario implements Serializable{
     }
 
     
-    public long getCedula() {
+    public Long getCedula() {
         return cedula;
     }
 
-    public void setCedula(long cedula) {
+    public void setCedula(Long cedula) {
         this.cedula = cedula;
     }
 
@@ -82,42 +82,4 @@ public class Usuario implements Serializable{
     public void setTelefono(long telefono) {
         this.telefono = telefono;
     }
-
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 17 * hash + (int) (this.cedula ^ (this.cedula >>> 32));
-        hash = 17 * hash + Objects.hashCode(this.nombres);
-        hash = 17 * hash + Objects.hashCode(this.apellidos);
-        hash = 17 * hash + Objects.hashCode(this.fecha_nacimiento);
-        hash = 17 * hash + Objects.hashCode(this.direccion);
-        hash = 17 * hash + Objects.hashCode(this.email);
-        hash = 17 * hash + (int) (this.telefono ^ (this.telefono >>> 32));
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Usuario other = (Usuario) obj;
-        if (this.cedula != other.cedula) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "Usuario{" + "cedula=" + cedula + ", nombres=" + nombres + ", apellidos=" + apellidos + ", fecha_nacimiento=" + fecha_nacimiento + ", direccion=" + direccion + ", email=" + email + ", telefono=" + telefono + '}';
-    }
-
-   
 }

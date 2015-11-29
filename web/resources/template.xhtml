@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"       
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>        
+        <title>Babel</title>
+        <meta charset="UTF-8"/>     
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" type="text/css" href="../../resources/indexCss.css"/>   
+        <link rel="stylesheet" type="text/css" href="../../mb/css/metro-bootstrap.css"/>
+        <link rel="stylesheet" href="../../mb/docs/font-awesome.css"/>
+        <link rel="stylesheet" type="text/css" href="../../resources/main.css"/>
+    </h:head>
+    <h:body>
+
+        <div id="top">
+            <ui:insert name="top">                
+                <header class="navbar navbar-inverse navbar-fixed-top">
+                    <div class="navbar-inner">
+                        <div class="container" style="width: auto;">
+                            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </a>
+                            <a href="#" class="brand"><img src="../../resources/images/babel2.jpg" alt="" width="120" height="90"/></a>
+                            <nav class="nav-collapse">
+                                <ul class="nav">
+                                    <li class="active"><a href="../index.xhtml">Inicio</a></li>
+                                    <li><a href="../usuarios/index.xhtml">Administrar Usuarios</a></li>
+                                    <li><a href="../clientes/index.xhtml">Administrar Clientes</a></li>
+                                    <li><a href="../categoria/index.xhtml">Administrar Categorias</a></li>
+                                    <li><a href="../productos/index.xhtml">Administrar Productos</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </header>
+            </ui:insert>
+        </div>
+
+        <div id="content" class="center_content">
+            <ui:insert name="content"></ui:insert>
+        </div>
+
+        <div id="bottom">
+            <ui:insert name="bottom">
+                <footer>
+                    <b><em>DAVID ARISTIZABAL--ANDERSON HINCAPIE</em></b> copy; 2015 - Todos Los Derechos Reservados
+                </footer>
+            </ui:insert>
+        </div>
+
+    </h:body>
+
+</html>

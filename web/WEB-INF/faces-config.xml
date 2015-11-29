@@ -20,11 +20,11 @@
             <from-outcome>importarProductos</from-outcome>
             <to-view-id>/admin/productos/importarCvs.xhtml</to-view-id>
         </navigation-case>
-         <navigation-case>
+        <navigation-case>
             <from-outcome>gestionarUsuarios</from-outcome>
             <to-view-id>/admin/usuarios/index.xhtml</to-view-id>
         </navigation-case>
-         <navigation-case>
+        <navigation-case>
             <from-outcome>gestionarClientes</from-outcome>
             <to-view-id>/admin/clientes/index.xhtml</to-view-id>
         </navigation-case>
@@ -40,7 +40,7 @@
             <from-outcome>crearFacturas</from-outcome>
             <to-view-id>/cajero/factura/crear.xhtml</to-view-id>
         </navigation-case>
-         <navigation-case>
+        <navigation-case>
             <from-outcome>editarFacturas</from-outcome>
             <to-view-id>/cajero/factura/editar.xhtml</to-view-id>
         </navigation-case>

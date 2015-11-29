@@ -5,90 +5,107 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
-    <h:head>
+    <head>
         <title>Babel</title>
-        <link rel="stylesheet" type="text/css" href="../../resources/indexCss.css"/>
-    </h:head>
-    <h:body>
+        <meta charset="UTF-8"/>     
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" type="text/css" href="../../resources/indexCss.css"/>   
+        <link rel="stylesheet" type="text/css" href="../../mb/css/metro-bootstrap.css"/>
+        <link rel="stylesheet" href="../../mb/docs/font-awesome.css"/>
+        <link rel="stylesheet" type="text/css" href="../../resources/main.css"/>        
+    </head>
+    <body>
+        <ui:composition template="./../../resources/template.xhtml">
 
-        <ui:include src="../../resources/appmenu.xhtml"/>
-        <ui:include src="../../resources/confirmdialog.xhtml"/>
-        <br/>
-        <h:form id="form1" enctype="multipart/form-data">
-            <p:panel header="#{productosBean.crearHeader}" styleClass="content1" style="text-align: center" id="panel1">
-                <p:growl id="growl" showDetail="true" life="3000" />
-                <h:panelGrid id="crear" columns="1" style="width: 100%">
+            <ui:define name="content">
+                <h:form id="form1" enctype="multipart/form-data">
+                    <p:panel header="#{productosBean.crearHeader}" styleClass="content1" style="text-align: center" id="panel1">
+                        <p:growl id="growl" showDetail="true" life="3000" />
+                        <h:panelGrid id="crear" columns="1" style="width: 100%">
 
-                    <h:outputText value="Categoria: *" />
-                    <p:selectOneMenu  required="true" value="#{productosBean.producto.id_categoria}"  converter="categoriaConverter" converterMessage="Error en la conversion" >
-
-                        <f:selectItem itemLabel="Seleccione uno"/>
-                        <f:selectItems value="#{categoriaBean.listaCategorias}" var="categoria" itemLabel="#{categoria.nombre}" itemValue="#{categoria}"/>
-                    </p:selectOneMenu>
+                            <h:outputText value="Categoria: *" />
+                            <p:selectOneMenu  required="true" value="#{productosBean.producto.id_categoria}"  style="width: 100%"
+                                              converter="categoriaConverter" converterMessage="Error en la conversion" >
+                                <f:selectItem itemLabel="Seleccione uno"/>
+                                <f:selectItems value="#{categoriaBean.listaCategorias}" var="categoria" itemLabel="#{categoria.nombre}" itemValue="#{categoria}"/>
+                            </p:selectOneMenu>
 
 
-                    <h:outputText value="Nombre: *" />
-                    <p:inputText value="#{productosBean.producto.nombre}" style="width: 100%;" required="true" label="Nombre">
-                        <p:ajax update=":form1:cancelar" event="keyup" />
-                    </p:inputText>
+                            <h:outputText value="Nombre: *" />
+                            <p:inputText value="#{productosBean.producto.nombre}" style="width: 100%;" required="true" label="Nombre">
+                                <p:ajax update=":form1:cancelar" event="keyup" />
+                            </p:inputText>
 
-                    <h:outputText value="Precio: *" />
-                    <p:inputText value="#{productosBean.producto.precio}" style="width: 100%;" required="true" label="Precio"/>
+                            <h:outputText value="Precio: *" />
+                            <p:inputText value="#{productosBean.producto.precio}" style="width: 100%;" required="true" label="Precio"/>
 
-                    <h:outputText value="Imagen: *"/>
-                    <p:fileUpload mode="advanced"  auto="true" sizeLimit="600000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" update="growl" fileUploadListener="#{productosBean.seleccionarImagen}" style="width: 100%"/>
+                            <h:outputText value="Imagen: *"/>
+                            <p:fileUpload mode="advanced"  auto="true" sizeLimit="600000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" update="growl" fileUploadListener="#{productosBean.seleccionarImagen}" style="width: 100%"/>
 
-                </h:panelGrid>
+                        </h:panelGrid>
+                        <br/>
+                        <p:commandButton value="#{productosBean.crear}"  actionListener="#{productosBean.crearProducto}" ajax="true" update="@form :formtable">
+                        </p:commandButton>
+                        <p:commandButton id="cancelar" value="#{productosBean.cancelar}" disabled="#{productosBean.producto.nombre == null}"  actionListener="#{productosBean.cancelar}" update="@form"/>
+
+                    </p:panel>
+
+                </h:form>
                 <br/>
-                <p:commandButton value="#{productosBean.crear}"  actionListener="#{productosBean.crearProducto}" ajax="true" update="@form :formtable">
-                    <p:confirm   header="Informacion" message="Desea continuar la operación" icon="ui-icon-alert"/>
-                </p:commandButton>
-                <p:commandButton id="cancelar" value="#{productosBean.cancelar}" disabled="#{productosBean.producto.nombre == null}"  actionListener="#{productosBean.cancelar}" update="@form"/>
+                <h:form id="formtable"  enctype="multipart/form-data">
+                    <p:growl id="grow2" showDetail="true" life="2000" />
 
-            </p:panel>
+                    <p:dataTable  id="table" style="width:auto" rowKey="#{producto.id_producto}" value="#{productosBean.listaProductos}" emptyMessage="Productos no encontrados"  paginator="true"
+                                  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                  rowsPerPageTemplate="5,10,15" var="producto" selection="#{productosBean.productoSelect}" selectionMode="single" >
 
-        </h:form>
-        <br/>
-        <h:form id="formtable"  enctype="multipart/form-data">
-            <p:growl id="grow2" showDetail="true" life="2000" />
+                        <p:ajax event="rowSelect" 
+                                listener="#{productosBean.onRowSelect}"
+                                update=":form1:panel1"/>
+                        <p:column filterBy="#{producto.id_producto}" headerText="Id" filterMatchMode="contains">
+                            <p:outputLabel value="#{producto.id_producto}"/>
+                        </p:column>
+                        <p:column filterBy="#{producto.id_categoria.nombre}" headerText="Categoria" filterMatchMode="contains">
+                            <p:outputLabel value="#{producto.id_categoria.nombre}"/>
+                        </p:column>
 
-            <p:dataTable  id="table" style="width:auto" rowKey="#{producto.id_producto}" value="#{productosBean.listaProductos}" emptyMessage="Productos no encontrados"  paginator="true"
-                          paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                          rowsPerPageTemplate="5,10,15" var="producto" selection="#{productosBean.productoSelect}" selectionMode="single" >
+                        <p:column filterBy="#{producto.nombre}" headerText="Nombre" filterMatchMode="contains">
+                            <p:outputLabel value="#{producto.nombre}"/>
+                        </p:column>
 
-                <p:ajax event="rowSelect" 
-                        listener="#{productosBean.onRowSelect}"
-                        update=":form1:panel1"/>
-                <p:column filterBy="#{producto.id_producto}" headerText="Id" filterMatchMode="contains">
-                    <p:outputLabel value="#{producto.id_producto}"/>
-                </p:column>
-                <p:column filterBy="#{producto.id_categoria.nombre}" headerText="Categoria" filterMatchMode="contains">
-                    <p:outputLabel value="#{producto.id_categoria.nombre}"/>
-                </p:column>
+                        <p:column filterBy="#{producto.precio}" headerText="Precio" filterMatchMode="contains">
+                            <p:outputLabel value="#{producto.precio}"/>
+                        </p:column>
 
-                <p:column filterBy="#{producto.nombre}" headerText="Nombre" filterMatchMode="contains">
-                    <p:outputLabel value="#{producto.nombre}"/>
-                </p:column>
-
-                <p:column filterBy="#{producto.precio}" headerText="Precio" filterMatchMode="contains">
-                    <p:outputLabel value="#{producto.precio}"/>
-                </p:column>
-
-                <p:column filterBy="#{producto.imagen}" headerText="Imagen" filterMatchMode="contains" >
-                    <p:graphicImage value="#{productosBean.getImagen()}" style="width: 100%">
-                        <f:param id="image_id" name="image_id" value="#{producto.imagen.id}" />
-                    </p:graphicImage>
-                </p:column>
+                        <p:column filterBy="#{producto.imagen}" headerText="Imagen" filterMatchMode="contains" >
+                            <p:graphicImage value="#{productosBean.getImagen()}" style="width: 100%">
+                                <f:param id="image_id" name="image_id" value="#{producto.imagen.id}" />
+                            </p:graphicImage>
+                        </p:column>
 
 
-                <p:column headerText="Eliminar" style="text-align: center">
-                    <p:commandButton icon="ui-icon-close" action="#{productosBean.eliminarProducto(producto)}" update=":formtable" >
-                        <p:confirm header="Eliminar" message="Desea eliminar el producto?" icon="ui-icon-alert" />
-                    </p:commandButton>
-                </p:column>
+                        <p:column headerText="Eliminar" style="text-align: center">
+                            <p:commandButton icon="ui-icon-close" action="#{productosBean.eliminarProducto(producto)}" update=":formtable" >
+                            </p:commandButton>
+                        </p:column>
 
-            </p:dataTable>
-        </h:form>
-    </h:body>
+                    </p:dataTable>
+                </h:form>
+            </ui:define>
+            <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+            <script src="../../mb/docs/bootstrap-transition.js"></script>
+            <script src="../../mb/docs/bootstrap-alert.js"></script>
+            <script src="../../mb/docs/bootstrap-modal.js"></script>
+            <script src="../../mb/docs/bootstrap-dropdown.js"></script>
+            <script src="../../mb/docs/bootstrap-scrollspy.js"></script>
+            <script src="../../mb/docs/bootstrap-tab.js"></script>
+            <script src="../../mb/docs/bootstrap-tooltip.js"></script>
+            <script src="../../mb/docs/bootstrap-popover.js"></script>
+            <script src="../../mb/docs/bootstrap-button.js"></script>
+            <script src="../../mb/docs/bootstrap-collapse.js"></script>
+            <script src="../../mb/docs/bootstrap-carousel.js"></script>
+            <script src="../../mb/docs/bootstrap-typeahead.js"></script>
+        </ui:composition>
+
+    </body>
 </html>
-

@@ -5,111 +5,126 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
-    <h:head>
+    <head>
         <title>Babel</title>
-        <link rel="stylesheet" type="text/css" href="../../resources/indexCss.css"/>
-    </h:head>
-    <h:body>
-        <ui:include src="../../resources/appmenu.xhtml"/>
-        <ui:include src="../../resources/confirmdialog.xhtml"/>
-        <br/>
+        <meta charset="UTF-8"/>     
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" type="text/css" href="../../resources/indexCss.css"/>   
+        <link rel="stylesheet" type="text/css" href="../../mb/css/metro-bootstrap.css"/>
+        <link rel="stylesheet" href="../../mb/docs/font-awesome.css"/>
+        <link rel="stylesheet" type="text/css" href="../../resources/main.css"/>        
+    </head>
+    <body>
+        <ui:composition template="./../../resources/template.xhtml">
 
-        <h:form id="form1">
+            <ui:define name="content">
+                <h:form id="form1">
 
-            <p:growl id="growl" showDetail="true" life="2000" />
-            <p:panel header="#{clientesBean.crearHeader}"   styleClass="content1" style="text-align: center" id="panel1">
-                <h:panelGrid columns="2" style="width: 100%">
-                    <h:outputText value="Cedula: *" />
-                    <p:inputText value="#{clientesBean.clientes.cedula}" disabled="#{clientesBean.clientes.cedula!=0}"  style="width: 100%;" 
-                                 required="true" label="Cedula">
-                     <p:ajax update=":form1:cancelar" event="keyup" />
-                    </p:inputText>
+                    <p:growl id="growl" showDetail="true" life="2000" />
+                    <p:panel header="#{clientesBean.crearHeader}"   styleClass="content1" style="text-align: center" id="panel1">
+                        <h:panelGrid columns="2" style="width: 100%">
+                            <h:outputText value="Cedula: *" />
+                            <p:inputText value="#{clientesBean.clientes.cedula}" disabled="#{clientesBean.clientes.cedula!=0}"  style="width: 100%;" 
+                                         required="true" label="Cedula">
+                                <p:ajax update=":form1:cancelar" event="keyup" />
+                            </p:inputText>
 
-                    <h:outputText value="Nombres: *" />
-                    <p:inputText value="#{clientesBean.clientes.nombres}" style="width: 100%;" 
-                                 required="true" label="Nombres"/>
+                            <h:outputText value="Nombres: *" />
+                            <p:inputText value="#{clientesBean.clientes.nombres}" style="width: 100%;" 
+                                         required="true" label="Nombres"/>
 
-                    <h:outputText value="Apellidos: *" />
-                    <p:inputText value="#{clientesBean.clientes.apellidos}" style="width: 100%;" 
-                                 required="true" label="Apellidos"/>
+                            <h:outputText value="Apellidos: *" />
+                            <p:inputText value="#{clientesBean.clientes.apellidos}" style="width: 100%;" 
+                                         required="true" label="Apellidos"/>
 
-                    <h:outputText value="Fecha Nacimiento: *" />
-                    <p:calendar id="german" value="#{clientesBean.date}"  navigator="true" placeholder="dd/mm/yy">
-                        <p:ajax event="dateSelect" listener="#{clientesBean.onDateSelect}" update="growl" />
-                    </p:calendar>
+                            <h:outputText value="Fecha Nacimiento: *" />
+                            <p:calendar id="german" value="#{clientesBean.date}"  navigator="true" placeholder="dd/mm/yy">
+                                <p:ajax event="dateSelect" listener="#{clientesBean.onDateSelect}" update="growl" />
+                            </p:calendar>
 
-                    <h:outputText value="Direccion: *" />
-                    <p:inputText value="#{clientesBean.clientes.direccion}" style="width: 100%;" 
-                                 required="true" label="Direccion"/>
+                            <h:outputText value="Direccion: *" />
+                            <p:inputText value="#{clientesBean.clientes.direccion}" style="width: 100%;" 
+                                         required="true" label="Direccion"/>
 
-                    <h:outputText value="Email:" />
-                    <p:inputText value="#{clientesBean.clientes.email}" style="width: 100%;" 
-                                 required="false" label="email"/>
-                    <h:outputText value="Telefono: *" />
-                    <p:inputText value="#{clientesBean.clientes.telefono}" style="width: 100%;" 
-                                 required="true" label="Telefono">
-                        <f:validateDoubleRange minimum="1"/>
-                    </p:inputText>
+                            <h:outputText value="Email:" />
+                            <p:inputText value="#{clientesBean.clientes.email}" style="width: 100%;" 
+                                         required="false" label="email"/>
+                            <h:outputText value="Telefono: *" />
+                            <p:inputText value="#{clientesBean.clientes.telefono}" style="width: 100%;" 
+                                         required="true" label="Telefono">
+                                <f:validateDoubleRange minimum="1"/>
+                            </p:inputText>
 
-                </h:panelGrid>
-                <p:commandButton value="#{clientesBean.crear}" actionListener="#{clientesBean.crearCliente()}" 
-                                 update="growl, :table :form1:panel1">
-                    <p:confirm   header="Informacion" message="Desea continuar la operación?" icon="ui-icon-alert"/>
-                </p:commandButton>
-                <p:commandButton id="cancelar" value="#{clientesBean.cancelar}" disabled="#{clientesBean.clientes.cedula == 0}" actionListener="#{clientesBean.cancelar}" update="@form"/>
+                        </h:panelGrid>
+                        <p:commandButton value="#{clientesBean.crear}" actionListener="#{clientesBean.crearCliente()}" 
+                                         update="growl, :table :form1:panel1">
+                        </p:commandButton>
+                        <p:commandButton id="cancelar" value="#{clientesBean.cancelar}" disabled="#{clientesBean.clientes.cedula == 0}" actionListener="#{clientesBean.cancelar}" update="@form"/>
 
-            </p:panel>
+                    </p:panel>
 
-        </h:form>
-        <br/>
-        <h:form  id="table">
+                </h:form>
+                <br/>
+                <h:form  id="table">
 
 
-            <p:dataTable style="width:auto" value="#{clientesBean.listaClientes}" paginator="true" rowKey="#{clientes.cedula}"
-                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                         rowsPerPageTemplate="5,10,15" var="clientes" emptyMessage="Clientes no encontrados" 
-                         selection="#{clientesBean.clientesSelect}" selectionMode="single">
+                    <p:dataTable style="width:auto" value="#{clientesBean.listaClientes}" paginator="true" rowKey="#{clientes.cedula}"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="5,10,15" var="clientes" emptyMessage="Clientes no encontrados" 
+                                 selection="#{clientesBean.clientesSelect}" selectionMode="single">
 
-                <p:ajax event="rowSelect" 
-                        listener="#{clientesBean.onRowSelect}"
-                        update=":form1:panel1"/>
+                        <p:ajax event="rowSelect" 
+                                listener="#{clientesBean.onRowSelect}"
+                                update=":form1:panel1"/>
 
-                <p:column filterBy="#{clientes.cedula}" headerText="Cedula" filterMatchMode="contains">
-                    #{clientes.cedula}
-                </p:column>
-                <p:column filterBy="#{clientes.nombres}" headerText="Nombres" filterMatchMode="contains">
-                    #{clientes.nombres}
-                </p:column>
+                        <p:column filterBy="#{clientes.cedula}" headerText="Cedula" filterMatchMode="contains">
+                            #{clientes.cedula}
+                        </p:column>
+                        <p:column filterBy="#{clientes.nombres}" headerText="Nombres" filterMatchMode="contains">
+                            #{clientes.nombres}
+                        </p:column>
 
-                <p:column filterBy="#{clientes.apellidos}" headerText="Apellidos" filterMatchMode="contains">
-                    #{clientes.apellidos}
-                </p:column>
+                        <p:column filterBy="#{clientes.apellidos}" headerText="Apellidos" filterMatchMode="contains">
+                            #{clientes.apellidos}
+                        </p:column>
 
-                <p:column filterBy="#{clientes.fecha_nacimiento}" headerText="Fecha Nacimiento" filterMatchMode="contains">
-                    #{clientes.fecha_nacimiento}
-                </p:column>
+                        <p:column filterBy="#{clientes.fecha_nacimiento}" headerText="Fecha Nacimiento" filterMatchMode="contains">
+                            #{clientes.fecha_nacimiento}
+                        </p:column>
 
-                <p:column filterBy="#{clientes.direccion}" headerText="Direccion" filterMatchMode="contains">
-                    #{clientes.direccion}
-                </p:column>
+                        <p:column filterBy="#{clientes.direccion}" headerText="Direccion" filterMatchMode="contains">
+                            #{clientes.direccion}
+                        </p:column>
 
-                <p:column filterBy="#{clientes.email}" headerText="Email" filterMatchMode="contains">
-                    #{clientes.email}
-                </p:column>
+                        <p:column filterBy="#{clientes.email}" headerText="Email" filterMatchMode="contains">
+                            #{clientes.email}
+                        </p:column>
 
-                <p:column filterBy="#{clientes.telefono}" headerText="Telefono" filterMatchMode="contains">
-                    #{clientes.telefono}
-                </p:column>
+                        <p:column filterBy="#{clientes.telefono}" headerText="Telefono" filterMatchMode="contains">
+                            #{clientes.telefono}
+                        </p:column>
 
-                <p:column headerText="Eliminar" style="width: available; text-align: center">
-                    <p:commandButton icon="ui-icon-close" actionListener="#{clientesBean.eliminarCliente(clientes)}" update=":form1:growl :table">
-                        <p:confirm header="Eliminar" message="Desea eliminar el cliente?" icon="ui-icon-alert" />
-                    </p:commandButton>
-                </p:column>
-               
-            </p:dataTable>
-        </h:form>
+                        <p:column headerText="Eliminar" style="width: available; text-align: center">
+                            <p:commandButton icon="ui-icon-close" actionListener="#{clientesBean.eliminarCliente(clientes)}" update=":form1:growl :table">
+                            </p:commandButton>
+                        </p:column>
 
-    </h:body>
+                    </p:dataTable>
+                </h:form>
+            </ui:define>
+            <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+            <script src="../../mb/docs/bootstrap-transition.js"></script>
+            <script src="../../mb/docs/bootstrap-alert.js"></script>
+            <script src="../../mb/docs/bootstrap-modal.js"></script>
+            <script src="../../mb/docs/bootstrap-dropdown.js"></script>
+            <script src="../../mb/docs/bootstrap-scrollspy.js"></script>
+            <script src="../../mb/docs/bootstrap-tab.js"></script>
+            <script src="../../mb/docs/bootstrap-tooltip.js"></script>
+            <script src="../../mb/docs/bootstrap-popover.js"></script>
+            <script src="../../mb/docs/bootstrap-button.js"></script>
+            <script src="../../mb/docs/bootstrap-collapse.js"></script>
+            <script src="../../mb/docs/bootstrap-carousel.js"></script>
+            <script src="../../mb/docs/bootstrap-typeahead.js"></script>
+        </ui:composition>
+    </body>
 </html>
-

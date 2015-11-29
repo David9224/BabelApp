@@ -5,71 +5,85 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
-    <h:head>
+    <head>
         <title>Babel</title>
-        <link rel="stylesheet" type="text/css" href="../../resources/indexCss.css"/>
-    </h:head>
-    <h:body>
+        <meta charset="UTF-8"/>     
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" type="text/css" href="../../resources/indexCss.css"/>   
+        <link rel="stylesheet" type="text/css" href="../../mb/css/metro-bootstrap.css"/>
+        <link rel="stylesheet" href="../../mb/docs/font-awesome.css"/>
+        <link rel="stylesheet" type="text/css" href="../../resources/main.css"/>        
+    </head>
+    <body>
+        <ui:composition template="./../../resources/template.xhtml">
+            <ui:include src="../../resources/confirmdialog.xhtml"/>
 
-        <ui:include src="../../resources/appmenu.xhtml"/>
+            <ui:define name="content">
+                <h:form id="form1">
+                    <p:panel header="#{categoriaBean.crearHeader}" styleClass="content1" style="text-align: center" id="panel1">
+                        <p:growl id="growl" showDetail="true" life="2000" />
+                        <h:panelGrid  columns="1" style="width: 100%">
+                            <h:outputText value="Nombre: *" />
+                            <p:inputText value="#{categoriaBean.categoria.nombre}" style="width: 100%;" required="true" label="Nombre">
+                                <p:ajax update=":form1:cancelar" event="keyup" />
+                            </p:inputText>
 
-        <ui:include src="../../resources/confirmdialog.xhtml"/>
-        <br/>
+                            <h:outputText value="Descripcion:" />
+                            <p:inputText value="#{categoriaBean.categoria.descripcion}" style="width: 100%;" required="false" label="Descripcion"/>
+                        </h:panelGrid>
+                        <br/>
+                        <p:commandButton value="#{categoriaBean.crear}"  action="#{categoriaBean.crearCategoria()}" update="@form :formtable">
+                        </p:commandButton>
 
-        <h:form id="form1">
-            <p:panel header="#{categoriaBean.crearHeader}" styleClass="content1" style="text-align: center" id="panel1">
-                <p:growl id="growl" showDetail="true" life="2000" />
-                <h:panelGrid  columns="1" style="width: 100%">
-                    <h:outputText value="Nombre: *" />
-                    <p:inputText value="#{categoriaBean.categoria.nombre}" style="width: 100%;" required="true" label="Nombre">
-                        <p:ajax update=":form1:cancelar" event="keyup" />
-                    </p:inputText>
+                        <p:commandButton id="cancelar" value="#{categoriaBean.cancelar}"  disabled="#{categoriaBean.categoria.nombre == null}" actionListener="#{categoriaBean.cancelar}" update="@form"/>
 
-                    <h:outputText value="Descripcion:" />
-                    <p:inputText value="#{categoriaBean.categoria.descripcion}" style="width: 100%;" required="false" label="Descripcion"/>
-                </h:panelGrid>
+                    </p:panel>
+
+                </h:form>
+
                 <br/>
-                <p:commandButton value="#{categoriaBean.crear}"  action="#{categoriaBean.crearCategoria()}" update="@form :formtable">
-                    <p:confirm   header="Informacion" message="Desea continuar la operación" icon="ui-icon-alert"/>
-                </p:commandButton>
+                <h:form id="formtable">
+                    <p:growl id="grow2" showDetail="true" life="2000" />
 
-                <p:commandButton id="cancelar" value="#{categoriaBean.cancelar}"  disabled="#{categoriaBean.categoria.nombre == null}" actionListener="#{categoriaBean.cancelar}" update="@form"/>
+                    <p:dataTable  id="table" style="width:auto;text-align: center" rowKey="#{categoria.id_categoria}" value="#{categoriaBean.listaCategorias}" emptyMessage="Categorias no encontradas"  paginator="true"
+                                  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                  rowsPerPageTemplate="5,10,15" var="categoria" selection="#{categoriaBean.categoriaSelect}" selectionMode="single" >
+                        <p:ajax event="rowSelect"  listener="#{categoriaBean.onRowSelect}"
+                                update=":form1:panel1 " />
+                        <p:column filterBy="#{categoria.id_categoria}" headerText="Id" filterMatchMode="contains">
+                            <p:outputLabel value="#{categoria.id_categoria}"/>
+                        </p:column>
+                        <p:column filterBy="#{categoria.nombre}" headerText="Nombre" filterMatchMode="contains">
+                            <p:outputLabel value="#{categoria.nombre}"/>
+                        </p:column>
 
-            </p:panel>
+                        <p:column filterBy="#{categoria.descripcion}" headerText="Descripcion" filterMatchMode="contains">
+                            <p:outputLabel value="#{categoria.descripcion}"/>
+                        </p:column>
 
-        </h:form>
+                        <p:column headerText="Eliminar">
+                            <p:commandButton icon="ui-icon-close" actionListener="#{categoriaBean.eliminarCategoria(categoria)}" update=":formtable" >
+                            </p:commandButton>
+                        </p:column>
 
-        <br/>
-        <h:form id="formtable">
-            <p:growl id="grow2" showDetail="true" life="2000" />
-
-            <p:dataTable  id="table" style="width:auto;text-align: center" rowKey="#{categoria.id_categoria}" value="#{categoriaBean.listaCategorias}" emptyMessage="Categorias no encontradas"  paginator="true"
-                          paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                          rowsPerPageTemplate="5,10,15" var="categoria" selection="#{categoriaBean.categoriaSelect}" selectionMode="single" >
-                <p:ajax event="rowSelect"  listener="#{categoriaBean.onRowSelect}"
-                        update=":form1:panel1 " />
-                <p:column filterBy="#{categoria.id_categoria}" headerText="Id" filterMatchMode="contains">
-                    <p:outputLabel value="#{categoria.id_categoria}"/>
-                </p:column>
-                <p:column filterBy="#{categoria.nombre}" headerText="Nombre" filterMatchMode="contains">
-                    <p:outputLabel value="#{categoria.nombre}"/>
-                </p:column>
-
-                <p:column filterBy="#{categoria.descripcion}" headerText="Descripcion" filterMatchMode="contains">
-                    <p:outputLabel value="#{categoria.descripcion}"/>
-                </p:column>
-
-                <p:column headerText="Eliminar">
-                    <p:commandButton icon="ui-icon-close" actionListener="#{categoriaBean.eliminarCategoria(categoria)}" update=":formtable" >
-                        <p:confirm header="Eliminar" message="Desea eliminar la categoria" icon="ui-icon-alert" />
-                    </p:commandButton>
-                </p:column>
-
-            </p:dataTable>
+                    </p:dataTable>
 
 
-        </h:form>
-
-    </h:body>
+                </h:form>
+            </ui:define>
+            <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+            <script src="../../mb/docs/bootstrap-transition.js"></script>
+            <script src="../../mb/docs/bootstrap-alert.js"></script>
+            <script src="../../mb/docs/bootstrap-modal.js"></script>
+            <script src="../../mb/docs/bootstrap-dropdown.js"></script>
+            <script src="../../mb/docs/bootstrap-scrollspy.js"></script>
+            <script src="../../mb/docs/bootstrap-tab.js"></script>
+            <script src="../../mb/docs/bootstrap-tooltip.js"></script>
+            <script src="../../mb/docs/bootstrap-popover.js"></script>
+            <script src="../../mb/docs/bootstrap-button.js"></script>
+            <script src="../../mb/docs/bootstrap-collapse.js"></script>
+            <script src="../../mb/docs/bootstrap-carousel.js"></script>
+            <script src="../../mb/docs/bootstrap-typeahead.js"></script>
+        </ui:composition>
+    </body>
 </html>
-
