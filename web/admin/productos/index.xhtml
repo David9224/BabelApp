@@ -45,6 +45,7 @@
                         </h:panelGrid>
                         <br/>
                         <p:commandButton value="#{productosBean.crear}"  actionListener="#{productosBean.crearProducto}" ajax="true" update="@form :formtable">
+                            <p:confirm header="Confirmation" message="Esta Seguro?" icon="ui-icon-alert" />
                         </p:commandButton>
                         <p:commandButton id="cancelar" value="#{productosBean.cancelar}" disabled="#{productosBean.producto.nombre == null}"  actionListener="#{productosBean.cancelar}" update="@form"/>
 
@@ -86,6 +87,7 @@
 
                         <p:column headerText="Eliminar" style="text-align: center">
                             <p:commandButton icon="ui-icon-close" action="#{productosBean.eliminarProducto(producto)}" update=":formtable" >
+                                <p:confirm header="Confirmation" message="Esta Seguro?" icon="ui-icon-alert" />
                             </p:commandButton>
                         </p:column>
 

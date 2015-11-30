@@ -28,7 +28,9 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.faces.event.PhaseId;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.DragDropEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -53,17 +55,36 @@ public class FacturaBean implements Serializable {
     private int mesa;
     private Cliente cliente;
     private Factura factura;
+    private String nombre;
 
     /**
      *
      */
     public FacturaBean() {
         try {
-            init();
+            clienteFacade = new ClienteFacade();
+            usuariosFacade = new UsuariosFacade();
+            productoFacade = new ProductoFacade();
+            imagenFacade = new ImagenFacade();
+            detalleSelect = new Detalle();
+            detalleFacade = new DetalleFacade();
+            listaDetalle = new ArrayList<>();
+            listaProducto = new ArrayList<>();
+            facturaFacade = new FacturaFacade();
+            cliente = new Cliente();
+            factura = new Factura();
         } catch (Exception ex) {
             Logger.getLogger(FacturaBean.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public int getMesa() {
@@ -150,21 +171,30 @@ public class FacturaBean implements Serializable {
     }
 
     public void eliminar(Detalle d) {
-        listaDetalle.remove(d);
+        try {
+            Factura f = facturaFacade.buscarFactura(factura.getNum_factura());
+            if (f == null) {
+                listaDetalle.remove(d);
+            } else {
+                detalleFacade.borrarDetalle(d.getNum_detalle(), d.getFactura().getNum_factura());
+                getDetalleFactura(f);
+            }
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+            Logger.getLogger(FacturaBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void crear() {
         try {
-            System.out.println("ole");
+            System.out.println("crear");
             if (facturaFacade.buscarFactura(factura.getNum_factura()) == null) {
-                System.out.println("ole1");
-                factura.setCliente(cliente);
                 AccesosUsuarios a = (AccesosUsuarios) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
                 factura.setUsuario(usuariosFacade.buscarUsuario(a.getAcCedu().getCedula()));
                 factura.setPendiente(false);
                 factura.setFecha(new Date(System.currentTimeMillis()));
                 factura.setMesa(1);
-                if (factura.getCliente() == null || factura.getCliente().getCedula() == 0) {
+                if ((factura.getNombre() == null || factura.getNombre().trim().equals("")) && factura.getCedula() == 0) {
                     factura = facturaFacade.crearFactura(factura);
                 } else {
                     factura = facturaFacade.crearFacturaC(factura);
@@ -173,15 +203,12 @@ public class FacturaBean implements Serializable {
                     detalle.setFactura(factura);
                     detalleFacade.crearDetalle(detalle);
                 }
-                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Factura con numero :" + factura.getNum_factura() + " ha sido guardada");
+                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Factura con numero :" + factura.getNum_factura() + " ha sido creada");
                 FacesContext.getCurrentInstance().addMessage(null, msg);
-
             } else {
-                System.out.println("ole2");
                 factura.setPendiente(false);
                 factura.setFecha(new Date(System.currentTimeMillis()));
-                factura.setMesa(1);
-                if (factura.getCliente() == null ||factura.getCliente().getCedula() == 0) {
+                if ((factura.getNombre() == null || factura.getNombre().trim().equals("")) && factura.getCedula() == 0) {
                     facturaFacade.updateFactura(factura);
                 } else {
                     facturaFacade.updateFacturaC(factura);
@@ -207,14 +234,13 @@ public class FacturaBean implements Serializable {
 
     public void guardar() {
         try {
+            System.out.println("guardar");
             if (facturaFacade.buscarFactura(factura.getNum_factura()) == null) {
-                factura.setCliente(cliente);
                 AccesosUsuarios a = (AccesosUsuarios) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
                 factura.setUsuario(usuariosFacade.buscarUsuario(a.getAcCedu().getCedula()));
                 factura.setPendiente(true);
-                factura.setFecha(new Date(System.currentTimeMillis()));
                 factura.setMesa(1);
-                if (factura.getCliente() == null ||factura.getCliente().getCedula() == 0) {
+                if ((factura.getNombre() == null || factura.getNombre().trim().equals("")) && factura.getCedula() == 0) {
                     factura = facturaFacade.crearFactura(factura);
                 } else {
                     factura = facturaFacade.crearFacturaC(factura);
@@ -223,14 +249,15 @@ public class FacturaBean implements Serializable {
                     detalle.setFactura(factura);
                     detalleFacade.crearDetalle(detalle);
                 }
+                RequestContext rc = RequestContext.getCurrentInstance();
+                rc.execute("PF('dlg2').hide()");
                 FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Factura con numero :" + factura.getNum_factura() + " ha sido guardada");
                 FacesContext.getCurrentInstance().addMessage(null, msg);
-
             } else {
                 factura.setPendiente(true);
                 factura.setFecha(new Date(System.currentTimeMillis()));
                 factura.setMesa(1);
-                if (factura.getCliente() == null || factura.getCliente().getCedula() == 0) {
+                if ((factura.getNombre() == null || factura.getNombre().trim().equals("")) && factura.getCedula() == 0) {
                     facturaFacade.updateFactura(factura);
                 } else {
                     facturaFacade.updateFacturaC(factura);
@@ -243,6 +270,8 @@ public class FacturaBean implements Serializable {
                         detalleFacade.updateDetalle(detalle);
                     }
                 }
+                RequestContext rc = RequestContext.getCurrentInstance();
+                rc.execute("PF('dlg2').hide()");
             }
             init();
         } catch (Exception ex) {
@@ -253,7 +282,7 @@ public class FacturaBean implements Serializable {
     }
 
     public void init() {
-
+        System.out.println("init");
         clienteFacade = new ClienteFacade();
         usuariosFacade = new UsuariosFacade();
         productoFacade = new ProductoFacade();
@@ -270,6 +299,25 @@ public class FacturaBean implements Serializable {
     public void getDetalleFactura(Factura f) {
         try {
             listaDetalle = detalleFacade.getAllDetallesFactura(f);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    public void productosFiltered() {
+        try {
+            List<Producto> listaf = new ArrayList<>();
+            for (Producto producto : getListaProducto()) {
+                if (producto.getNombre().toLowerCase().contains(nombre.toLowerCase())) {
+                    listaf.add(producto);
+                }
+            }
+            if (!listaf.isEmpty()) {
+                listaProducto = listaf;
+            } else {
+                listaProducto = getListaProducto();
+            }
+            System.out.println(listaProducto.size());
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }

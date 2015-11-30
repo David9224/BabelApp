@@ -21,12 +21,13 @@ import utility.ConexionSql;
 public class FacturaFacade implements Serializable {
 
     private ConexionSql connection;
-    private ClienteFacade clienteFacade = new ClienteFacade();
-    private UsuariosFacade usuariosFacade = new UsuariosFacade();
+    private final ClienteFacade clienteFacade = new ClienteFacade();
+    private final UsuariosFacade usuariosFacade = new UsuariosFacade();
 
     /**
      * @param num_factura
      * @return
+     * @throws java.lang.Exception
      * @Fecha 16/11/2015
      * @Observacion busca el usuario por cedula
      */
@@ -43,11 +44,12 @@ public class FacturaFacade implements Serializable {
             while (rs.next()) {
                 factura = new Factura();
                 factura.setNum_factura(rs.getInt(1));
-                factura.setCliente(clienteFacade.buscarCliente(rs.getInt(2)));
-                factura.setUsuario(usuariosFacade.buscarUsuario(rs.getInt(3)));
-                factura.setFecha(rs.getDate(4));
-                factura.setPendiente(rs.getBoolean(5));
-                factura.setMesa(rs.getInt(6));
+                factura.setCedula(rs.getLong(2));
+                factura.setNombre(rs.getString(3));
+                factura.setUsuario(usuariosFacade.buscarUsuario(rs.getInt(4)));
+                factura.setFecha(rs.getDate(5));
+                factura.setPendiente(rs.getBoolean(6));
+                factura.setMesa(rs.getInt(7));
             }
             rs.close();
             stmt.close();
@@ -63,11 +65,11 @@ public class FacturaFacade implements Serializable {
 
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
-            String SQL = "INSERT INTO factura (id_cliente,id_usuario,fecha,pendiente,mesa) values (?, ?, ?, ?, ?)";
+            String SQL = "INSERT INTO factura (id_cliente,nombre_cliente,id_usuario,fecha,pendiente,mesa) values (?, ?, ?, CURRENT_TIMESTAMP, ?, ?)";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
-            stmt.setLong(1, factura.getCliente().getCedula());
-            stmt.setLong(2, factura.getUsuario().getCedula());
-            stmt.setDate(3, factura.getFecha());
+            stmt.setLong(1, factura.getCedula());
+            stmt.setString(2, factura.getNombre());
+            stmt.setLong(3, factura.getUsuario().getCedula());
             stmt.setBoolean(4, factura.isPendiente());
             stmt.setInt(5, factura.getMesa());
             stmt.executeUpdate();
@@ -89,12 +91,11 @@ public class FacturaFacade implements Serializable {
 
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
-            String SQL = "INSERT INTO factura (id_usuario,fecha,pendiente,mesa) values (?, ?, ?, ?)";
+            String SQL = "INSERT INTO factura (id_usuario,fecha,pendiente,mesa) values (?, CURRENT_TIMESTAMP, ?, ?)";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             stmt.setLong(1, factura.getUsuario().getCedula());
-            stmt.setDate(2, factura.getFecha());
-            stmt.setBoolean(3, factura.isPendiente());
-            stmt.setInt(4, factura.getMesa());
+            stmt.setBoolean(2, factura.isPendiente());
+            stmt.setInt(3, factura.getMesa());
             stmt.executeUpdate();
             try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
@@ -114,14 +115,13 @@ public class FacturaFacade implements Serializable {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
             String SQL = " update Factura set  "
-                    + "   id_usuario = ?,fecha = ?, pendiente = ?,mesa = ?"
+                    + "   id_usuario = ?, pendiente = ?,mesa = ?"
                     + "     where num_factura = ?";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
-            stmt.setInt(5, factura.getNum_factura());
+            stmt.setInt(4, factura.getNum_factura());
             stmt.setLong(1, factura.getUsuario().getCedula());
-            stmt.setDate(2, factura.getFecha());
-            stmt.setBoolean(3, factura.isPendiente());
-            stmt.setInt(4, factura.getMesa());
+            stmt.setBoolean(2, factura.isPendiente());
+            stmt.setInt(3, factura.getMesa());
             stmt.execute();
             stmt.close();
             conexion.close();
@@ -129,20 +129,19 @@ public class FacturaFacade implements Serializable {
             throw new Exception("Error update Factura: " + e.toString());
         }
     }
-    
+
     public void updateFacturaC(Factura factura) throws Exception {
         try {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
             String SQL = " update Factura set  "
-                    + "     id_cliente = ?, id_usuario = ?,fecha = ?, pendiente = ?,mesa = ?"
+                    + "     id_cliente = ?,nom_cliente, id_usuario = ?, pendiente = ?,mesa = ?"
                     + "     where num_factura = ?";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             stmt.setInt(6, factura.getNum_factura());
-            stmt.setLong(1, factura.getCliente().getCedula());
-            stmt.setLong(2, factura.getUsuario().getCedula());
-            stmt.setDate(3, factura.getFecha());
-            System.out.println(factura.isPendiente());
+            stmt.setLong(1, factura.getCedula());
+            stmt.setString(2, factura.getNombre());
+            stmt.setLong(3, factura.getUsuario().getCedula());
             stmt.setBoolean(4, factura.isPendiente());
             stmt.setInt(5, factura.getMesa());
             stmt.execute();
@@ -182,11 +181,12 @@ public class FacturaFacade implements Serializable {
             while (rs.next()) {
                 factura = new Factura();
                 factura.setNum_factura(rs.getInt(1));
-                factura.setCliente(clienteFacade.buscarCliente(rs.getInt(2)));
-                factura.setUsuario(usuariosFacade.buscarUsuario(rs.getInt(3)));
-                factura.setFecha(rs.getDate(4));
-                factura.setPendiente(rs.getBoolean(5));
-                factura.setMesa(rs.getInt(6));
+                factura.setCedula(rs.getLong(2));
+                factura.setNombre(rs.getString(3));
+                factura.setUsuario(usuariosFacade.buscarUsuario(rs.getInt(4)));
+                factura.setFecha(rs.getDate(5));
+                factura.setPendiente(rs.getBoolean(6));
+                factura.setMesa(rs.getInt(7));
                 listaFacturas.add(factura);
             }
             rs.close();
@@ -212,11 +212,12 @@ public class FacturaFacade implements Serializable {
             while (rs.next()) {
                 factura = new Factura();
                 factura.setNum_factura(rs.getInt(1));
-                factura.setCliente(clienteFacade.buscarCliente(rs.getInt(2)));
-                factura.setUsuario(usuariosFacade.buscarUsuario(rs.getInt(3)));
-                factura.setFecha(rs.getDate(4));
-                factura.setPendiente(rs.getBoolean(5));
-                factura.setMesa(rs.getInt(6));
+                factura.setCedula(rs.getLong(2));
+                factura.setNombre(rs.getString(3));
+                factura.setUsuario(usuariosFacade.buscarUsuario(rs.getInt(4)));
+                factura.setFecha(rs.getDate(5));
+                factura.setPendiente(rs.getBoolean(6));
+                factura.setMesa(rs.getInt(7));
                 listaFacturas.add(factura);
             }
             rs.close();

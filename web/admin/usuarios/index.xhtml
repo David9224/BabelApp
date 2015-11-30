@@ -68,6 +68,7 @@
                         </h:panelGrid>
                         <p:commandButton value="#{usuariosBean.crear}" actionListener="#{usuariosBean.crearUsuario()}" 
                                          update="growl, :table :form1:panel1">
+                            <p:confirm header="Confirmation" message="Esta Seguro?" icon="ui-icon-alert" />
                         </p:commandButton>
                         <p:commandButton id="cancelar" value="#{usuariosBean.cancelar}" 
                                          actionListener="#{usuariosBean.cancelar}" update="@form"/>
@@ -121,6 +122,7 @@
                         </p:column>
                         <p:column headerText="Resetear Contraseña" style="width: available; text-align: center">
                             <p:commandButton icon="ui-icon-check" actionListener="#{usuariosBean.resetPassword(usuarios)}" update=":form1:growl :table">
+                                <p:confirm header="Confirmation" message="Esta Seguro?" icon="ui-icon-alert" />
                             </p:commandButton>
                         </p:column>
 

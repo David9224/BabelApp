@@ -48,7 +48,7 @@ public class UsuariosFacade implements Serializable {
                 usuarios.setFecha_nacimiento(rs.getDate(4));
                 usuarios.setDireccion(rs.getString(5));
                 usuarios.setEmail(rs.getString(6));
-                usuarios.setTelefono(rs.getInt(7));
+                usuarios.setTelefono(rs.getLong(7));
             }
             rs.close();
             stmt.close();
@@ -141,7 +141,7 @@ public class UsuariosFacade implements Serializable {
                 usuarios.setFecha_nacimiento(rs.getDate(4));
                 usuarios.setDireccion(rs.getString(5));
                 usuarios.setEmail(rs.getString(6));
-                usuarios.setTelefono(rs.getInt(7));
+                usuarios.setTelefono(rs.getLong(7));
                 listaUsuarios.add(usuarios);
             }
             rs.close();

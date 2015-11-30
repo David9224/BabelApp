@@ -18,6 +18,9 @@
                 droppedProducto.fadeOut('fast');
             }
         </script>
+        <h:form>
+            <p:remoteCommand autoRun="true" actionListener="#{facturaBean.init()}" update=":detalleForm"/>
+        </h:form>
         <h:form id="facturaPrinter">
             <p:panel visible="false">
                 <p:panelGrid id="printer" columns="1">
@@ -26,8 +29,10 @@
                     <p:panelGrid columns="2" style="width: 100%">
                         <h:outputText value="Num_factura:"/>
                         <h:outputText value="#{facturaBean.factura.num_factura}" title="Num_factura"/>
-                        <h:outputText value="Cliente:"/>
-                        <h:outputText value="#{facturaBean.factura.cliente.cedula}" title="Cliente"/>
+                        <h:outputText value="Cedula Cliente:"/>
+                        <h:outputText value="#{facturaBean.factura.cedula}" title="Cedula"/>
+                        <h:outputText value="Nombre Cliente:"/>
+                        <h:outputText value="#{facturaBean.factura.nombre}" title="Cedula"/>
                         <h:outputText value="Cajero:"/>
                         <h:outputText value="#{facturaBean.factura.usuario.nombres} #{facturaBean.factura.usuario.apellidos}" title="Usuario"/>
                         <h:outputText value="Fecha:"/>
@@ -58,29 +63,37 @@
             </p:panel>
         </h:form>
         <h:form id="detalleForm">
-
-
-
-            <p:growl id="growl" autoUpdate="true" showDetail="true" showSummary="true" life="3000"/>
+            <p:growl id="growl" autoUpdate="true" showDetail="true"  life="3000"/>
             <p:fieldset style="width: 40%;position: static;float: left;margin: 1%" id="availableProductoField" legend="Productos Disponibles">
-                <p:dataGrid   id="availableProducto" var="producto" value="#{facturaBean.listaProducto}" 
-                              columns="3" paginator="true" rows="4" 
-                              paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                              rowsPerPageTemplate="4,8,12,20,30">
-                    <p:panel id="pnl" header="#{producto.nombre}" style="text-align:center">
-                        <p:graphicImage  value="#{facturaBean.getImagen()}" style="width: 100%">
+
+                <p:dataTable  style="text-align: center" id="availableProducto" var="producto"  value="#{facturaBean.listaProducto}" 
+                             scrollable="true" scrollHeight="400">
+
+                    <p:column headerText="ID" filterBy="#{producto.id_producto}"  style="width: 20%">
+                        <h:outputLabel value="#{producto.id_producto}"/>
+                    </p:column>
+                    <p:column headerText="Nombre" filterBy="#{producto.nombre}" style="width: 20%">
+                        <h:outputLabel value="#{producto.nombre}"/>
+                    </p:column>
+                    <p:column headerText="Categoria" filterBy="#{producto.id_categoria.nombre}"  style="width: 20%" >
+                        <h:outputLabel value="#{producto.id_categoria.nombre}"/>
+                    </p:column >
+                    <p:column  headerText="Imagen" style="width: 20%">
+                        <p:graphicImage id="pnl"  value="#{facturaBean.getImagen()}" style="width: 100%">
                             <f:param id="image_id" name="image_id" value="#{producto.imagen.id}" />
                         </p:graphicImage>
-                    </p:panel>
-                    <p:draggable for="pnl" revert="true" handle=".ui-panel-titlebar" stack=".ui-panel"/>
-
-                </p:dataGrid>
+                    </p:column>
+                    <p:column style="width:20px">
+                        <h:outputText id="dragIcon" styleClass="ui-icon ui-icon-arrow-4" />
+                        <p:draggable for="dragIcon" revert="true" helper="clone"/>
+                    </p:column>
+                </p:dataTable>
             </p:fieldset>
 
             <p:fieldset id="factura" legend="Factura" style="width: 50%;position: static;float: left;margin: 1%;text-align: center">
                 <p:outputPanel id="dropArea">
                     <h:outputText value="!!!Arrastre aqui!!!" rendered="#{empty facturaBean.listaDetalle}" style="font-size:24px;" />
-                    <p:dataTable id="selectedProductoTable" var="detalle" value="#{facturaBean.listaDetalle}" rendered="#{not empty facturaBean.listaDetalle}">
+                    <p:dataTable id="selectedProductoTable" var="detalle" value="#{facturaBean.listaDetalle}" rendered="#{not empty facturaBean.listaDetalle}" scrollable="true" scrollHeight="300">
 
                         <p:column headerText="Producto">
                             <h:outputText value="#{detalle.producto.nombre}" />
@@ -109,23 +122,19 @@
                         </f:facet>
                     </p:dataTable>
                     <br/>
-                    <p:commandButton rendered="#{not empty facturaBean.listaDetalle}" update="@form" actionListener="#{facturaBean.guardar()}" value="Guardar" style="margin: 1%"/>
-                    <p:commandButton rendered="#{not empty facturaBean.listaDetalle}" actionListener="#{facturaBean.crear()}" update=":facturaPrinter"  oncomplete="document.getElementById('detalleForm:imprimir').click();" value="Imprimir" style="margin: 1%"/>
+                    <p:commandButton rendered="#{not empty facturaBean.listaDetalle}" update=":detalleForm" actionListener="#{facturaBean.guardar()}" value="Guardar" style="margin: 1%"/>
+                    <p:commandButton rendered="#{not empty facturaBean.listaDetalle}" actionListener="#{facturaBean.crear()}" update=":facturaPrinter" oncomplete="document.getElementById('detalleForm:imprimir').click();" value="Imprimir" style="margin: 1%"/>
+                    <p:commandButton value="Cancelar" rendered="#{not empty facturaBean.listaDetalle}" actionListener="#{facturaBean.init()}" update=":detalleForm" />
                     <br/>
-                    <p:remoteCommand name="rc" update="@form" actionListener="#{facturaBean.init()}" />
+                    <p:remoteCommand name="rc" update=":detalleForm" actionListener="#{facturaBean.init()}" />
                     <p:commandButton  id="imprimir"  onclick="rc();" style="visibility: hidden;" value="Imprimir">
                         <p:printer target=":facturaPrinter:printer"/> 
                     </p:commandButton>
                 </p:outputPanel>
-
             </p:fieldset>
-
-
-
             <p:droppable for="factura" tolerance="touch" activeStyleClass="ui-state-highlight" datasource="availableProducto" onDrop="handleDrop">
                 <p:ajax listener="#{facturaBean.onProductDrop}" update="dropArea availableProducto" />
             </p:droppable>
-
         </h:form>
     </h:body>
 </html>

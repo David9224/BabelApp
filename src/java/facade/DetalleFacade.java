@@ -103,14 +103,15 @@ public class DetalleFacade implements Serializable {
         }
     }
 
-    public void borrarDetalle(int num_detalle) {
+    public void borrarDetalle(int num_detalle, int num_factura) {
         try {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
             String SQL = " delete from Detalle "
-                    + "     where num_detalle =? ";
+                    + "     where num_detalle =? and id_factura=?";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
-            stmt.setLong(1, num_detalle);
+            stmt.setInt(1, num_detalle);
+            stmt.setInt(2, num_factura);
             stmt.execute();
 
             stmt.close();

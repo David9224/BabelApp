@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8' ?>
+<!--<?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
@@ -12,4 +12,84 @@
     <h:body>
         <ui:include src="../resources/appmenu.xhtml"/>
     </h:body>
+</html>-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"       
+      xmlns:h="http://java.sun.com/jsf/html">
+    <head>
+        <title>Babel</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" type="text/css" href="../mb/css/metro-bootstrap.css"/>
+        <link rel="stylesheet" type="text/css" href="../../resources/indexCss.css"/> 
+        <link rel="stylesheet" href="../mb/docs/font-awesome.css"/>
+        <link rel="stylesheet" type="text/css" href="../resources/main.css"/>
+    </head>
+    <body>
+        <div class="container cont">
+            <ul class="thumbnails">
+                <li class="span3">
+                    <a class="thumbnail" href="../cajero/factura/crear.xhtml">
+                        <img src="../resources/images/class-header-offline.jpg" alt=""/>
+                    </a>
+                    <div class="details">
+                        <h3>CREAR FACTURA</h3>
+                    </div>
+                </li>
+                <li class="span3">
+                    <a class="thumbnail" href="../cajero/factura/editar.xhtml">
+                        <img src="../resources/images/class-header-performance.jpg" alt=""/>
+                    </a>
+                    <div class="details">
+                        <h3>EDITAR FACTURA</h3>
+                    </div>
+                </li>
+                <li class="span3">
+                    <h:form>
+                        <h:commandLink actionListener="#{loginBean.logout()}">
+                            <img src="../resources/images/class-header-performance.jpg" alt=""/>
+                        </h:commandLink>
+
+                        <div class="details">
+                            <h3>CERRAR SESION</h3>
+                        </div>
+                    </h:form>
+                </li>
+                <!--                <li class="span4">
+                                    <a class="thumbnail" href="#">
+                                        <img src="../resources/images/class-header-connectivity.jpg" alt=""/>
+                                    </a>
+                                    <div class="details">
+                                        <h3>CLASS: CONNECTIVITY</h3>
+                                    </div>
+                                </li>
+                                <li class="span4">
+                                    <a class="thumbnail" href="#">
+                                        <img src="../resources/images/class-header-device.jpg" alt=""/>
+                                    </a>
+                                    <div class="details">
+                                        <h3>CLASS: DEVICE ACCESS</h3>
+                                    </div>
+                                </li>-->
+            </ul>
+
+
+        </div>
+        <footer ><b><em>DAVID ARISTIZABAL--ANDERSON HINCAPIE</em></b> Copyright; 2015 - Todos Los Derechos Reservados</footer>
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+        <script src="../mb/docs/bootstrap-transition.js"></script>
+        <script src="../mb/docs/bootstrap-alert.js"></script>
+        <script src="../mb/docs/bootstrap-modal.js"></script>
+        <script src="../mb/docs/bootstrap-dropdown.js"></script>
+        <script src="../mb/docs/bootstrap-scrollspy.js"></script>
+        <script src="../mb/docs/bootstrap-tab.js"></script>
+        <script src="../mb/docs/bootstrap-tooltip.js"></script>
+        <script src="../mb/docs/bootstrap-popover.js"></script>
+        <script src="../mb/docs/bootstrap-button.js"></script>
+        <script src="../mb/docs/bootstrap-collapse.js"></script>
+        <script src="../mb/docs/bootstrap-carousel.js"></script>
+        <script src="../mb/docs/bootstrap-typeahead.js"></script>
+    </body>
 </html>
+

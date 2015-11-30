@@ -5,7 +5,8 @@
  */
 package entity;
 
-import java.sql.Date;
+import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 
@@ -13,15 +14,32 @@ import java.util.Objects;
  *
  * @author anderson
  */
-public class Factura {
+public class Factura implements Serializable{
    private int num_factura;
-   private Cliente cliente;
    private Usuario usuario;
    private Date fecha;
+   private long cedula;
+   private String nombre;
    private boolean pendiente;
    private int mesa;
 
     public Factura() {
+    }
+
+    public long getCedula() {
+        return cedula;
+    }
+
+    public void setCedula(long cedula) {
+        this.cedula = cedula;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public int getNum_factura() {
@@ -30,14 +48,6 @@ public class Factura {
 
     public void setNum_factura(int num_factura) {
         this.num_factura = num_factura;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
     }
 
     public Usuario getUsuario() {
@@ -77,7 +87,6 @@ public class Factura {
     public int hashCode() {
         int hash = 7;
         hash = 79 * hash + this.num_factura;
-        hash = 79 * hash + Objects.hashCode(this.cliente);
         hash = 79 * hash + Objects.hashCode(this.usuario);
         hash = 79 * hash + Objects.hashCode(this.fecha);
         hash = 79 * hash + (this.pendiente ? 1 : 0);
@@ -105,7 +114,7 @@ public class Factura {
 
     @Override
     public String toString() {
-        return "Factura{" + "num_factura=" + num_factura + ", cliente=" + cliente + ", usuario=" + usuario + ", fecha=" + fecha + ", pendiente=" + pendiente + ", mesa=" + mesa + '}';
+        return "Factura{" + "num_factura=" + num_factura +", usuario=" + usuario + ", fecha=" + fecha + ", pendiente=" + pendiente + ", mesa=" + mesa + '}';
     }
    
    

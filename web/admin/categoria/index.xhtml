@@ -16,12 +16,10 @@
     </head>
     <body>
         <ui:composition template="./../../resources/template.xhtml">
-            <ui:include src="../../resources/confirmdialog.xhtml"/>
-
             <ui:define name="content">
-                <h:form id="form1">
+                <h:form id="form1" style="margin-top: 1%">
                     <p:panel header="#{categoriaBean.crearHeader}" styleClass="content1" style="text-align: center" id="panel1">
-                        <p:growl id="growl" showDetail="true" life="2000" />
+                        <p:growl id="growl" showDetail="true" life="2000" sticky="true" />
                         <h:panelGrid  columns="1" style="width: 100%">
                             <h:outputText value="Nombre: *" />
                             <p:inputText value="#{categoriaBean.categoria.nombre}" style="width: 100%;" required="true" label="Nombre">
@@ -33,6 +31,7 @@
                         </h:panelGrid>
                         <br/>
                         <p:commandButton value="#{categoriaBean.crear}"  action="#{categoriaBean.crearCategoria()}" update="@form :formtable">
+                            <p:confirm header="Confirmation" message="Esta Seguro?" icon="ui-icon-alert" />
                         </p:commandButton>
 
                         <p:commandButton id="cancelar" value="#{categoriaBean.cancelar}"  disabled="#{categoriaBean.categoria.nombre == null}" actionListener="#{categoriaBean.cancelar}" update="@form"/>
@@ -63,6 +62,7 @@
 
                         <p:column headerText="Eliminar">
                             <p:commandButton icon="ui-icon-close" actionListener="#{categoriaBean.eliminarCategoria(categoria)}" update=":formtable" >
+                               <p:confirm header="Confirmation" message="Esta Seguro?" icon="ui-icon-alert" />
                             </p:commandButton>
                         </p:column>
 

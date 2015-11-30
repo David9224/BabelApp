@@ -28,7 +28,7 @@
     <body>
         <div class="container cont">
             <ul class="thumbnails">
-                <li class="span4">
+                <li class="span3">
                     <a class="thumbnail" href="../admin/usuarios/index.xhtml">
                         <img src="../resources/images/class-header-offline.jpg" alt=""/>
                     </a>
@@ -36,15 +36,7 @@
                         <h3>ADMINISTRAR USUARIOS</h3>
                     </div>
                 </li>
-                <li class="span4">
-                    <a class="thumbnail" href="../admin/clientes/index.xhtml">
-                        <img src="../resources/images/class-header-multimedia.jpg" alt=""/>
-                    </a>
-                    <div class="details">
-                        <h3>ADMINISTRAR CLIENTES</h3>
-                    </div>
-                </li>
-                <li class="span4">
+                <li class="span3">
                     <a class="thumbnail" href="../admin/categoria/index.xhtml">
                         <img src="../resources/images/class-header-3d.jpg" alt=""/>
                     </a>
@@ -52,7 +44,7 @@
                         <h3>ADMINISTRAR TIPO DE PRODUCTOS</h3>
                     </div>
                 </li>
-                <li class="span4">
+                <li class="span3">
                     <a class="thumbnail" href="../admin/productos/index.xhtml">
                         <img src="../resources/images/class-header-performance.jpg" alt=""/>
                     </a>
@@ -60,27 +52,38 @@
                         <h3>ADMINISTRAR PRODUCTOS</h3>
                     </div>
                 </li>
-<!--                <li class="span4">
-                    <a class="thumbnail" href="#">
-                        <img src="../resources/images/class-header-connectivity.jpg" alt=""/>
-                    </a>
-                    <div class="details">
-                        <h3>CLASS: CONNECTIVITY</h3>
-                    </div>
+                <li class="span3">
+                    <h:form>
+                        <h:commandLink actionListener="#{loginBean.logout()}">
+                            <img src="../resources/images/class-header-performance.jpg" alt=""/>
+                        </h:commandLink>
+
+                        <div class="details">
+                            <h3>CERRAR SESION</h3>
+                        </div>
+                    </h:form>
                 </li>
-                <li class="span4">
-                    <a class="thumbnail" href="#">
-                        <img src="../resources/images/class-header-device.jpg" alt=""/>
-                    </a>
-                    <div class="details">
-                        <h3>CLASS: DEVICE ACCESS</h3>
-                    </div>
-                </li>-->
+                <!--                <li class="span4">
+                                    <a class="thumbnail" href="#">
+                                        <img src="../resources/images/class-header-connectivity.jpg" alt=""/>
+                                    </a>
+                                    <div class="details">
+                                        <h3>CLASS: CONNECTIVITY</h3>
+                                    </div>
+                                </li>
+                                <li class="span4">
+                                    <a class="thumbnail" href="#">
+                                        <img src="../resources/images/class-header-device.jpg" alt=""/>
+                                    </a>
+                                    <div class="details">
+                                        <h3>CLASS: DEVICE ACCESS</h3>
+                                    </div>
+                                </li>-->
             </ul>
 
 
         </div>
-        <footer><b><em>DAVID ARISTIZABAL--ANDERSON HINCAPIE</em></b> copy; 2015 - Todos Los Derechos Reservados</footer>
+        <footer ><b><em>DAVID ARISTIZABAL--ANDERSON HINCAPIE</em></b> Copyright; 2015 - Todos Los Derechos Reservados</footer>
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
         <script src="../mb/docs/bootstrap-transition.js"></script>
