@@ -103,7 +103,7 @@ public class DetalleFacade implements Serializable {
         }
     }
 
-    public void borrarDetalle(int num_detalle, int num_factura) {
+    public void borrarDetalle(int num_detalle, int num_factura) throws Exception {
         try {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
@@ -117,7 +117,7 @@ public class DetalleFacade implements Serializable {
             stmt.close();
             conexion.close();
         } catch (Exception e) {
-            System.out.println("Error delete Detalle " + e.toString());
+            throw new Exception("Error delete Detalle: " + e.toString());
         }
     }
 

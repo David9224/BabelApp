@@ -92,7 +92,7 @@ public class ClienteFacade implements Serializable {
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             stmt.setString(1, cliente.getNombres().toUpperCase());
             stmt.setString(2, cliente.getApellidos().toUpperCase());
-            stmt.setDate(3,  cliente.getFecha_nacimiento());
+            stmt.setDate(3, cliente.getFecha_nacimiento());
             stmt.setString(4, cliente.getDireccion().toUpperCase());
             stmt.setString(5, cliente.getEmail());
             stmt.setLong(6, cliente.getTelefono());
@@ -105,7 +105,7 @@ public class ClienteFacade implements Serializable {
         }
     }
 
-    public void borrarCliente(long cedula) {
+    public void borrarCliente(long cedula) throws Exception {
         try {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
@@ -118,7 +118,7 @@ public class ClienteFacade implements Serializable {
             stmt.close();
             conexion.close();
         } catch (Exception e) {
-            System.out.println("Error delete Cliente " + e.toString());
+            throw new Exception("Error delete Cliente: " + e.toString());
         }
     }
 

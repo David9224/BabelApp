@@ -96,7 +96,7 @@ public class CategoriaFacade implements Serializable {
         }
     }
 
-    public void borrarCategoria(int id) {
+    public void borrarCategoria(int id) throws Exception {
         try {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
@@ -109,7 +109,7 @@ public class CategoriaFacade implements Serializable {
             stmt.close();
             conexion.close();
         } catch (Exception e) {
-            System.out.println("Error delete categoria " + e.toString());
+            throw new Exception("Error delete Categoria: " + e.toString());
         }
     }
 
@@ -120,7 +120,7 @@ public class CategoriaFacade implements Serializable {
             String SQL = " select * from categoria ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             ResultSet rs = stmt.executeQuery();
-            Categoria categoria=null;
+            Categoria categoria = null;
             List<Categoria> listaCategorias = new ArrayList<>();
             while (rs.next()) {
                 categoria = new Categoria();

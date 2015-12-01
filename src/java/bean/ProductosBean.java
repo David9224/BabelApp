@@ -35,7 +35,7 @@ import utility.ImagenesUtil;
  * @author David
  */
 @ManagedBean
-@SessionScoped
+@ViewScoped
 public class ProductosBean implements Serializable {
 
     private Producto producto;
@@ -51,7 +51,6 @@ public class ProductosBean implements Serializable {
     private final ImagenesUtil imagenesUtil;
     private final ImagenFacade imagenFacade;
     private Imagen selected;
-   
 
     public ProductosBean() {
         selected = new Imagen();
@@ -64,20 +63,19 @@ public class ProductosBean implements Serializable {
         categoriaFacade = new CategoriaFacade();
     }
 
-    public StreamedContent getImagen() throws Exception {
-       FacesContext context = FacesContext.getCurrentInstance();
+    public StreamedContent getImagen(Imagen i) throws Exception {
+        FacesContext context = FacesContext.getCurrentInstance();
         if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
             // So, we're rendering the HTML. Return a stub StreamedContent so that it will generate right URL.
             return new DefaultStreamedContent();
-        }
-        else {
+        } else {
             // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
             int id = Integer.parseInt(context.getExternalContext().getRequestParameterMap().get("image_id"));
-            Imagen imagen = imagenFacade.buscarImagen(id);
+            Imagen imagen = imagenFacade.buscarImagen(i.getId());
             return new DefaultStreamedContent(new ByteArrayInputStream(imagen.getArchivo()));
         }
     }
-    
+
     public UploadedFile getUploadedFile() {
         return uploadedFile;
     }
@@ -149,12 +147,13 @@ public class ProductosBean implements Serializable {
         this.listaProductosFiltrados = listaProductosFiltrados;
     }
 
-    public void crearProducto() throws Exception {
+    public void crearProducto(Imagen i) throws Exception {
         FacesMessage msg = null;
         try {
+            System.out.println(producto);
             if (productoFacade.buscarProducto(producto.getId_producto()) == null) {
-                selected.setArchivo(imagenesUtil.convertirImagenBytes(uploadedFile.getInputstream()));
-                selected.setExt(uploadedFile.getContentType());
+                selected.setArchivo(i.getArchivo());
+                selected.setExt(i.getExt());
                 selected.setNombre(producto.getNombre());
                 selected = imagenFacade.crearImagen(selected);
                 producto.setImagen(selected);
@@ -163,8 +162,8 @@ public class ProductosBean implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, msg);
             } else {
                 selected = imagenFacade.buscarImagen(producto.getImagen().getId());
-                selected.setArchivo(imagenesUtil.convertirImagenBytes(uploadedFile.getInputstream()));
-                selected.setExt(uploadedFile.getContentType());
+                selected.setArchivo(i.getArchivo());
+                selected.setExt(i.getExt());
                 selected.setNombre(producto.getNombre());
                 imagenFacade.updateImagen(selected);
                 productoFacade.updateProducto(producto);
@@ -187,6 +186,7 @@ public class ProductosBean implements Serializable {
     public void eliminarProducto(Producto p) {
         FacesMessage msg = null;
         try {
+            System.out.println(p.toString());
             productoFacade.borrarProducto(p.getId_producto());
             imagenFacade.borrarImagen(p.getImagen().getId());
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Producto Eliminado");
@@ -196,7 +196,8 @@ public class ProductosBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
     }
-   public void onRowSelect() {
+
+    public void onRowSelect() {
         producto = productoSelect;
         crear = "Editar";
         crearHeader = "Editar Producto";

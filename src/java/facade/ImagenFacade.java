@@ -101,7 +101,7 @@ public class ImagenFacade implements Serializable {
         }
     }
 
-    public void borrarImagen(int id) {
+    public void borrarImagen(int id) throws Exception {
         try {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
@@ -114,7 +114,7 @@ public class ImagenFacade implements Serializable {
             stmt.close();
             conexion.close();
         } catch (Exception e) {
-            System.out.println("Error delete Imagen " + e.toString());
+            throw new Exception("Error delete Imagen " + e.toString());
         }
     }
 

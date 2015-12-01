@@ -108,7 +108,7 @@ public class ProductoFacade implements Serializable {
         }
     }
 
-    public void borrarProducto(int id) {
+    public void borrarProducto(int id) throws Exception{
         try {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
@@ -121,7 +121,7 @@ public class ProductoFacade implements Serializable {
             stmt.close();
             conexion.close();
         } catch (Exception e) {
-            System.out.println("Error delete producto " + e.toString());
+            throw new Exception("Error delete producto " + e.toString());
         }
     }
 

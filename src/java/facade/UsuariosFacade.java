@@ -107,7 +107,7 @@ public class UsuariosFacade implements Serializable {
         }
     }
 
-    public void borrarUsuario(long cedula) {
+    public void borrarUsuario(long cedula) throws Exception {
         try {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
@@ -120,7 +120,7 @@ public class UsuariosFacade implements Serializable {
             stmt.close();
             conexion.close();
         } catch (Exception e) {
-            System.out.println("Error delete usuario " + e.toString());
+            throw new Exception("Error Delete Usuario: " + e.toString());
         }
     }
 

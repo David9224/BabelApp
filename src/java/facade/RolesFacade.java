@@ -15,19 +15,20 @@ import java.util.List;
 import utility.ConexionSql;
 
 /**
- *@Fecha 16/11/2015
+ * @Fecha 16/11/2015
  * @author David
  */
-public class RolesFacade implements Serializable{
-    
+public class RolesFacade implements Serializable {
+
     private ConexionSql connection;
+
     /**
      * @param id
-     * @return 
+     * @return
      * @Fecha 16/11/2015
      * @Observacion busca el usuario por cedula
      */
-    public Roles getRoles(int id){
+    public Roles getRoles(int id) throws Exception {
         try {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
@@ -37,7 +38,7 @@ public class RolesFacade implements Serializable{
             stmt.setLong(1, id);
             Roles rol = null;
             ResultSet rs = stmt.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 rol = new Roles();
                 rol.setIdRol(rs.getInt(1));
                 rol.setNombreRol(rs.getString(2));
@@ -46,15 +47,14 @@ public class RolesFacade implements Serializable{
             rs.close();
             stmt.close();
             conexion.close();
-            
+
             return rol;
         } catch (Exception e) {
-            System.out.println("Error getRoles "+e.toString());
-            return null;
+            throw new Exception("Error getRoles: " + e.toString());
         }
     }
-    
-    public Roles getRoles(String nombre_rol){
+
+    public Roles getRoles(String nombre_rol) throws Exception {
         try {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
@@ -64,7 +64,7 @@ public class RolesFacade implements Serializable{
             stmt.setString(1, nombre_rol);
             Roles rol = null;
             ResultSet rs = stmt.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 rol = new Roles();
                 rol.setIdRol(rs.getInt(1));
                 rol.setNombreRol(rs.getString(2));
@@ -73,15 +73,14 @@ public class RolesFacade implements Serializable{
             rs.close();
             stmt.close();
             conexion.close();
-            
+
             return rol;
         } catch (Exception e) {
-            System.out.println("Error getRoles "+e.toString());
-            return null;
+            throw new Exception("Error getRoles: " + e.toString());
         }
     }
-    
-    public List<Roles> getAllRoles(){
+
+    public List<Roles> getAllRoles() throws Exception {
         try {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
@@ -90,7 +89,7 @@ public class RolesFacade implements Serializable{
             Roles rol = null;
             List<Roles> lstRoles = new ArrayList<>();
             ResultSet rs = stmt.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 rol = new Roles();
                 rol.setIdRol(rs.getInt(1));
                 rol.setNombreRol(rs.getString(2));
@@ -100,11 +99,10 @@ public class RolesFacade implements Serializable{
             rs.close();
             stmt.close();
             conexion.close();
-            
+
             return lstRoles;
         } catch (Exception e) {
-            System.out.println("Error getAllRoles "+e.toString());
-            return null;
+            throw new Exception("Error getAllRoles: " + e.toString());
         }
     }
 }

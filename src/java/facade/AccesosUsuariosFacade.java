@@ -30,7 +30,7 @@ public class AccesosUsuariosFacade implements Serializable {
      * @Fecha 16/11/2015
      * @Observacion busca el usuario por cedula
      */
-    public AccesosUsuarios getAccesoCedula(Long cedula) {
+    public AccesosUsuarios getAccesoCedula(Long cedula) throws Exception {
         try {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
@@ -50,15 +50,13 @@ public class AccesosUsuariosFacade implements Serializable {
             rs.close();
             stmt.close();
             conexion.close();
-
             return acceso;
         } catch (Exception e) {
-            System.out.println("Error getAcceso " + e.toString());
-            return null;
+            throw new Exception("Error getAcceso " + e.toString());
         }
     }
 
-    public AccesosUsuarios getAccesoCodigo(Long Ac_Codi) {
+    public AccesosUsuarios getAccesoCodigo(Long Ac_Codi) throws Exception {
         try {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
@@ -81,12 +79,11 @@ public class AccesosUsuariosFacade implements Serializable {
 
             return acceso;
         } catch (Exception e) {
-            System.out.println("Error getAcceso " + e.toString());
-            return null;
+            throw new Exception("Error getAcceso " + e.toString());
         }
     }
 
-    public void crearAccesoUsuario(AccesosUsuarios accesosUsuarios) {
+    public void crearAccesoUsuario(AccesosUsuarios accesosUsuarios) throws Exception {
         try {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
@@ -100,11 +97,11 @@ public class AccesosUsuariosFacade implements Serializable {
             stmt.close();
             conexion.close();
         } catch (Exception e) {
-            System.out.println("Error al crearAccesoUsuario: " + e.toString());
+            throw new Exception("Error al crearAccesoUsuario: " + e.toString());
         }
     }
 
-    public void updateAcceso(AccesosUsuarios acceso) {
+    public void updateAcceso(AccesosUsuarios acceso) throws Exception {
         try {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
@@ -121,11 +118,11 @@ public class AccesosUsuariosFacade implements Serializable {
             stmt.close();
             conexion.close();
         } catch (Exception e) {
-            System.out.println("Error update AccesoUsuario: " + e.toString());
+            throw new Exception("Error update AccesoUsuario: " + e.toString());
         }
     }
 
-    public void borrarAcceso(int id) {
+    public void borrarAcceso(int id) throws Exception {
         try {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
@@ -138,7 +135,7 @@ public class AccesosUsuariosFacade implements Serializable {
             stmt.close();
             conexion.close();
         } catch (Exception e) {
-            System.out.println("Error delete AccesoUsuario " + e.toString());
+            throw new Exception("Error delete AccesoUsuario " + e.toString());
         }
     }
 

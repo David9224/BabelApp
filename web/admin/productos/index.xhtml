@@ -24,30 +24,28 @@
                         <h:panelGrid id="crear" columns="1" style="width: 100%">
 
                             <h:outputText value="Categoria: *" />
-                            <p:selectOneMenu  required="true" value="#{productosBean.producto.id_categoria}"  style="width: 100%"
+                            <h:selectOneMenu  required="true" value="#{productosBean.producto.id_categoria}"  style="width: 100%"
                                               converter="categoriaConverter" converterMessage="Error en la conversion" >
                                 <f:selectItem itemLabel="Seleccione uno"/>
                                 <f:selectItems value="#{categoriaBean.listaCategorias}" var="categoria" itemLabel="#{categoria.nombre}" itemValue="#{categoria}"/>
-                            </p:selectOneMenu>
+                            </h:selectOneMenu>
 
 
                             <h:outputText value="Nombre: *" />
-                            <p:inputText value="#{productosBean.producto.nombre}" style="width: 100%;" required="true" label="Nombre">
-                                <p:ajax update=":form1:cancelar" event="keyup" />
-                            </p:inputText>
+                            <h:inputText value="#{productosBean.producto.nombre}" style="width: 100%;" required="true" label="Nombre">
+                                <f:ajax  render=":form1:cancelar" event="keyup" />
+                            </h:inputText>
 
                             <h:outputText value="Precio: *" />
-                            <p:inputText value="#{productosBean.producto.precio}" style="width: 100%;" required="true" label="Precio"/>
-
+                            <h:inputText value="#{productosBean.producto.precio}" style="width: 100%;" required="true" label="Precio"/>
                             <h:outputText value="Imagen: *"/>
-                            <p:fileUpload mode="advanced"  auto="true" sizeLimit="600000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" update="growl" fileUploadListener="#{productosBean.seleccionarImagen}" style="width: 100%"/>
-
+                            <h:inputFile id="file" value="#{uploadImageBean.file}"/>
                         </h:panelGrid>
                         <br/>
-                        <p:commandButton value="#{productosBean.crear}"  actionListener="#{productosBean.crearProducto}" ajax="true" update="@form :formtable">
-                            <p:confirm header="Confirmation" message="Esta Seguro?" icon="ui-icon-alert" />
-                        </p:commandButton>
-                        <p:commandButton id="cancelar" value="#{productosBean.cancelar}" disabled="#{productosBean.producto.nombre == null}"  actionListener="#{productosBean.cancelar}" update="@form"/>
+                        <h:commandButton value="Crear" actionListener="#{productosBean.crearProducto(uploadImageBean.upload())}">
+                            <f:ajax listener="#{uploadImageBean.read()}" render="@all" execute="@all" />
+                        </h:commandButton>
+                        <h:commandButton id="cancelar" value="#{productosBean.cancelar}" disabled="#{productosBean.producto.nombre == null}"  actionListener="#{productosBean.cancelar}"/>
 
                     </p:panel>
 
@@ -60,9 +58,9 @@
                                   paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                   rowsPerPageTemplate="5,10,15" var="producto" selection="#{productosBean.productoSelect}" selectionMode="single" >
 
-                        <p:ajax event="rowSelect" 
+                        <f:ajax event="rowSelect" 
                                 listener="#{productosBean.onRowSelect}"
-                                update=":form1:panel1"/>
+                                render=":form1"/>
                         <p:column filterBy="#{producto.id_producto}" headerText="Id" filterMatchMode="contains">
                             <p:outputLabel value="#{producto.id_producto}"/>
                         </p:column>
@@ -79,14 +77,14 @@
                         </p:column>
 
                         <p:column filterBy="#{producto.imagen}" headerText="Imagen" filterMatchMode="contains" >
-                            <p:graphicImage value="#{productosBean.getImagen()}" style="width: 100%">
+                            <p:graphicImage value="#{uploadImageBean.getImagen(producto.imagen)}" style="width: 100%">
                                 <f:param id="image_id" name="image_id" value="#{producto.imagen.id}" />
                             </p:graphicImage>
                         </p:column>
 
 
                         <p:column headerText="Eliminar" style="text-align: center">
-                            <p:commandButton icon="ui-icon-close" action="#{productosBean.eliminarProducto(producto)}" update=":formtable" >
+                            <p:commandButton icon="ui-icon-close" action="#{productosBean.eliminarProducto(producto)}" update="@form" >
                                 <p:confirm header="Confirmation" message="Esta Seguro?" icon="ui-icon-alert" />
                             </p:commandButton>
                         </p:column>
