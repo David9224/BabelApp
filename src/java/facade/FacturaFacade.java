@@ -184,7 +184,7 @@ public class FacturaFacade implements Serializable {
                 factura.setCedula(rs.getLong(2));
                 factura.setNombre(rs.getString(3));
                 factura.setUsuario(usuariosFacade.buscarUsuario(rs.getInt(4)));
-                factura.setFecha(rs.getDate(5));
+                factura.setFecha(new java.util.Date(rs.getDate(5).getTime()));
                 factura.setPendiente(rs.getBoolean(6));
                 factura.setMesa(rs.getInt(7));
                 listaFacturas.add(factura);

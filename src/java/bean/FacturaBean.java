@@ -282,7 +282,6 @@ public class FacturaBean implements Serializable {
     }
 
     public void init() {
-        System.out.println("init");
         clienteFacade = new ClienteFacade();
         usuariosFacade = new UsuariosFacade();
         productoFacade = new ProductoFacade();

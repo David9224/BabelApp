@@ -7,9 +7,11 @@
       xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>Babel</title>
-        <link rel="stylesheet" type="text/css" href="../resources/indexCss.css"/>
+        <link rel="stylesheet" type="text/css" href="../../resources/indexCss.css"/>
     </h:head>
     <h:body>
+        <applet id="qz" name="QZ Print Plugin" code="qz.PrintApplet.class" archive="../../qz-print.jar" width="100" height="100">
+        </applet>
         <ui:include src="../../resources/appmenu.xhtml"/>
         <script type="text/javascript">
             function handleDrop(event, ui) {
@@ -67,7 +69,7 @@
             <p:fieldset style="width: 40%;position: static;float: left;margin: 1%" id="availableProductoField" legend="Productos Disponibles">
 
                 <p:dataTable  style="text-align: center" id="availableProducto" var="producto"  value="#{facturaBean.listaProducto}" 
-                             scrollable="true" scrollHeight="400">
+                              scrollable="true" scrollHeight="400">
 
                     <p:column headerText="ID" filterBy="#{producto.id_producto}"  style="width: 20%">
                         <h:outputLabel value="#{producto.id_producto}"/>
