@@ -22,6 +22,8 @@ public class Factura implements Serializable{
    private String nombre;
    private boolean pendiente;
    private int mesa;
+   private Long totalRecibido;
+   private Long total;
 
     public Factura() {
     }
@@ -81,6 +83,22 @@ public class Factura implements Serializable{
 
     public void setMesa(int mesa) {
         this.mesa = mesa;
+    }
+
+    public Long getTotalRecibido() {
+        return totalRecibido;
+    }
+
+    public void setTotalRecibido(Long totalRecibido) {
+        this.totalRecibido = totalRecibido;
+    }
+
+    public Long getTotal() {
+        return total;
+    }
+
+    public void setTotal(Long total) {
+        this.total = total;
     }
 
     @Override

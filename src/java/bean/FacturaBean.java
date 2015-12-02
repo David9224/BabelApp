@@ -17,6 +17,7 @@ import facade.FacturaFacade;
 import facade.ImagenFacade;
 import facade.ProductoFacade;
 import facade.UsuariosFacade;
+import imprimir.Imprimir;
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.sql.Date;
@@ -174,12 +175,12 @@ public class FacturaBean implements Serializable {
         }
     }
 
-    public float total() {
-        float total = 0;
+    public Long total() {
+        Float total = 0F;
         for (Detalle detalle : listaDetalle) {
             total = total + detalle.getPrecio();
         }
-        return total;
+        return total.longValue();
     }
 
     public void eliminar(Detalle d) {
@@ -199,8 +200,6 @@ public class FacturaBean implements Serializable {
 
     public void crear() {
         try {
-            System.out.println("crear");
-            System.out.println(accion);
             if (facturaFacade.buscarFactura(factura.getNum_factura()) == null) {
                 AccesosUsuarios a = (AccesosUsuarios) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
                 factura.setUsuario(usuariosFacade.buscarUsuario(a.getAcCedu().getCedula()));
@@ -209,7 +208,8 @@ public class FacturaBean implements Serializable {
                 } else {
                     factura.setPendiente(false);
                 }
-                if ((factura.getNombre() == null || factura.getNombre().trim().equals("")) && factura.getCedula() == 0) {
+                factura.setTotal(total());
+                if ((factura.getNombre() == null || factura.getNombre().trim().equals("")) && factura.getCedula() == 0) {                    
                     factura = facturaFacade.crearFactura(factura);
                 } else {
                     factura = facturaFacade.crearFacturaC(factura);
@@ -259,7 +259,7 @@ public class FacturaBean implements Serializable {
                 }
 
             }
-            
+            new Imprimir().imprimir(factura);
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Error al guardar la factura: " + ex.getMessage());
