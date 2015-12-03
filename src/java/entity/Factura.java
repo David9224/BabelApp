@@ -18,7 +18,7 @@ public class Factura implements Serializable{
    private int num_factura;
    private Usuario usuario;
    private Date fecha;
-   private long cedula;
+   private Long cedula;
    private String nombre;
    private boolean pendiente;
    private int mesa;
@@ -28,11 +28,11 @@ public class Factura implements Serializable{
     public Factura() {
     }
 
-    public long getCedula() {
+    public Long getCedula() {
         return cedula;
     }
 
-    public void setCedula(long cedula) {
+    public void setCedula(Long cedula) {
         this.cedula = cedula;
     }
 

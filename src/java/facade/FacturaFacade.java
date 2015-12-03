@@ -60,16 +60,25 @@ public class FacturaFacade implements Serializable {
         }
     }
 
-    public Factura crearFacturaC(Factura factura) throws Exception {
+    public Factura crearFactura(Factura factura) throws Exception {
         try {
 
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
-            String SQL = "INSERT INTO factura (id_cliente,nombre_cliente,id_usuario,fecha,pendiente,mesa,totalRecibido, total) "
+            String SQL = "INSERT INTO factura (id_cliente,nom_cliente,id_usuario,fecha,"
+                    + "                         pendiente,mesa,totalRecibido, total) "
                     + "     values (?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?, ?)";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
-            stmt.setLong(1, factura.getCedula());
-            stmt.setString(2, factura.getNombre());
+            if (factura.getCedula() != null) {
+                stmt.setLong(1, factura.getCedula());
+            } else {
+                stmt.setString(1, null);
+            }
+            if (!factura.getNombre().equals("")) {
+                stmt.setString(2, factura.getNombre().toUpperCase());
+            } else {
+                stmt.setString(2, null);
+            }
             stmt.setLong(3, factura.getUsuario().getCedula());
             stmt.setBoolean(4, factura.isPendiente());
             stmt.setInt(5, factura.getMesa());
@@ -89,66 +98,26 @@ public class FacturaFacade implements Serializable {
         }
     }
 
-    public Factura crearFactura(Factura factura) throws Exception {
-        try {
-
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
-            String SQL = "INSERT INTO factura (id_usuario,fecha,pendiente,mesa,totalRecibido, total) "
-                    + "     values (?, CURRENT_TIMESTAMP, ?, ?, ?, ?)";
-            PreparedStatement stmt = conexion.prepareStatement(SQL);
-            stmt.setLong(1, factura.getUsuario().getCedula());
-            stmt.setBoolean(2, factura.isPendiente());
-            stmt.setInt(3, factura.getMesa());
-            stmt.setLong(4, factura.getTotalRecibido());
-            stmt.setLong(5, factura.getTotal());
-            stmt.executeUpdate();
-            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    factura.setNum_factura(generatedKeys.getInt(1));
-                }
-            }
-            stmt.close();
-            conexion.close();
-            return factura;
-        } catch (Exception e) {
-            throw new Exception("Error Crear Factura: " + e.toString());
-        }
-    }
-
     public void updateFactura(Factura factura) throws Exception {
         try {
             connection = new ConexionSql();
             Connection conexion = connection.conexion();
             String SQL = " update Factura set  "
-                    + "   id_usuario = ?, pendiente = ?,mesa = ?, totalRecibido = ?, total = ?"
-                    + "     where num_factura = ?";
-            PreparedStatement stmt = conexion.prepareStatement(SQL);
-            stmt.setInt(6, factura.getNum_factura());
-            stmt.setLong(1, factura.getUsuario().getCedula());
-            stmt.setBoolean(2, factura.isPendiente());
-            stmt.setInt(3, factura.getMesa());
-            stmt.setLong(4, factura.getTotalRecibido());
-            stmt.setLong(5, factura.getTotal());
-            stmt.execute();
-            stmt.close();
-            conexion.close();
-        } catch (Exception e) {
-            throw new Exception("Error update Factura: " + e.toString());
-        }
-    }
-
-    public void updateFacturaC(Factura factura) throws Exception {
-        try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
-            String SQL = " update Factura set  "
-                    + "     id_cliente = ?,nom_cliente, id_usuario = ?, pendiente = ?,mesa = ?, totalRecibido = ?, total = ?"
+                    + "     id_cliente = ?,nom_cliente = ?, id_usuario = ?, pendiente = ?,mesa = ?, "
+                    + "     totalRecibido = ?, total = ?"
                     + "     where num_factura = ?";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             stmt.setInt(8, factura.getNum_factura());
-            stmt.setLong(1, factura.getCedula());
-            stmt.setString(2, factura.getNombre());
+            if (factura.getCedula() != 0L) {
+                stmt.setLong(1, factura.getCedula());
+            } else {
+                stmt.setString(1, null);
+            }
+            if (!factura.getNombre().equals("")) {
+                stmt.setString(2, factura.getNombre().toUpperCase());
+            } else {
+                stmt.setString(2, null);
+            }
             stmt.setLong(3, factura.getUsuario().getCedula());
             stmt.setBoolean(4, factura.isPendiente());
             stmt.setInt(5, factura.getMesa());

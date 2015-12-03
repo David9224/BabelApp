@@ -21,9 +21,10 @@
             }
         </script>
         <h:form id="formdlg">
-            <p:dialog header="Guardar" modal="true" id="dlg1" widgetVar="dlg1" resizable="false" draggable="false" closable="false" closeOnEscape="false">
+            <p:dialog header="Guardar" modal="true" id="dlg1" widgetVar="dlg1" 
+                      resizable="false" draggable="false" closable="false" closeOnEscape="false">
                 <br/>
-                <p:outputLabel value="Se puede continuar sin la informacion del cliente"/>
+                <p:outputLabel value="Se puede continuar sin la informacion del cliente" style="font: bold"/>
                 <br/>
                 <h:form>
                     <p:panelGrid columns="2">
@@ -35,12 +36,12 @@
                         <h:inputText value="#{facturaBean.factura.cedula}" required="false"  maxlength="12"/>
                         <h:outputText value="Nombre Cliente" />
                         <h:inputText value="#{facturaBean.factura.nombre}" required="false"  maxlength="100"/>
-                        <h:outputText value="Total Recibo"/>
+                        <h:outputText value="Total Recibido"/>
                         <h:inputText value="#{facturaBean.factura.totalRecibido}" required="true" maxlength="11"/>
                     </p:panelGrid>
                     <center>
                         <p:commandButton id="btnGuardar" value="Continuar" update="@form :facturaPrinter :detalleForm" actionListener="#{facturaBean.crear()}"/>
-                        <p:commandButton id="btnCancelar" value="Cancelar"  onclick="PF('dlg1').hide();"/>
+                        <p:commandButton id="btnCancelar" value="Cancelar"  oncomplete="PF('dlg1').hide();"/>
                     </center>
                 </h:form>
             </p:dialog>
@@ -103,7 +104,7 @@
                         <h:outputLabel value="#{producto.id_categoria.nombre}"/>
                     </p:column >
                     <p:column  headerText="Imagen" style="width: 20%">
-                        <p:graphicImage id="pnl" value="#{uploadImageBean.getImagen(producto.imagen)}" style="width: 100%">
+                        <p:graphicImage id="pnl" value="#{uploadImageBean.getImagen(producto.imagen)}" style="width: 100%" height="100">
                             <f:param id="image_id" name="image_id" value="#{producto.imagen.id}" />
                         </p:graphicImage>
                     </p:column>
@@ -142,7 +143,7 @@
                             <p:commandButton icon="ui-icon-close" actionListener="#{facturaBean.eliminar(detalle)}" update="@form" />
                         </p:column>
                         <f:facet name="footer">
-                            total #{facturaBean.total()}$.
+                            total $ #{facturaBean.total()}
                         </f:facet>
                     </p:dataTable>
                     <br/>
@@ -150,7 +151,7 @@
                     <p:commandButton rendered="#{not empty facturaBean.listaDetalle}" update=":detalleForm :formdlg"  oncomplete="PF('dlg1').show();"  value="Imprimir" actionListener="#{facturaBean.accion('crear')}" style="margin: 1%"/>
                     <p:commandButton value="Cancelar" rendered="#{not empty facturaBean.listaDetalle}" actionListener="#{facturaBean.init()}" update=":detalleForm" />
                     <br/>
-                    <p:remoteCommand name="rc" update=":detalleForm" actionListener="#{facturaBean.init()}" />
+                    <!--<p:remoteCommand name="rc" update=":detalleForm" actionListener="# {facturaBean.init()}" />-->
 <!--                    <p:commandButton  id="imprimir"   style="visibility: hidden;" value="Imprimir">
                         <p:printer target=":facturaPrinter:printer"/> 
                     </p:commandButton>-->
