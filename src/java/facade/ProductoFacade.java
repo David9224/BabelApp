@@ -20,21 +20,26 @@ import utility.ConexionSql;
  */
 public class ProductoFacade implements Serializable {
 
-    private ConexionSql connection;
-    private final CategoriaFacade categoriaFacade = new CategoriaFacade();
-    private final ImagenFacade imagenFacade= new ImagenFacade();
+    private final ConexionSql connection;
+    private final CategoriaFacade categoriaFacade;
+    private final ImagenFacade imagenFacade;
+
+    public ProductoFacade() {
+        connection = new ConexionSql();
+        categoriaFacade = new CategoriaFacade();
+        imagenFacade = new ImagenFacade();
+    }
 
     /**
      * @param id
      * @return
      * @throws java.lang.Exception
      * @Fecha 16/11/2015
-     * @Observacion busca el usuario por cedula
+     * @Observacion busca el producto por id
      */
     public Producto buscarProducto(int id) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " select * from producto "
                     + "     where id_producto = ? ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
@@ -53,18 +58,16 @@ public class ProductoFacade implements Serializable {
             rs.close();
             stmt.close();
             conexion.close();
-
             return producto;
         } catch (Exception e) {
-            throw new Exception("Error Buscar Producto: " + e.getMessage());
+            conexion.close();
+            throw new Exception("Error Buscar Producto: " + e.toString());
         }
     }
 
     public Producto crearProducto(Producto producto) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = "INSERT INTO producto (id_categoria,nombre,precio,imagen) values (?, ?, ?, ?)";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             stmt.setInt(1, producto.getId_categoria().getId_categoria());
@@ -73,23 +76,23 @@ public class ProductoFacade implements Serializable {
             stmt.setInt(4, producto.getImagen().getId());
             stmt.executeUpdate();
             try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-            if (generatedKeys.next()) {
-                producto.setId_producto(generatedKeys.getInt(1));
-            }
+                if (generatedKeys.next()) {
+                    producto.setId_producto(generatedKeys.getInt(1));
+                }
             }
             stmt.close();
             conexion.close();
-            
+
             return producto;
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error Crear Producto: " + e.toString());
         }
     }
 
     public void updateProducto(Producto producto) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " update Producto set  "
                     + "     id_categoria = ?, nombre = ?, precio = ?,imagen = ?"
                     + "     where id_producto = ?";
@@ -100,35 +103,33 @@ public class ProductoFacade implements Serializable {
             stmt.setInt(4, producto.getImagen().getId());
             stmt.setInt(5, producto.getId_producto());
             stmt.execute();
-
             stmt.close();
             conexion.close();
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error update producto: " + e.toString());
         }
     }
 
-    public void borrarProducto(int id) throws Exception{
+    public void borrarProducto(int id) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " delete from producto "
                     + "     where id_producto =? ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             stmt.setInt(1, id);
             stmt.execute();
-
             stmt.close();
             conexion.close();
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error delete producto " + e.toString());
         }
     }
 
     public List<Producto> getAllProductos() throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " select * from producto ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             ResultSet rs = stmt.executeQuery();
@@ -148,6 +149,7 @@ public class ProductoFacade implements Serializable {
             conexion.close();
             return listaProductos;
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error getAllProductos: " + e.toString());
         }
     }

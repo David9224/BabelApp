@@ -20,19 +20,23 @@ import utility.ConexionSql;
  */
 public class CategoriaFacade implements Serializable {
 
-    private ConexionSql connection;
+    private final ConexionSql connection;
+
+    public CategoriaFacade() {
+        connection = new ConexionSql();
+    }
 
     /**
      * @param id
      * @return
      * @throws java.lang.Exception
      * @Fecha 16/11/2015
-     * @Observacion busca el usuario por cedula
+     * @Observacion busca la categoria por id
      */
     public Categoria buscarCategoria(int id) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
+
             String SQL = " select * from categoria "
                     + "     where id_categoria = ? ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
@@ -52,15 +56,14 @@ public class CategoriaFacade implements Serializable {
 
             return categoria;
         } catch (Exception e) {
-            throw new Exception("Error Buscar categoria: " + e.getMessage());
+            conexion.close();
+            throw new Exception("Error Buscar categoria: " + e.toString());
         }
     }
 
     public Categoria crearCategoria(Categoria categoria) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = "INSERT INTO categoria (nombre,descripcion) values (?, ?)";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             stmt.setString(1, categoria.getNombre().toUpperCase());
@@ -71,14 +74,14 @@ public class CategoriaFacade implements Serializable {
 
             return categoria;
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error Crear Categoria: " + e.toString());
         }
     }
 
     public void updateCategoria(Categoria categoria) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " update categoria set  "
                     + "     nombre = ?, descripcion = ?"
                     + "     where id_categoria = ?";
@@ -92,14 +95,14 @@ public class CategoriaFacade implements Serializable {
             stmt.close();
             conexion.close();
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error update Categoria: " + e.toString());
         }
     }
 
     public void borrarCategoria(int id) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " delete from categoria "
                     + "     where id_categoria =? ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
@@ -109,14 +112,14 @@ public class CategoriaFacade implements Serializable {
             stmt.close();
             conexion.close();
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error delete Categoria: " + e.toString());
         }
     }
 
     public List<Categoria> getAllCategorias() throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " select * from categoria ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             ResultSet rs = stmt.executeQuery();
@@ -134,8 +137,8 @@ public class CategoriaFacade implements Serializable {
             conexion.close();
             return listaCategorias;
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error getAllCategorias: " + e.toString());
         }
     }
-
 }

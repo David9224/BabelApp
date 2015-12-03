@@ -20,21 +20,26 @@ import utility.ConexionSql;
  */
 public class FacturaFacade implements Serializable {
 
-    private ConexionSql connection;
-    private final ClienteFacade clienteFacade = new ClienteFacade();
-    private final UsuariosFacade usuariosFacade = new UsuariosFacade();
+    private final ConexionSql connection;
+    private final ClienteFacade clienteFacade;
+    private final UsuariosFacade usuariosFacade;
+
+    public FacturaFacade() {
+        connection = new ConexionSql();
+        clienteFacade = new ClienteFacade();
+        usuariosFacade = new UsuariosFacade();
+    }
 
     /**
      * @param num_factura
      * @return
      * @throws java.lang.Exception
      * @Fecha 16/11/2015
-     * @Observacion busca el usuario por cedula
+     * @Observacion busca la factura por num_factura
      */
     public Factura buscarFactura(int num_factura) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " select * from factura "
                     + "     where num_factura = ? ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
@@ -50,21 +55,22 @@ public class FacturaFacade implements Serializable {
                 factura.setFecha(rs.getDate(5));
                 factura.setPendiente(rs.getBoolean(6));
                 factura.setMesa(rs.getInt(7));
+                factura.setTotalRecibido(rs.getLong(8));
+                factura.setTotal(rs.getLong(9));
             }
             rs.close();
             stmt.close();
             conexion.close();
             return factura;
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error Buscar Cliente: " + e.getMessage());
         }
     }
 
     public Factura crearFactura(Factura factura) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = "INSERT INTO factura (id_cliente,nom_cliente,id_usuario,fecha,"
                     + "                         pendiente,mesa,totalRecibido, total) "
                     + "     values (?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?, ?)";
@@ -94,14 +100,14 @@ public class FacturaFacade implements Serializable {
             conexion.close();
             return factura;
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error Crear Factura: " + e.toString());
         }
     }
 
     public void updateFactura(Factura factura) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " update Factura set  "
                     + "     id_cliente = ?,nom_cliente = ?, id_usuario = ?, pendiente = ?,mesa = ?, "
                     + "     totalRecibido = ?, total = ?"
@@ -113,7 +119,7 @@ public class FacturaFacade implements Serializable {
             } else {
                 stmt.setString(1, null);
             }
-            if (!factura.getNombre().equals("")) {
+            if (!factura.getNombre().trim().equals("")) {
                 stmt.setString(2, factura.getNombre().toUpperCase());
             } else {
                 stmt.setString(2, null);
@@ -127,14 +133,14 @@ public class FacturaFacade implements Serializable {
             stmt.close();
             conexion.close();
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error update Factura: " + e.toString());
         }
     }
 
-    public void deleteFactura(int num_factura) {
+    public void deleteFactura(int num_factura) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " delete from Factura "
                     + "     where num_factura =? ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
@@ -144,28 +150,30 @@ public class FacturaFacade implements Serializable {
             stmt.close();
             conexion.close();
         } catch (Exception e) {
-            System.out.println("Error delete Factura " + e.toString());
+            conexion.close();
+            throw new Exception("Error delete Factura " + e.toString());
         }
     }
 
     public List<Factura> getAllFacturas() throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " select * from Factura ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             ResultSet rs = stmt.executeQuery();
             Factura factura = null;
             List<Factura> listaFacturas = new ArrayList<>();
             while (rs.next()) {
-                factura = new Factura();
+                 factura = new Factura();
                 factura.setNum_factura(rs.getInt(1));
                 factura.setCedula(rs.getLong(2));
                 factura.setNombre(rs.getString(3));
                 factura.setUsuario(usuariosFacade.buscarUsuario(rs.getInt(4)));
-                factura.setFecha(new java.util.Date(rs.getDate(5).getTime()));
+                factura.setFecha(rs.getDate(5));
                 factura.setPendiente(rs.getBoolean(6));
                 factura.setMesa(rs.getInt(7));
+                factura.setTotalRecibido(rs.getLong(8));
+                factura.setTotal(rs.getLong(9));
                 listaFacturas.add(factura);
             }
             rs.close();
@@ -173,14 +181,14 @@ public class FacturaFacade implements Serializable {
             conexion.close();
             return listaFacturas;
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error getAllFacturas: " + e.toString());
         }
     }
 
     public List<Factura> getAllFacturasPendientes() throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " select * from Factura "
                     + "     where pendiente = ? ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
@@ -197,6 +205,8 @@ public class FacturaFacade implements Serializable {
                 factura.setFecha(rs.getDate(5));
                 factura.setPendiente(rs.getBoolean(6));
                 factura.setMesa(rs.getInt(7));
+                factura.setTotalRecibido(rs.getLong(8));
+                factura.setTotal(rs.getLong(9));
                 listaFacturas.add(factura);
             }
             rs.close();
@@ -204,7 +214,8 @@ public class FacturaFacade implements Serializable {
             conexion.close();
             return listaFacturas;
         } catch (Exception e) {
-            throw new Exception("Error getAllFacturas: " + e.toString());
+            conexion.close();
+            throw new Exception("Error getAllFacturasPendientes: " + e.toString());
         }
     }
 

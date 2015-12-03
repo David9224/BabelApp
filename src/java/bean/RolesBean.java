@@ -48,7 +48,11 @@ public class RolesBean implements Serializable {
     }
 
     public List<Roles> getListaRoles() {
-        listaRoles= rolesFacade.getAllRoles();
+        try {
+            listaRoles= rolesFacade.getAllRoles();
+        } catch (Exception ex) {
+            Logger.getLogger(RolesBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return listaRoles;
     }
 

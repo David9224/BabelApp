@@ -16,7 +16,6 @@
     </head>
     <body>
         <ui:composition template="./../../resources/template.xhtml">
-
             <ui:define name="content">
                 <h:form id="form1" enctype="multipart/form-data">
                     <p:panel header="#{productosBean.crearHeader}" styleClass="content1" style="text-align: center" id="panel1">
@@ -54,32 +53,32 @@
                 <h:form id="formtable"  enctype="multipart/form-data">
                     <p:growl id="grow2" showDetail="true" life="2000" />
 
-                    <p:dataTable  id="table" style="width:auto" rowKey="#{producto.id_producto}" value="#{productosBean.listaProductos}" emptyMessage="Productos no encontrados"  paginator="true"
-                                  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                  rowsPerPageTemplate="5,10,15" var="producto" selection="#{productosBean.productoSelect}" selectionMode="single" >
+                    <p:dataTable  id="table" style="width:auto" rowKey="#{producto.id_producto}" value="#{productosBean.listaProductos}" emptyMessage="Productos no encontrados"  scrollable="true" scrollHeight="400" var="producto" selection="#{productosBean.productoSelect}" selectionMode="single" >
 
                         <f:ajax event="rowSelect" 
                                 listener="#{productosBean.onRowSelect}"
                                 render=":form1"/>
                         <p:column filterBy="#{producto.id_producto}" headerText="Id" filterMatchMode="contains">
-                            <p:outputLabel value="#{producto.id_producto}"/>
+                            <h:outputLabel value="#{producto.id_producto}"/>
                         </p:column>
                         <p:column filterBy="#{producto.id_categoria.nombre}" headerText="Categoria" filterMatchMode="contains">
-                            <p:outputLabel value="#{producto.id_categoria.nombre}"/>
+                            <h:outputLabel value="#{producto.id_categoria.nombre}"/>
                         </p:column>
 
                         <p:column filterBy="#{producto.nombre}" headerText="Nombre" filterMatchMode="contains">
-                            <p:outputLabel value="#{producto.nombre}"/>
+                            <h:outputLabel value="#{producto.nombre}"/>
                         </p:column>
 
                         <p:column filterBy="#{producto.precio}" headerText="Precio" filterMatchMode="contains">
-                            <p:outputLabel value="#{producto.precio}"/>
+                            <h:outputLabel value="#{producto.precio}"/>
                         </p:column>
 
                         <p:column filterBy="#{producto.imagen}" headerText="Imagen" filterMatchMode="contains" >
-                            <p:graphicImage value="#{uploadImageBean.getImagen(producto.imagen)}" style="width: 100%">
-                                <f:param id="image_id" name="image_id" value="#{producto.imagen.id}" />
-                            </p:graphicImage>
+                            <center>
+                                <p:graphicImage value="#{uploadImageBean.getImagen(producto.imagen)}" style="width: 50%">
+                                    <f:param id="image_id" name="image_id" value="#{producto.imagen.id}" />
+                                </p:graphicImage>
+                            </center>
                         </p:column>
 
 

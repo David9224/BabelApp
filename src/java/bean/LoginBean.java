@@ -117,6 +117,8 @@ public class LoginBean implements Serializable {
                 context.redirect(rol + "/index.xhtml");
             } catch (IOException ex) {
                 Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

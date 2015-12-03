@@ -27,16 +27,16 @@
                     <p:panel header="#{usuariosBean.crearHeader}"   styleClass="content1" style="text-align: center" id="panel1">
                         <h:panelGrid columns="2" style="width: auto">
                             <h:outputText value="Cedula: *" />
-                            <p:inputText value="#{usuariosBean.usuarios.cedula}" disabled="#{usuariosBean.usuarios.cedula!= null}"  
+                            <h:inputText value="#{usuariosBean.usuarios.cedula}" disabled="#{usuariosBean.usuarios.cedula!= null}"  
                                          style="width: auto;" label="Cedula">
-                            </p:inputText>
+                            </h:inputText>
 
                             <h:outputText value="Nombres: *" />
-                            <p:inputText value="#{usuariosBean.usuarios.nombres}" style="width: auto;" 
+                            <h:inputText value="#{usuariosBean.usuarios.nombres}" style="width: auto;" 
                                          label="Nombres"/>
 
                             <h:outputText value="Apellidos: *" />
-                            <p:inputText value="#{usuariosBean.usuarios.apellidos}" style="width: auto;" 
+                            <h:inputText value="#{usuariosBean.usuarios.apellidos}" style="width: auto;" 
                                          label="Apellidos"/>
 
                             <h:outputText value="Fecha Nacimiento: *" />
@@ -45,24 +45,24 @@
                             </p:calendar>
 
                             <h:outputText value="Direccion: *" />
-                            <p:inputText value="#{usuariosBean.usuarios.direccion}" style="width: auto;" 
+                            <h:inputText value="#{usuariosBean.usuarios.direccion}" style="width: auto;" 
                                          required="true" label="Direccion"/>
 
                             <h:outputText value="Email:" />
-                            <p:inputText value="#{usuariosBean.usuarios.email}" style="width: auto;"
+                            <h:inputText value="#{usuariosBean.usuarios.email}" style="width: auto;"
                                          required="false" label="email"/>
                             <h:outputText value="Telefono: *" />
-                            <p:inputText value="#{usuariosBean.usuarios.telefono}" style="width: auto;" 
+                            <h:inputText value="#{usuariosBean.usuarios.telefono}" style="width: auto;" 
                                          label="Telefono">
                                 <f:validateDoubleRange minimum="1"/>
-                            </p:inputText>
+                            </h:inputText>
 
                             <h:outputText value="Rol: *" />
-                            <p:selectOneMenu  value="#{usuariosBean.roles}" style="width: 100%"
+                            <h:selectOneMenu  value="#{usuariosBean.roles}" style="width: 100%"
                                               converter="rolesConverter" converterMessage="Error en la conversion" >
                                 <f:selectItems value="#{rolesBean.listaRoles}" var="roles" 
                                                itemLabel="#{roles.nombreRol}" itemValue="#{roles}"/>
-                            </p:selectOneMenu>
+                            </h:selectOneMenu>
 
 
                         </h:panelGrid>
@@ -80,9 +80,7 @@
                 <h:form  id="table">
 
 
-                    <p:dataTable style="width:auto" value="#{usuariosBean.listaUsuarios}" paginator="true" rowKey="#{usuarios.cedula}"
-                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                 rowsPerPageTemplate="5,10,15" var="usuarios" emptyMessage="Usuarios no encontrados" 
+                    <p:dataTable style="width:auto" value="#{usuariosBean.listaUsuarios}" paginator="true" rowKey="#{usuarios.cedula}" scrollable="true" scrollHeight="400" var="usuarios" emptyMessage="Usuarios no encontrados" 
                                  selection="#{usuariosBean.usuariosSelect}" selectionMode="single">
 
                         <p:ajax event="rowSelect" 

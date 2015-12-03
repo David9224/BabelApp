@@ -16,17 +16,27 @@ import utility.ConexionSql;
  * @author David
  */
 public class EmpresaFacade {
-    
-    
-    public Empresa getEmpresa(){
+
+    private final ConexionSql connection;
+
+    public EmpresaFacade() {
+        connection = new ConexionSql();
+    }
+
+    /**
+     * @return
+     * @throws java.lang.Exception
+     * @Fecha 16/11/2015
+     * @Observacion busca la empresa
+     */
+    public Empresa getEmpresa() throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            ConexionSql connection= new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " SELECT * FROM EMPRESAS";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             Empresa empresa = null;
             ResultSet rs = stmt.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 empresa = new Empresa();
                 empresa.setNit(rs.getString(1));
                 empresa.setNombreEmpresa(rs.getString(2));
@@ -38,11 +48,12 @@ public class EmpresaFacade {
             rs.close();
             stmt.close();
             conexion.close();
-            
+
             return empresa;
         } catch (Exception e) {
-            System.out.println("Error getEmpresa "+ e.toString());
-            return null;
+            conexion.close();
+            throw new Exception("Error getEmpresa " + e.getMessage());
+
         }
     }
 }

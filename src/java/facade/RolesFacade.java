@@ -20,18 +20,22 @@ import utility.ConexionSql;
  */
 public class RolesFacade implements Serializable {
 
-    private ConexionSql connection;
+    private final ConexionSql connection;
+
+    public RolesFacade() {
+        connection = new ConexionSql();
+    }
 
     /**
      * @param id
      * @return
+     * @throws java.lang.Exception
      * @Fecha 16/11/2015
-     * @Observacion busca el usuario por cedula
+     * @Observacion busca el Rol por id
      */
     public Roles getRoles(int id) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " select * from roles "
                     + "     where id_rol = ? ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
@@ -47,17 +51,16 @@ public class RolesFacade implements Serializable {
             rs.close();
             stmt.close();
             conexion.close();
-
             return rol;
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error getRoles: " + e.toString());
         }
     }
 
     public Roles getRoles(String nombre_rol) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " select * from roles "
                     + "     where nombre_rol = ? ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
@@ -73,18 +76,16 @@ public class RolesFacade implements Serializable {
             rs.close();
             stmt.close();
             conexion.close();
-
             return rol;
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error getRoles: " + e.toString());
         }
     }
 
     public List<Roles> getAllRoles() throws Exception {
-        try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
-            String SQL = " select * from roles ";
+        Connection conexion = connection.conexion();
+        try {String SQL = " select * from roles ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             Roles rol = null;
             List<Roles> lstRoles = new ArrayList<>();
@@ -99,9 +100,9 @@ public class RolesFacade implements Serializable {
             rs.close();
             stmt.close();
             conexion.close();
-
             return lstRoles;
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error getAllRoles: " + e.toString());
         }
     }

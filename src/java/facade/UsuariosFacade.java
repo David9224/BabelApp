@@ -8,7 +8,6 @@ package facade;
 import entity.Usuario;
 import java.io.Serializable;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -21,7 +20,11 @@ import utility.ConexionSql;
  */
 public class UsuariosFacade implements Serializable {
 
-    private ConexionSql connection;
+    private final ConexionSql connection;
+
+    public UsuariosFacade() {
+        connection = new ConexionSql();
+    }
 
     /**
      * @param cedula
@@ -31,9 +34,8 @@ public class UsuariosFacade implements Serializable {
      * @Observacion busca el usuario por cedula
      */
     public Usuario buscarUsuario(long cedula) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " select * from USUARIOS "
                     + "     where cedula = ? ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
@@ -53,18 +55,16 @@ public class UsuariosFacade implements Serializable {
             rs.close();
             stmt.close();
             conexion.close();
-
             return usuarios;
         } catch (Exception e) {
-            throw new Exception("Error Buscar Usuario: " + e.getMessage());
+            conexion.close();
+            throw new Exception("Error Buscar Usuario: " + e.toString());
         }
     }
 
     public Usuario crearUsuario(Usuario usuarios) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = "INSERT INTO Usuarios values (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             stmt.setLong(1, usuarios.getCedula());
@@ -77,17 +77,16 @@ public class UsuariosFacade implements Serializable {
             stmt.execute();
             stmt.close();
             conexion.close();
-
             return usuarios;
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error Crear Usuario: " + e.toString());
         }
     }
 
     public void updateUsuario(Usuario usuario) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " update usuarios set  "
                     + "     nombres = ?, apellidos = ?,fecha_nacimiento = ?, direccion = ?,email = ?,telefono = ? "
                     + "     where cedula = ?";
@@ -103,14 +102,14 @@ public class UsuariosFacade implements Serializable {
             stmt.close();
             conexion.close();
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error update Usuario: " + e.toString());
         }
     }
 
     public void borrarUsuario(long cedula) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " delete from usuarios "
                     + "     where CEDULA =? ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
@@ -120,14 +119,14 @@ public class UsuariosFacade implements Serializable {
             stmt.close();
             conexion.close();
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error Delete Usuario: " + e.toString());
         }
     }
 
     public List<Usuario> getAllUsuarios() throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " select * from usuarios ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             ResultSet rs = stmt.executeQuery();
@@ -149,6 +148,7 @@ public class UsuariosFacade implements Serializable {
             conexion.close();
             return listaUsuarios;
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error getAllUsuarios: " + e.toString());
         }
     }

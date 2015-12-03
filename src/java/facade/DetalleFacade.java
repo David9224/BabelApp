@@ -21,9 +21,15 @@ import utility.ConexionSql;
  */
 public class DetalleFacade implements Serializable {
 
-    private ConexionSql connection;
-    private final FacturaFacade facturaFacade = new FacturaFacade();
-    private final ProductoFacade productoFacade = new ProductoFacade();
+    private final ConexionSql connection;
+    private final FacturaFacade facturaFacade;
+    private final ProductoFacade productoFacade;
+
+    public DetalleFacade() {
+        facturaFacade = new FacturaFacade();
+        productoFacade = new ProductoFacade();
+        connection = new ConexionSql();
+    }
 
     /**
      * @param num_detalle
@@ -31,12 +37,11 @@ public class DetalleFacade implements Serializable {
      * @return
      * @throws java.lang.Exception
      * @Fecha 16/11/2015
-     * @Observacion busca el usuario por cedula
+     * @Observacion busca el detalle por num_detalle y id_producto
      */
     public Detalle buscarDetalle(int num_detalle, int id_producto) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " select * from detalle "
                     + "     where num_detalle = ? and id_producto =? ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
@@ -57,15 +62,14 @@ public class DetalleFacade implements Serializable {
 
             return detalle;
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error Buscar Detalle: " + e.getMessage());
         }
     }
 
     public Detalle crearDetalle(Detalle detalle) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = "INSERT INTO Detalle (id_factura,id_producto,cantidad,precio) values (?, ?, ?, ?)";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             stmt.setInt(1, detalle.getFactura().getNum_factura());
@@ -78,14 +82,14 @@ public class DetalleFacade implements Serializable {
 
             return detalle;
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error Crear Detalle: " + e.toString());
         }
     }
 
     public void updateDetalle(Detalle detalle) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " update Detalle set  "
                     + "     id_factura = ?, id_producto = ?,cantidad = ?, precio = ?"
                     + "     where num_detalle = ?";
@@ -99,14 +103,14 @@ public class DetalleFacade implements Serializable {
             stmt.close();
             conexion.close();
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error update Detalle: " + e.toString());
         }
     }
 
     public void borrarDetalle(int num_detalle, int num_factura) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " delete from Detalle "
                     + "     where num_detalle =? and id_factura=?";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
@@ -117,14 +121,14 @@ public class DetalleFacade implements Serializable {
             stmt.close();
             conexion.close();
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error delete Detalle: " + e.toString());
         }
     }
 
     public List<Detalle> getAllDetalles() throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " select * from Detalle ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             ResultSet rs = stmt.executeQuery();
@@ -143,14 +147,14 @@ public class DetalleFacade implements Serializable {
             conexion.close();
             return listaDetalles;
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error getAllDetalles: " + e.toString());
         }
     }
 
     public List<Detalle> getAllDetallesFactura(Factura f) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " select * from Detalle"
                     + "     where id_factura = ?";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
@@ -171,6 +175,7 @@ public class DetalleFacade implements Serializable {
             conexion.close();
             return listaDetalles;
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error getAllDetallesFactura: " + e.toString());
         }
     }

@@ -20,20 +20,26 @@ import utility.ConexionSql;
  */
 public class AccesosUsuariosFacade implements Serializable {
 
-    private ConexionSql connection;
-    private final UsuariosFacade usuariosFacade = new UsuariosFacade();
-    private final RolesFacade rolesFacade = new RolesFacade();
+    private final ConexionSql connection;
+    private final UsuariosFacade usuariosFacade;
+    private final RolesFacade rolesFacade;
+
+    public AccesosUsuariosFacade() {
+        usuariosFacade = new UsuariosFacade();
+        rolesFacade = new RolesFacade();
+        connection = new ConexionSql();
+    }
 
     /**
      * @param cedula
      * @return
+     * @throws java.lang.Exception
      * @Fecha 16/11/2015
-     * @Observacion busca el usuario por cedula
+     * @Observacion busca el acceso por cedula
      */
     public AccesosUsuarios getAccesoCedula(Long cedula) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " select * from ACCESOS_USUARIOS "
                     + "     where ac_cedu = ? ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
@@ -52,14 +58,14 @@ public class AccesosUsuariosFacade implements Serializable {
             conexion.close();
             return acceso;
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error getAcceso " + e.toString());
         }
     }
 
     public AccesosUsuarios getAccesoCodigo(Long Ac_Codi) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " select * from ACCESOS_USUARIOS "
                     + "     where Ac_Codi = ? ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
@@ -79,14 +85,14 @@ public class AccesosUsuariosFacade implements Serializable {
 
             return acceso;
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error getAcceso " + e.toString());
         }
     }
 
     public void crearAccesoUsuario(AccesosUsuarios accesosUsuarios) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " insert into accesos_usuarios (Ac_Cedu,Ac_Contra,Ac_Rol) values (?, ?, ?)";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             stmt.setDouble(1, accesosUsuarios.getAcCedu().getCedula());
@@ -97,14 +103,14 @@ public class AccesosUsuariosFacade implements Serializable {
             stmt.close();
             conexion.close();
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error al crearAccesoUsuario: " + e.toString());
         }
     }
 
     public void updateAcceso(AccesosUsuarios acceso) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " update accesos_usuarios set  "
                     + "     Ac_Cedu = ?, Ac_Contra = ? ,Ac_Rol = ?"
                     + "     where Ac_Codi = ?";
@@ -118,14 +124,14 @@ public class AccesosUsuariosFacade implements Serializable {
             stmt.close();
             conexion.close();
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error update AccesoUsuario: " + e.toString());
         }
     }
 
     public void borrarAcceso(int id) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " delete from accesos_usuarios "
                     + "     where Ac_Codi =? ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
@@ -135,14 +141,14 @@ public class AccesosUsuariosFacade implements Serializable {
             stmt.close();
             conexion.close();
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error delete AccesoUsuario " + e.toString());
         }
     }
 
     public List<AccesosUsuarios> getAllAcceso() throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " select * from accesos_usuarios ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             ResultSet rs = stmt.executeQuery();
@@ -161,6 +167,7 @@ public class AccesosUsuariosFacade implements Serializable {
             conexion.close();
             return listaAccesosUsuarios;
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error getAllAccesos: " + e.toString());
         }
     }

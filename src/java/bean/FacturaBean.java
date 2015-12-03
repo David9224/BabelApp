@@ -6,12 +6,10 @@
 package bean;
 
 import entity.AccesosUsuarios;
-import entity.Cliente;
 import entity.Detalle;
 import entity.Factura;
 import entity.Imagen;
 import entity.Producto;
-import facade.ClienteFacade;
 import facade.DetalleFacade;
 import facade.FacturaFacade;
 import facade.ImagenFacade;
@@ -50,10 +48,8 @@ public class FacturaBean implements Serializable {
     private FacturaFacade facturaFacade;
     private ImagenFacade imagenFacade;
     private ProductoFacade productoFacade;
-    private ClienteFacade clienteFacade;
     private UsuariosFacade usuariosFacade;
     private int mesa;
-    private Cliente cliente;
     private Factura factura;
     private String nombre;
     private String accion;
@@ -63,7 +59,6 @@ public class FacturaBean implements Serializable {
      */
     public FacturaBean() {
         try {
-            clienteFacade = new ClienteFacade();
             usuariosFacade = new UsuariosFacade();
             productoFacade = new ProductoFacade();
             imagenFacade = new ImagenFacade();
@@ -72,7 +67,6 @@ public class FacturaBean implements Serializable {
             listaDetalle = new ArrayList<>();
             listaProducto = new ArrayList<>();
             facturaFacade = new FacturaFacade();
-            cliente = new Cliente();
             factura = new Factura();
         } catch (Exception ex) {
             Logger.getLogger(FacturaBean.class.getName()).log(Level.SEVERE, null, ex);
@@ -201,25 +195,16 @@ public class FacturaBean implements Serializable {
     public void crear() {
         try {
             factura.setTotal(total());
+            factura.setTotalRecibido(0L);
+            AccesosUsuarios a = (AccesosUsuarios) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
+            factura.setUsuario(usuariosFacade.buscarUsuario(a.getAcCedu().getCedula()));
             if (facturaFacade.buscarFactura(factura.getNum_factura()) == null) {
-                AccesosUsuarios a = (AccesosUsuarios) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
-                factura.setUsuario(usuariosFacade.buscarUsuario(a.getAcCedu().getCedula()));
                 if (accion.equals("guardar")) {
                     factura.setPendiente(true);
                 } else {
                     factura.setPendiente(false);
                 }
-                if (factura.isPendiente() == false) {
-                    if (factura.getTotalRecibido() >= total()) {
-                        factura = facturaFacade.crearFactura(factura);
-                    } else {
-                        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "Informacion", "El valor recibido no puede ser menor al total a pagar");
-                        FacesContext.getCurrentInstance().addMessage(null, msg);
-                        throw new Exception("");
-                    }
-                } else {
-                    factura = facturaFacade.crearFactura(factura);
-                }
+                factura = facturaFacade.crearFactura(factura);
                 for (Detalle detalle : listaDetalle) {
                     detalle.setFactura(factura);
                     detalleFacade.crearDetalle(detalle);
@@ -234,25 +219,13 @@ public class FacturaBean implements Serializable {
                     FacesContext.getCurrentInstance().addMessage(null, msg);
                 }
             } else {
-                factura.setPendiente(true);
                 factura.setFecha(new Date(System.currentTimeMillis()));
                 if (accion.equals("guardar")) {
                     factura.setPendiente(true);
                 } else {
                     factura.setPendiente(false);
                 }
-                if (factura.isPendiente() == false) {
-                    if (factura.getTotalRecibido() >= total()) {
-                        facturaFacade.updateFactura(factura);
-                    } else {
-                        
-                        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, "Informacion", "El valor recibido no puede ser menor al total a pagar");
-                        FacesContext.getCurrentInstance().addMessage(null, msg);
-                        throw new Exception("");
-                    }
-                } else {
-                    facturaFacade.updateFactura(factura);
-                }
+                facturaFacade.updateFactura(factura);
                 for (Detalle detalle : listaDetalle) {
                     detalle.setFactura(factura);
                     if (detalleFacade.buscarDetalle(detalle.getNum_detalle(), detalle.getProducto().getId_producto()) == null) {
@@ -276,8 +249,8 @@ public class FacturaBean implements Serializable {
                 new Imprimir().imprimir(factura);
             }
             init();
-
         } catch (Exception ex) {
+            init();
             System.out.println(ex.getMessage());
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Error al guardar la factura: " + ex.getMessage());
             FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -285,7 +258,6 @@ public class FacturaBean implements Serializable {
     }
 
     public void init() {
-        clienteFacade = new ClienteFacade();
         usuariosFacade = new UsuariosFacade();
         productoFacade = new ProductoFacade();
         imagenFacade = new ImagenFacade();
@@ -294,8 +266,8 @@ public class FacturaBean implements Serializable {
         listaDetalle = new ArrayList<>();
         listaProducto = new ArrayList<>();
         facturaFacade = new FacturaFacade();
-        cliente = new Cliente();
         factura = new Factura();
+        System.out.println("init");
     }
 
     public void getDetalleFactura(Factura f) {

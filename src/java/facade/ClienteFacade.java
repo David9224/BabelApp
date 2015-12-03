@@ -20,18 +20,22 @@ import utility.ConexionSql;
  */
 public class ClienteFacade implements Serializable {
 
-    private ConexionSql connection;
+    private final ConexionSql connection;
+
+    public ClienteFacade() {
+        connection = new ConexionSql();
+    }
 
     /**
      * @param cedula
      * @return
+     * @throws java.lang.Exception
      * @Fecha 16/11/2015
-     * @Observacion busca el usuario por cedula
+     * @Observacion busca el cliente por cedula
      */
     public Cliente buscarCliente(long cedula) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " select * from cliente "
                     + "     where cedula = ? ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
@@ -51,18 +55,16 @@ public class ClienteFacade implements Serializable {
             rs.close();
             stmt.close();
             conexion.close();
-
             return cliente;
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error Buscar Cliente: " + e.getMessage());
         }
     }
 
     public Cliente crearCliente(Cliente cliente) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = "INSERT INTO Cliente values (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             stmt.setLong(1, cliente.getCedula());
@@ -78,14 +80,14 @@ public class ClienteFacade implements Serializable {
 
             return cliente;
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error Crear Cliente: " + e.toString());
         }
     }
 
     public void updateCliente(Cliente cliente) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " update Cliente set  "
                     + "     nombres = ?, apellidos = ?,fecha_nacimiento = ?, direccion = ?,email = ?,telefono = ? "
                     + "     where cedula = ?";
@@ -101,14 +103,14 @@ public class ClienteFacade implements Serializable {
             stmt.close();
             conexion.close();
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error update Cliente: " + e.toString());
         }
     }
 
     public void borrarCliente(long cedula) throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " delete from Cliente "
                     + "     where CEDULA =? ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
@@ -118,14 +120,14 @@ public class ClienteFacade implements Serializable {
             stmt.close();
             conexion.close();
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error delete Cliente: " + e.toString());
         }
     }
 
     public List<Cliente> getAllClientes() throws Exception {
+        Connection conexion = connection.conexion();
         try {
-            connection = new ConexionSql();
-            Connection conexion = connection.conexion();
             String SQL = " select * from Cliente ";
             PreparedStatement stmt = conexion.prepareStatement(SQL);
             ResultSet rs = stmt.executeQuery();
@@ -147,6 +149,7 @@ public class ClienteFacade implements Serializable {
             conexion.close();
             return listaCliente;
         } catch (Exception e) {
+            conexion.close();
             throw new Exception("Error getAllClientes: " + e.toString());
         }
     }

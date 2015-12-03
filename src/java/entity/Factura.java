@@ -103,12 +103,16 @@ public class Factura implements Serializable{
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 79 * hash + this.num_factura;
-        hash = 79 * hash + Objects.hashCode(this.usuario);
-        hash = 79 * hash + Objects.hashCode(this.fecha);
-        hash = 79 * hash + (this.pendiente ? 1 : 0);
-        hash = 79 * hash + this.mesa;
+        int hash = 5;
+        hash = 89 * hash + this.num_factura;
+        hash = 89 * hash + Objects.hashCode(this.usuario);
+        hash = 89 * hash + Objects.hashCode(this.fecha);
+        hash = 89 * hash + Objects.hashCode(this.cedula);
+        hash = 89 * hash + Objects.hashCode(this.nombre);
+        hash = 89 * hash + (this.pendiente ? 1 : 0);
+        hash = 89 * hash + this.mesa;
+        hash = 89 * hash + Objects.hashCode(this.totalRecibido);
+        hash = 89 * hash + Objects.hashCode(this.total);
         return hash;
     }
 
@@ -132,8 +136,6 @@ public class Factura implements Serializable{
 
     @Override
     public String toString() {
-        return "Factura{" + "num_factura=" + num_factura +", usuario=" + usuario + ", fecha=" + fecha + ", pendiente=" + pendiente + ", mesa=" + mesa + '}';
+        return "Factura{" + "num_factura=" + num_factura + ", usuario=" + usuario + ", fecha=" + fecha + ", cedula=" + cedula + ", nombre=" + nombre + ", pendiente=" + pendiente + ", mesa=" + mesa + ", totalRecibido=" + totalRecibido + ", total=" + total + '}';
     }
-   
-   
 }
