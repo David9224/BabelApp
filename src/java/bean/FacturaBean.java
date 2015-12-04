@@ -5,6 +5,7 @@
  */
 package bean;
 
+import com.sun.tools.xjc.reader.RawTypeSet;
 import entity.AccesosUsuarios;
 import entity.Detalle;
 import entity.Factura;
@@ -183,8 +184,14 @@ public class FacturaBean implements Serializable {
             if (f == null) {
                 listaDetalle.remove(d);
             } else {
-                detalleFacade.borrarDetalle(d.getNum_detalle(), d.getFactura().getNum_factura());
                 getDetalleFactura(f);
+                if (listaDetalle.size() - 1 == 0) {
+                    FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "No se puede eliminar: la factura no puede estar vacia");
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                } else {
+                    detalleFacade.borrarDetalle(d.getNum_detalle(), d.getFactura().getNum_factura());
+                    getDetalleFactura(f);
+                }
             }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
@@ -194,59 +201,67 @@ public class FacturaBean implements Serializable {
 
     public void crear() {
         try {
-            factura.setTotal(total());
-            factura.setTotalRecibido(0L);
-            AccesosUsuarios a = (AccesosUsuarios) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
-            factura.setUsuario(usuariosFacade.buscarUsuario(a.getAcCedu().getCedula()));
-            if (facturaFacade.buscarFactura(factura.getNum_factura()) == null) {
-                if (accion.equals("guardar")) {
-                    factura.setPendiente(true);
-                } else {
-                    factura.setPendiente(false);
-                }
-                factura = facturaFacade.crearFactura(factura);
-                for (Detalle detalle : listaDetalle) {
-                    detalle.setFactura(factura);
-                    detalleFacade.crearDetalle(detalle);
-                }
-                RequestContext rc = RequestContext.getCurrentInstance();
-                rc.execute("PF('dlg1').hide()");
-                if (accion.equals("guardar")) {
-                    FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Factura con numero :" + factura.getNum_factura() + " ha sido guardada");
-                    FacesContext.getCurrentInstance().addMessage(null, msg);
-                } else {
-                    FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Factura con numero :" + factura.getNum_factura() + " ha sido creada");
-                    FacesContext.getCurrentInstance().addMessage(null, msg);
-                }
+            if (listaDetalle.isEmpty()) {
+                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "No se puede guardar o crear una factura vacia");
+                FacesContext.getCurrentInstance().addMessage(null, msg);
             } else {
-                factura.setFecha(new Date(System.currentTimeMillis()));
-                if (accion.equals("guardar")) {
-                    factura.setPendiente(true);
-                } else {
-                    factura.setPendiente(false);
+                
+                factura.setTotal(total());
+                if (factura.getTotalRecibido() == null) {
+                    factura.setTotalRecibido(0L);
                 }
-                facturaFacade.updateFactura(factura);
-                for (Detalle detalle : listaDetalle) {
-                    detalle.setFactura(factura);
-                    if (detalleFacade.buscarDetalle(detalle.getNum_detalle(), detalle.getProducto().getId_producto()) == null) {
-                        detalleFacade.crearDetalle(detalle);
+                AccesosUsuarios a = (AccesosUsuarios) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
+                factura.setUsuario(usuariosFacade.buscarUsuario(a.getAcCedu().getCedula()));
+                if (facturaFacade.buscarFactura(factura.getNum_factura()) == null) {
+                    if (accion.equals("guardar")) {
+                        factura.setPendiente(true);
                     } else {
-                        detalleFacade.updateDetalle(detalle);
+                        factura.setPendiente(false);
+                    }
+                    factura = facturaFacade.crearFactura(factura);
+                    for (Detalle detalle : listaDetalle) {
+                        detalle.setFactura(factura);
+                        detalleFacade.crearDetalle(detalle);
+                    }
+                    RequestContext rc = RequestContext.getCurrentInstance();
+                    rc.execute("PF('dlg1').hide()");
+                    if (accion.equals("guardar")) {
+                        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Factura con numero :" + factura.getNum_factura() + " ha sido guardada");
+                        FacesContext.getCurrentInstance().addMessage(null, msg);
+                    } else {
+                        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Factura con numero :" + factura.getNum_factura() + " ha sido creada");
+                        FacesContext.getCurrentInstance().addMessage(null, msg);
+                    }
+                } else {
+                    factura.setFecha(new Date(System.currentTimeMillis()));
+                    if (accion.equals("guardar")) {
+                        factura.setPendiente(true);
+                    } else {
+                        factura.setPendiente(false);
+                    }
+                    facturaFacade.updateFactura(factura);
+                    for (Detalle detalle : listaDetalle) {
+                        detalle.setFactura(factura);
+                        if (detalleFacade.buscarDetalle(detalle.getNum_detalle(), detalle.getProducto().getId_producto()) == null) {
+                            detalleFacade.crearDetalle(detalle);
+                        } else {
+                            detalleFacade.updateDetalle(detalle);
+                        }
+                    }
+                    RequestContext rc = RequestContext.getCurrentInstance();
+                    rc.execute("PF('dlg1').hide()");
+                    if (accion.equals("guardar")) {
+                        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Factura con numero :" + factura.getNum_factura() + " ha sido guardada");
+                        FacesContext.getCurrentInstance().addMessage(null, msg);
+                    } else {
+                        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Factura con numero :" + factura.getNum_factura() + " ha sido creada");
+                        FacesContext.getCurrentInstance().addMessage(null, msg);
                     }
                 }
-                RequestContext rc = RequestContext.getCurrentInstance();
-                rc.execute("PF('dlg1').hide()");
-                if (accion.equals("guardar")) {
-                    FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Factura con numero :" + factura.getNum_factura() + " ha sido guardada");
-                    FacesContext.getCurrentInstance().addMessage(null, msg);
-                } else {
-                    FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Factura con numero :" + factura.getNum_factura() + " ha sido creada");
-                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                if (factura.isPendiente() == false) {
+                    new Imprimir().imprimir(factura);
                 }
 
-            }
-            if (factura.isPendiente() == false) {
-                new Imprimir().imprimir(factura);
             }
             init();
         } catch (Exception ex) {
@@ -310,4 +325,15 @@ public class FacturaBean implements Serializable {
         getDetalleFactura(factura);
     }
 
+    public void decrement(Detalle d) {
+        if (d.getCantidad() - 1 >= 1) {
+            d.setCantidad(d.getCantidad() - 1);
+        }
+    }
+
+    public void increment(Detalle d) {
+        if (d.getCantidad() + 1 <= 99) {
+            d.setCantidad(d.getCantidad() + 1);
+        }
+    }
 }
